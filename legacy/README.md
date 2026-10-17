@@ -6,6 +6,7 @@ Se archiva aquí el **2026-09-22** tras decidir migrar a React y cambiar el cont
 
 - No se sigue desarrollando.
 - Se mantiene como referencia (ej. el motor FSRS en `assets/js/fsrs.js` se portará a la nueva app).
+- El contenido de Past Simple y Past Continuous (verbos, oraciones, lecturas) ya se migró a `src/content/courses/english-tenses/`. Pendiente por portar: Context Hunt, ICFES y FSRS.
 - Para abrirlo: `legacy/index.html` directamente en el navegador (sigue funcionando igual que antes, no depende de build tool).
 
 ## Agregar nuevas preguntas al simulacro ICFES
