@@ -187,3 +187,62 @@
 .exercise-feedback__answer strong {
   color: var(--text-h);
 }
+
+/* Open answer */
+.open-answer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.open-answer__label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 15px;
+}
+
+.open-answer textarea {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-h);
+  font: inherit;
+}
+
+.open-answer__model {
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 4px solid var(--accent);
+  background: var(--accent-bg);
+}
+
+.open-answer__rating {
+  display: flex;
+  gap: 8px;
+}
+
+/* Dialogue */
+.dialogue__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dialogue__line--yours {
+  padding-left: 16px;
+  border-left: 3px solid var(--accent);
+}
+
+.dialogue__line--correct {
+  color: var(--success);
+}
+
+.dialogue__line--wrong {
+  color: var(--error);
+  text-decoration: line-through;
+}

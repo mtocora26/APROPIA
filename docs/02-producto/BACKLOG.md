@@ -57,7 +57,7 @@ _Objetivo: proceso de aprendizaje continuo por estudiante._
 ## EPIC-13 — Ejercicios creativos y modo clase
 | ID | Historia | Prioridad | Est. |
 |---|---|---|---|
-| EPIC-13-01 (#25) | Tipos de ejercicio abiertos (situación, diálogo, traducción libre) + modo clase | 🟡 | 3 |
+| ✅ EPIC-13-01 (#25) | Tipos de ejercicio `open` (respuesta abierta autoevaluada: situación, traducción libre) y `dialogue` (conversación guiada) + modo clase `/clase/:curso/:lección`. Pendiente: mini práctica mixta del recap (requiere registrar ítems fallados) | 🟡 | 3 |
 
 ## EPIC-09 — Firebase (Firestore + Auth email/password)
 _⏸️ Diferido por ADR-0006 (multiusuario local primero). Objetivo: sincronizar progreso entre dispositivos, con el mismo contrato `ProgressRepository` ya en uso._

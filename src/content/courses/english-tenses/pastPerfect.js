@@ -22,6 +22,7 @@ export const PAST_PERFECT = {
         { id: 'pas-l1-e3', type: 'typed', prompt: 'Forma negativa de «finish».', sentence: 'He ___ his homework.', answer: 'hadn\'t finished', alternatives: ['had not finished'] },
         { id: 'pas-l1-e4', type: 'reorder', prompt: 'Ordena: Ya habíamos comido cuando llegó.', tokens: ['We', 'had', 'already', 'eaten', 'when', 'he', 'arrived'], answer: ['We', 'had', 'already', 'eaten', 'when', 'he', 'arrived'] },
         { id: 'pas-l1-e5', type: 'choice', prompt: '¿Qué ocurrió primero? «I had finished before she called.»', options: ['I finished', 'She called'], answer: 'I finished' },
+        { id: 'pas-l1-e6', type: 'open', prompt: 'Traducción libre: «Cuando llegué, la reunión ya había terminado.»', hints: ['arrive', 'meeting', 'already'], modelAnswer: 'When I arrived, the meeting had already finished.' },
       ],
     },
   ],

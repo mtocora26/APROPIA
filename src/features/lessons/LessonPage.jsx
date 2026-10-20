@@ -23,8 +23,9 @@ import {
 import SpeakButton from '../../ui/SpeakButton.jsx'
 import LessonResult from './LessonResult.jsx'
 import LessonTheory from './LessonTheory.jsx'
-import { coursePath, lessonPath } from './paths.js'
+import { classPath, coursePath, lessonPath } from './paths.js'
 import '../exercises/types/exerciseTypes.css'
+import './classMode.css'
 import './lesson.css'
 
 function LessonPage() {
@@ -115,6 +116,9 @@ function LessonPlayer({ course, lesson, onRestart }) {
           <button type="button" className="lesson-intro__start" onClick={exercise.start}>
             Empezar · {items.length} ejercicios
           </button>
+          <Link to={classPath(course.id, lesson.id)} className="lesson-intro__class">
+            Modo clase
+          </Link>
         </div>
       </section>
     )
@@ -127,7 +131,14 @@ function LessonPlayer({ course, lesson, onRestart }) {
       renderPrompt={(item) => <ExercisePrompt exercise={item} />}
       renderAnswer={({ item, onAnswer, disabled }) => {
         const Answer = ANSWER_COMPONENTS[item.type]
-        return <Answer exercise={item} onAnswer={onAnswer} disabled={disabled} />
+        return (
+          <Answer
+            exercise={item}
+            onAnswer={onAnswer}
+            disabled={disabled}
+            language={course.language}
+          />
+        )
       }}
       renderFeedback={({ item, result }) => (
         <>

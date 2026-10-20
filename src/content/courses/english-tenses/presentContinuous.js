@@ -22,6 +22,7 @@ export const PRESENT_CONTINUOUS = {
         { id: 'prc-l1-e3', type: 'typed', prompt: 'Forma negativa de «work».', sentence: 'I ___ today.', answer: 'am not working', alternatives: ['\'m not working'] },
         { id: 'prc-l1-e4', type: 'reorder', prompt: 'Ordena: ¿Qué estás haciendo?', tokens: ['What', 'are', 'you', 'doing?'], answer: ['What', 'are', 'you', 'doing?'] },
         { id: 'prc-l1-e5', type: 'match', prompt: 'Une el verbo con su forma -ing.', pairs: [['make', 'making'], ['run', 'running'], ['die', 'dying'], ['play', 'playing']] },
+        { id: 'prc-l1-e6', type: 'open', prompt: 'Describe lo que ves a tu alrededor ahora mismo con 2 frases en Present Continuous.', hints: ['I am ...ing', 'He/She is ...ing'], modelAnswer: 'I am sitting at my desk, and my colleague is drinking coffee.' },
       ],
     },
   ],

@@ -16,6 +16,8 @@ export const EXERCISE_TYPES = Object.freeze([
   'reorder',
   'match',
   'spelling',
+  'open',
+  'dialogue',
 ])
 
 export const THEORY_BLOCK_TYPES = Object.freeze([
@@ -227,6 +229,36 @@ function validateExercise(exercise, path, alphabet) {
       assertNoDuplicates(exercise.pairs.map(([left]) => left), `${path}.pairs`)
       assertNoDuplicates(exercise.pairs.map(([, right]) => right), `${path}.pairs`)
       break
+
+    case 'open':
+      assertOptionalString(exercise.sentence, `${path}.sentence`)
+      assertString(exercise.modelAnswer, `${path}.modelAnswer`)
+      if (exercise.hints !== undefined) {
+        assertStringArray(exercise.hints, `${path}.hints`)
+      }
+      break
+
+    case 'dialogue': {
+      assertNonEmptyArray(exercise.lines, `${path}.lines`)
+      let yourLines = 0
+      exercise.lines.forEach((line, i) => {
+        const linePath = `${path}.lines[${i}]`
+        assertRecord(line, linePath)
+        assertString(line.who, `${linePath}.who`)
+        if (line.options === undefined) {
+          assertString(line.text, `${linePath}.text`)
+          return
+        }
+        yourLines += 1
+        assertStringArray(line.options, `${linePath}.options`)
+        assertString(line.answer, `${linePath}.answer`)
+        if (line.options.length < 2) fail(`${linePath}.options`, 'must have at least 2 options')
+        if (!line.options.includes(line.answer)) fail(`${linePath}.answer`, 'must be one of the options')
+        assertNoDuplicates(line.options, `${linePath}.options`)
+      })
+      if (yourLines === 0) fail(`${path}.lines`, 'needs at least one line with options')
+      break
+    }
 
     case 'spelling':
       assertString(exercise.word, `${path}.word`)
