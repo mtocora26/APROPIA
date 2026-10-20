@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { progressRepository } from '../../app/progressRepository.js'
+import { useProgressRepository } from '../students/studentContext.js'
 import { getCourse } from '../../content/courses/index.js'
 import { useCourseProgress } from '../../hooks/useCourseProgress.js'
 import { lessonPath } from '../lessons/paths.js'
@@ -12,6 +12,7 @@ const MAX_STARS = 3
 
 function CoursePage() {
   const { courseId } = useParams()
+  const progressRepository = useProgressRepository()
   const course = getCourse(courseId)
   const { progress, error } = useCourseProgress({
     repository: progressRepository,

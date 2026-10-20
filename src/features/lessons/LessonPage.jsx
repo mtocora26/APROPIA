@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { appEvents } from '../../app/appEvents.js'
-import { progressRepository } from '../../app/progressRepository.js'
+import { useProgressRepository } from '../students/studentContext.js'
 import { getCourse } from '../../content/courses/index.js'
 import { starsForAccuracy, xpForSession } from '../../core/gamification/scoring.js'
 import { speechLang } from '../../core/speech/speech.js'
@@ -29,6 +29,7 @@ import './lesson.css'
 
 function LessonPage() {
   const { courseId, lessonId } = useParams()
+  const progressRepository = useProgressRepository()
   const [round, setRound] = useState(0)
   const course = getCourse(courseId)
   const found = course && findLesson(course, lessonId)
@@ -76,6 +77,7 @@ function LessonPage() {
 
 /** Theory → exercises → review of mistakes → result (stars and XP). */
 function LessonPlayer({ course, lesson, onRestart }) {
+  const progressRepository = useProgressRepository()
   const context = { alphabet: course.alphabet }
   const lang = speechLang(course.language)
   const [items] = useState(() => {

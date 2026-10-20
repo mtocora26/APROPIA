@@ -9,9 +9,12 @@ Tablero simple en markdown. Muévete de columna editando este archivo (o migra a
 
 ## ✅ Ready (próximas 1-2 semanas)
 - [ ] EPIC-07-04 — Portar FSRS a módulo ES puro (#7)
+- [ ] EPIC-12-01 — Flashcards con FSRS por estudiante (#23)
+- [ ] EPIC-12-02 — Recap de inicio de clase y sesiones de tutoría (#24)
+- [ ] EPIC-13-01 — Ejercicios creativos y modo clase (#25)
 
 ## 🔨 In Progress
-_(vacío — arrastra aquí solo 1 tarjeta cuando empieces)_
+- [ ] EPIC-11-01 — Estudiantes locales (#22) — rama `feature/EPIC-11-01-estudiantes-locales`
 
 ## 👀 Review (autorevisión antes de mergear)
 - [ ] EPIC-07-05 — `ExerciseContainer` genérico (#6) — rama `feature/EPIC-07-05-exercise-container`

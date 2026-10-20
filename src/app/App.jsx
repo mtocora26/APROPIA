@@ -3,15 +3,21 @@ import { COURSES } from '../content/courses/index.js'
 import PlayerBadge from '../features/gamification/PlayerBadge.jsx'
 import { usePlayerStats } from '../hooks/usePlayerStats.js'
 import { appEvents } from './appEvents.js'
-import { progressRepository } from './progressRepository.js'
+import { studentRepository } from './progressRepository.js'
+import StudentProvider from '../features/students/StudentProvider.jsx'
+import StudentSwitcher from '../features/students/StudentSwitcher.jsx'
+import StudentsPage from '../features/students/StudentsPage.jsx'
+import { useProgressRepository } from '../features/students/studentContext.js'
 import CoursePage from '../features/course/CoursePage.jsx'
 import DemoExercisePage from '../features/exercises/demo/DemoExercisePage.jsx'
 import LessonPage from '../features/lessons/LessonPage.jsx'
 import HomePage from './HomePage.jsx'
 import '../features/gamification/gamification.css'
+import '../features/students/students.css'
 import './App.css'
 
-function App() {
+function AppShell() {
+  const progressRepository = useProgressRepository()
   const stats = usePlayerStats({
     repository: progressRepository,
     courses: COURSES,
@@ -24,12 +30,16 @@ function App() {
         <Link to="/" className="app-brand">
           Tukola
         </Link>
-        <PlayerBadge stats={stats} />
+        <div className="app-header__right">
+          <StudentSwitcher />
+          <PlayerBadge stats={stats} />
+        </div>
       </header>
 
       <main className="app-main">
         <Routes>
           <Route path="/" element={<HomePage stats={stats} />} />
+          <Route path="/estudiantes" element={<StudentsPage />} />
           <Route path="/practica/demo" element={<DemoExercisePage />} />
           <Route path="/curso/:courseId" element={<CoursePage />} />
           <Route
@@ -39,6 +49,14 @@ function App() {
         </Routes>
       </main>
     </BrowserRouter>
+  )
+}
+
+function App() {
+  return (
+    <StudentProvider studentRepository={studentRepository}>
+      <AppShell />
+    </StudentProvider>
   )
 }
 

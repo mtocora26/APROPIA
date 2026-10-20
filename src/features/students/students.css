@@ -1,0 +1,109 @@
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.student-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.student-switcher select,
+.students input[type='text'],
+.students input:not([type]) {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 15px;
+}
+
+.student-switcher__manage {
+  font-size: 14px;
+}
+
+.students__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.students__item {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.students__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.students__name {
+  flex: 1;
+  min-width: 120px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.students__active {
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.students button,
+.students__import {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-h);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.students button:hover,
+.students__import:hover {
+  border-color: var(--accent);
+}
+
+.students__import input {
+  display: none;
+}
+
+.students__add {
+  margin-bottom: 32px;
+}
+
+.students__message {
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.students__message--error {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.app-header .player-badge {
+  margin: 0;
+}
+
+.app-header__right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

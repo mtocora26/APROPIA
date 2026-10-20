@@ -13,7 +13,11 @@ _Meta: esqueleto de la app funcionando con los patrones clave, usando `LocalStor
 - Scaffold Vite+React, `ProgressRepository`/`LocalStorageRepository`, contrato de hook de ejercicio, `ExerciseContainer` genérico
 - Criterio de salida: puedes crear un ejercicio "de prueba" y su progreso se guarda vía el Repository, 100% local.
 
-## Fase 2 — Firebase (EPIC-09)
+## Fase 1.5 — Tutorías multiusuario local (EPIC-11, 07-04, 12, 13)
+_Meta: usar Tukola en clase con varios estudiantes, sin login ni base de datos (ADR-0006). Orden: estudiantes → FSRS → flashcards → recap/sesiones → ejercicios creativos._
+- Criterio de salida: eliges estudiante, haces el recap de inicio de clase con sus tarjetas vencidas y registras la tutoría.
+
+## Fase 2 — Firebase (EPIC-09) ⏸️ diferida
 _Meta: el mismo contrato `ProgressRepository`, ahora respaldado por Firestore — demostración práctica de por qué se diseñó la interfaz desde el Paso A._
 - Proyecto Firebase, Auth email/password (cuenta única), reglas de seguridad (obligatorias), `FirebaseRepository`, manejo de estados async en la UI
 - Criterio de salida: cierras la app, la abres en otro navegador/perfil, y tu progreso sigue ahí (mismo `uid`).
