@@ -23,7 +23,7 @@ _Objetivo: tener el esqueleto de la app en React con los patrones clave funciona
 | ✅ EPIC-07-01 | Scaffold Vite + React + React Router | 🔴 | 1 |
 | ✅ EPIC-07-02 | `core/storage/ProgressRepository.js` (interfaz) + `LocalStorageRepository.js` (impl inicial — se reemplaza en EPIC-09 sin tocar UI) | 🔴 | 2 |
 | ✅ EPIC-07-03 | Definir "shape" común de ejercicio vía custom hook (contrato `useExercise`: `state, answer(), next(), stats`) | 🔴 | 2 |
-| EPIC-07-04 (#7) | **Ahora núcleo de flashcards por estudiante.** Portar `fsrs.js` (repetición espaciada) a `core/fsrs/` como módulo ES puro, con tests | 🟡 | 2 |
+| ✅ EPIC-07-04 (#7) | **Ahora núcleo de flashcards por estudiante.** Portar `fsrs.js` (repetición espaciada) a `core/fsrs/` como módulo ES puro, con tests | 🟡 | 2 |
 | EPIC-07-05 | Componente `ExerciseContainer` genérico (Container/Presentational) que consuma cualquier hook de ejercicio | 🟡 | 2 |
 | EPIC-07-06 | Reducer de sesión de estudio (`idle → active → reviewing → done`) con `useReducer` | 🟢 | 1 |
 
