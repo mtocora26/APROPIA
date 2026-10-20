@@ -25,6 +25,11 @@ function HomePage({ stats }) {
         ))}
       </ul>
 
+      <Link to="/flashcards" className="course-card">
+        <span className="course-card__title">Flashcards</span>
+        <span className="course-card__meta">Verbos y vocabulario con repaso espaciado</span>
+      </Link>
+
       <p className="home__demo">
         <Link to="/practica/demo">Ejercicio de demostración</Link>
       </p>

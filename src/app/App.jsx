@@ -11,6 +11,8 @@ import { useProgressRepository } from '../features/students/studentContext.js'
 import CoursePage from '../features/course/CoursePage.jsx'
 import DemoExercisePage from '../features/exercises/demo/DemoExercisePage.jsx'
 import LessonPage from '../features/lessons/LessonPage.jsx'
+import FlashcardReviewPage from '../features/flashcards/FlashcardReviewPage.jsx'
+import FlashcardsPage from '../features/flashcards/FlashcardsPage.jsx'
 import HomePage from './HomePage.jsx'
 import '../features/gamification/gamification.css'
 import '../features/students/students.css'
@@ -39,6 +41,8 @@ function AppShell() {
       <main className="app-main">
         <Routes>
           <Route path="/" element={<HomePage stats={stats} />} />
+          <Route path="/flashcards" element={<FlashcardsPage />} />
+          <Route path="/flashcards/:deckId" element={<FlashcardReviewPage />} />
           <Route path="/estudiantes" element={<StudentsPage />} />
           <Route path="/practica/demo" element={<DemoExercisePage />} />
           <Route path="/curso/:courseId" element={<CoursePage />} />

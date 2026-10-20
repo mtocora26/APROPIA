@@ -1,5 +1,5 @@
 import { Fragment, useMemo, useState } from 'react'
-import { createProgressRepository } from '../../app/progressRepository.js'
+import { createFlashcardRepository, createProgressRepository } from '../../app/progressRepository.js'
 import { StudentContext } from './studentContext.js'
 
 function readState(studentRepository) {
@@ -29,6 +29,7 @@ function StudentProvider({ studentRepository, children }) {
       students: state.students,
       activeStudent: state.active,
       progressRepository: activeId === null ? null : createProgressRepository(activeId),
+      flashcardRepository: activeId === null ? null : createFlashcardRepository(activeId),
       switchStudent: (id) => apply(() => studentRepository.setActive(id)),
       addStudent: (name) => apply(() => studentRepository.add(name)),
       renameStudent: (id, name) => apply(() => studentRepository.rename(id, name)),

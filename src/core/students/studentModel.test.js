@@ -4,7 +4,9 @@ import {
   DEFAULT_STUDENT_ID,
   createDefaultStudentsData,
   normalizeStudentName,
+  cardsStorageKey,
   progressStorageKey,
+  studentStorageKeys,
   validateStudentsData,
 } from './studentModel.js'
 
@@ -35,4 +37,10 @@ test('validates the students document', () => {
     () => validateStudentsData({ ...data, students: [data.students[0], data.students[0]] }),
     TypeError,
   )
+})
+
+test('cards follow the same key rule as progress', () => {
+  assert.equal(cardsStorageKey(DEFAULT_STUDENT_ID), 'tukola.cards')
+  assert.equal(cardsStorageKey('ab12'), 'tukola.cards.ab12')
+  assert.deepEqual(studentStorageKeys('ab12'), ['tukola.progress.ab12', 'tukola.cards.ab12'])
 })

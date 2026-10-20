@@ -13,6 +13,11 @@ export function useProgressRepository() {
   return useStudentContext().progressRepository
 }
 
+/** The active student's `FlashcardRepository` (stable while the student is the same). */
+export function useFlashcardRepository() {
+  return useStudentContext().flashcardRepository
+}
+
 /** `{ students, activeStudent, switchStudent, addStudent, renameStudent, removeStudent }` */
 export function useStudents() {
   return useStudentContext()
