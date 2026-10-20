@@ -1,4 +1,4 @@
-# Kanban — Tukola
+# Kanban — APROPIA
 
 Tablero simple en markdown. Muévete de columna editando este archivo (o migra a GitHub Projects cuando quieras algo visual — ver nota al final).
 

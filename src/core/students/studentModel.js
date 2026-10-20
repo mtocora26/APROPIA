@@ -1,4 +1,4 @@
-export const STUDENTS_STORAGE_KEY = 'tukola.students'
+export const STUDENTS_STORAGE_KEY = 'apropia.students'
 export const STUDENTS_VERSION = 1
 export const DEFAULT_STUDENT_ID = 'yo'
 export const MAX_NAME_LENGTH = 40
@@ -6,9 +6,9 @@ export const MAX_NAME_LENGTH = 40
 export const STUDENT_CARDS_VERSION = 1
 export const STUDENT_SESSIONS_VERSION = 1
 
-const PROGRESS_KEY_PREFIX = 'tukola.progress'
-const CARDS_KEY_PREFIX = 'tukola.cards'
-const SESSIONS_KEY_PREFIX = 'tukola.sessions'
+const PROGRESS_KEY_PREFIX = 'apropia.progress'
+const CARDS_KEY_PREFIX = 'apropia.cards'
+const SESSIONS_KEY_PREFIX = 'apropia.sessions'
 
 /**
  * Storage key of a student's course progress. The default student keeps the

@@ -7,8 +7,8 @@ import { coursePath } from '../features/lessons/paths.js'
 function HomePage({ stats }) {
   return (
     <section className="home">
-      <h1>Tukola</h1>
-      <p>Plataforma personal de idiomas: italiano y business English.</p>
+      <h1>APROPIA</h1>
+      <p>Plataforma de aprendizaje personalizado.</p>
 
       <PlayerStatsCard stats={stats} />
 

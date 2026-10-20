@@ -11,11 +11,11 @@ import {
 } from './studentModel.js'
 
 test('the default student keeps the historical progress key', () => {
-  assert.equal(progressStorageKey(DEFAULT_STUDENT_ID), 'tukola.progress')
+  assert.equal(progressStorageKey(DEFAULT_STUDENT_ID), 'apropia.progress')
 })
 
 test('other students get their own progress key', () => {
-  assert.equal(progressStorageKey('ab12'), 'tukola.progress.ab12')
+  assert.equal(progressStorageKey('ab12'), 'apropia.progress.ab12')
   assert.notEqual(progressStorageKey('ab12'), progressStorageKey('cd34'))
 })
 
@@ -40,11 +40,11 @@ test('validates the students document', () => {
 })
 
 test('cards follow the same key rule as progress', () => {
-  assert.equal(cardsStorageKey(DEFAULT_STUDENT_ID), 'tukola.cards')
-  assert.equal(cardsStorageKey('ab12'), 'tukola.cards.ab12')
+  assert.equal(cardsStorageKey(DEFAULT_STUDENT_ID), 'apropia.cards')
+  assert.equal(cardsStorageKey('ab12'), 'apropia.cards.ab12')
   assert.deepEqual(studentStorageKeys('ab12'), [
-    'tukola.progress.ab12',
-    'tukola.cards.ab12',
-    'tukola.sessions.ab12',
+    'apropia.progress.ab12',
+    'apropia.cards.ab12',
+    'apropia.sessions.ab12',
   ])
 })

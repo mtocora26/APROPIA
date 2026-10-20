@@ -3,7 +3,7 @@ import test from 'node:test'
 import { createMemoryStorage } from '../storage/memoryStorage.js'
 import { FlashcardRepository, FlashcardStorageError } from './FlashcardRepository.js'
 
-const KEY = 'tukola.cards.ana'
+const KEY = 'apropia.cards.ana'
 
 test('returns no cards for a deck never studied', async () => {
   const repository = new FlashcardRepository({ storage: createMemoryStorage(), storageKey: KEY })
@@ -25,8 +25,8 @@ test('persists cards per deck across instances', async () => {
 
 test('students with different keys do not share cards', async () => {
   const storage = createMemoryStorage()
-  const ana = new FlashcardRepository({ storage, storageKey: 'tukola.cards.ana' })
-  const luis = new FlashcardRepository({ storage, storageKey: 'tukola.cards.luis' })
+  const ana = new FlashcardRepository({ storage, storageKey: 'apropia.cards.ana' })
+  const luis = new FlashcardRepository({ storage, storageKey: 'apropia.cards.luis' })
 
   await ana.saveCard('verbs', 'go', { reps: 1 })
 

@@ -49,7 +49,7 @@ function StudentProvider({ studentRepository, children }) {
         <p>{state.error.message}</p>
         <p>
           Los datos guardados no se borraron. Si tienes un respaldo, restáuralo; si no,
-          revisa la clave <code>tukola.students</code> en el almacenamiento del navegador.
+          revisa la clave <code>apropia.students</code> en el almacenamiento del navegador.
         </p>
       </main>
     )

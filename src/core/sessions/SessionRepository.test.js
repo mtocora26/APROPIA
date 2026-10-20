@@ -3,7 +3,7 @@ import test from 'node:test'
 import { createMemoryStorage } from '../storage/memoryStorage.js'
 import { SessionRepository, SessionStorageError } from './SessionRepository.js'
 
-const KEY = 'tukola.sessions.ana'
+const KEY = 'apropia.sessions.ana'
 const session = (id, date, createdAt = `${date}T10:00:00.000Z`) => ({
   id,
   date,
@@ -26,12 +26,12 @@ test('starts empty and keeps sessions ordered by date', async () => {
 
 test('students do not share sessions', async () => {
   const storage = createMemoryStorage()
-  await new SessionRepository({ storage, storageKey: 'tukola.sessions.ana' }).add(
+  await new SessionRepository({ storage, storageKey: 'apropia.sessions.ana' }).add(
     session('a', '2026-10-13'),
   )
 
   assert.deepEqual(
-    await new SessionRepository({ storage, storageKey: 'tukola.sessions.luis' }).list(),
+    await new SessionRepository({ storage, storageKey: 'apropia.sessions.luis' }).list(),
     [],
   )
 })

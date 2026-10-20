@@ -68,17 +68,17 @@ test('switches the active student and rejects unknown ones', () => {
 test('removing a student deletes their progress and moves the active one', () => {
   const { repository, storage } = createRepository()
   const { id } = repository.add('Ana')
-  storage.setItem(`tukola.progress.${id}`, '{}')
-  storage.setItem(`tukola.cards.${id}`, '{}')
-  storage.setItem(`tukola.sessions.${id}`, '{}')
-  storage.setItem('tukola.progress', '{"keep":true}')
+  storage.setItem(`apropia.progress.${id}`, '{}')
+  storage.setItem(`apropia.cards.${id}`, '{}')
+  storage.setItem(`apropia.sessions.${id}`, '{}')
+  storage.setItem('apropia.progress', '{"keep":true}')
 
   repository.remove(id)
 
-  assert.equal(storage.getItem(`tukola.progress.${id}`), null)
-  assert.equal(storage.getItem(`tukola.cards.${id}`), null)
-  assert.equal(storage.getItem(`tukola.sessions.${id}`), null)
-  assert.equal(storage.getItem('tukola.progress'), '{"keep":true}')
+  assert.equal(storage.getItem(`apropia.progress.${id}`), null)
+  assert.equal(storage.getItem(`apropia.cards.${id}`), null)
+  assert.equal(storage.getItem(`apropia.sessions.${id}`), null)
+  assert.equal(storage.getItem('apropia.progress'), '{"keep":true}')
   assert.equal(repository.getActive().id, DEFAULT_STUDENT_ID)
   assert.equal(repository.list().length, 1)
 })
@@ -91,10 +91,10 @@ test('the last student cannot be removed', () => {
 
 test('reports corrupt stored data without overwriting it', () => {
   const storage = createMemoryStorage()
-  storage.setItem('tukola.students', '{not json')
+  storage.setItem('apropia.students', '{not json')
   const { repository } = createRepository(storage)
 
   assert.throws(() => repository.list(), StudentStorageError)
   assert.throws(() => repository.add('Ana'), StudentStorageError)
-  assert.equal(storage.getItem('tukola.students'), '{not json')
+  assert.equal(storage.getItem('apropia.students'), '{not json')
 })

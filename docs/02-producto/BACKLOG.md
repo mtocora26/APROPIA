@@ -1,4 +1,4 @@
-# Backlog — Tukola
+# Backlog — APROPIA
 
 Convención de ID: `EPIC-XX` para épicas, `EPIC-XX-YY` para historias.
 Prioridad: 🔴 Alta · 🟡 Media · 🟢 Baja. Estimación en "sesiones de estudio" (≈1-2h cada una, pensado para tu ritmo actual).
@@ -40,7 +40,7 @@ _Objetivo: modelar el contenido para que agregar un curso sea "solo agregar dato
 | ✅ EPIC-08-06 | Curso `english-tenses`: un módulo por tiempo verbal, contenido migrado de legacy (#20) + despliegue en Vercel | 🔴 | 2 |
 
 ## EPIC-11 — Estudiantes locales (tutorías)
-_Objetivo: usar Tukola con varios estudiantes sin login ni backend. Ver [ADR-0006](../01-arquitectura/decisiones/ADR-0006-estudiantes-locales.md)._
+_Objetivo: usar APROPIA con varios estudiantes sin login ni backend. Ver [ADR-0006](../01-arquitectura/decisiones/ADR-0006-estudiantes-locales.md)._
 
 | ID | Historia | Prioridad | Est. |
 |---|---|---|---|

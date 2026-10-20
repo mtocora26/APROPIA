@@ -33,7 +33,7 @@ function AppShell() {
     <BrowserRouter>
       <header className="app-header">
         <Link to="/" className="app-brand">
-          Tukola
+          APROPIA
         </Link>
         <div className="app-header__right">
           <StudentSwitcher />

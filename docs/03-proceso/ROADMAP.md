@@ -1,4 +1,4 @@
-# Roadmap — Tukola
+# Roadmap — APROPIA
 
 Fases pensadas para avance **incremental y sostenible**, compatible con poco tiempo disponible y en paralelo a tus cursos de italiano e inglés de negocios. No son sprints con fecha fija — son un orden lógico de dependencias.
 
@@ -14,7 +14,7 @@ _Meta: esqueleto de la app funcionando con los patrones clave, usando `LocalStor
 - Criterio de salida: puedes crear un ejercicio "de prueba" y su progreso se guarda vía el Repository, 100% local.
 
 ## Fase 1.5 — Tutorías multiusuario local (EPIC-11, 07-04, 12, 13)
-_Meta: usar Tukola en clase con varios estudiantes, sin login ni base de datos (ADR-0006). Orden: estudiantes → FSRS → flashcards → recap/sesiones → ejercicios creativos._
+_Meta: usar APROPIA en clase con varios estudiantes, sin login ni base de datos (ADR-0006). Orden: estudiantes → FSRS → flashcards → recap/sesiones → ejercicios creativos._
 - Criterio de salida: eliges estudiante, haces el recap de inicio de clase con sus tarjetas vencidas y registras la tutoría.
 
 ## Fase 2 — Firebase (EPIC-09) ⏸️ diferida

@@ -97,19 +97,19 @@ test('rejects invalid progress before writing it', async () => {
     }),
     /progress\.courseId must match courseId/,
   )
-  assert.equal(storage.getItem('tukola.progress'), null)
+  assert.equal(storage.getItem('apropia.progress'), null)
 })
 
 test('reports corrupt stored data instead of silently deleting it', async () => {
   const storage = createMemoryStorage()
-  storage.setItem('tukola.progress', '{invalid')
+  storage.setItem('apropia.progress', '{invalid')
   const repository = createRepository(storage)
 
   await assert.rejects(
     repository.getProgress('italian-a1'),
     ProgressStorageError,
   )
-  assert.equal(storage.getItem('tukola.progress'), '{invalid')
+  assert.equal(storage.getItem('apropia.progress'), '{invalid')
 })
 
 function createRepository(storage = createMemoryStorage()) {

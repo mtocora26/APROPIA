@@ -1,4 +1,4 @@
-# Flujo de trabajo — Tukola
+# Flujo de trabajo — APROPIA
 
 Guía corta para trabajar este proyecto como un proceso de ingeniería real, adaptado a un side-project part-time.
 

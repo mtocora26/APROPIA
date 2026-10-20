@@ -43,7 +43,7 @@ function StudentsPage() {
     const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }))
     const link = document.createElement('a')
     link.href = url
-    link.download = `tukola-respaldo-${new Date().toISOString().slice(0, 10)}.json`
+    link.download = `apropia-respaldo-${new Date().toISOString().slice(0, 10)}.json`
     link.click()
     URL.revokeObjectURL(url)
   }
