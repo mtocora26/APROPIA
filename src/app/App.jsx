@@ -13,6 +13,8 @@ import DemoExercisePage from '../features/exercises/demo/DemoExercisePage.jsx'
 import LessonPage from '../features/lessons/LessonPage.jsx'
 import FlashcardReviewPage from '../features/flashcards/FlashcardReviewPage.jsx'
 import FlashcardsPage from '../features/flashcards/FlashcardsPage.jsx'
+import EndSessionPage from '../features/tutoring/EndSessionPage.jsx'
+import RecapPage from '../features/tutoring/RecapPage.jsx'
 import HomePage from './HomePage.jsx'
 import '../features/gamification/gamification.css'
 import '../features/students/students.css'
@@ -41,6 +43,8 @@ function AppShell() {
       <main className="app-main">
         <Routes>
           <Route path="/" element={<HomePage stats={stats} />} />
+          <Route path="/recap" element={<RecapPage />} />
+          <Route path="/tutoria" element={<EndSessionPage />} />
           <Route path="/flashcards" element={<FlashcardsPage />} />
           <Route path="/flashcards/:deckId" element={<FlashcardReviewPage />} />
           <Route path="/estudiantes" element={<StudentsPage />} />

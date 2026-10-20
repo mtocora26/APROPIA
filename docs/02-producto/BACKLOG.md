@@ -52,7 +52,7 @@ _Objetivo: proceso de aprendizaje continuo por estudiante._
 | ID | Historia | Prioridad | Est. |
 |---|---|---|---|
 | ✅ EPIC-12-01 (#23) | Flashcards (verbos, vocabulario) con FSRS y calendario por estudiante | 🔴 | 3 |
-| EPIC-12-02 (#24) | Recap de inicio de clase + registro de sesiones de tutoría | 🔴 | 3 |
+| ✅ EPIC-12-02 (#24) | Recap de inicio de clase + registro de sesiones de tutoría (la mini práctica de 5-8 preguntas mixtas queda para EPIC-13: hoy el recap enlaza a las lecciones débiles) | 🔴 | 3 |
 
 ## EPIC-13 — Ejercicios creativos y modo clase
 | ID | Historia | Prioridad | Est. |

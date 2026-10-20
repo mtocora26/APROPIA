@@ -1,7 +1,8 @@
 import { LocalStorageRepository } from '../core/storage/LocalStorageRepository.js'
 import { FlashcardRepository } from '../core/flashcards/FlashcardRepository.js'
+import { SessionRepository } from '../core/sessions/SessionRepository.js'
 import { StudentRepository } from '../core/students/StudentRepository.js'
-import { cardsStorageKey, progressStorageKey } from '../core/students/studentModel.js'
+import { cardsStorageKey, progressStorageKey, sessionsStorageKey } from '../core/students/studentModel.js'
 
 /**
  * Composition root for persistence: the only place that decides which
@@ -17,4 +18,8 @@ export function createProgressRepository(studentId) {
 
 export function createFlashcardRepository(studentId) {
   return new FlashcardRepository({ storageKey: cardsStorageKey(studentId) })
+}
+
+export function createSessionRepository(studentId) {
+  return new SessionRepository({ storageKey: sessionsStorageKey(studentId) })
 }

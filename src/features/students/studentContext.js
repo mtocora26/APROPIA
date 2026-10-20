@@ -18,6 +18,11 @@ export function useFlashcardRepository() {
   return useStudentContext().flashcardRepository
 }
 
+/** The active student's `SessionRepository` (stable while the student is the same). */
+export function useSessionRepository() {
+  return useStudentContext().sessionRepository
+}
+
 /** `{ students, activeStudent, switchStudent, addStudent, renameStudent, removeStudent }` */
 export function useStudents() {
   return useStudentContext()

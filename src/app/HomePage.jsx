@@ -12,6 +12,11 @@ function HomePage({ stats }) {
 
       <PlayerStatsCard stats={stats} />
 
+      <Link to="/recap" className="course-card">
+        <span className="course-card__title">Recap de inicio de clase</span>
+        <span className="course-card__meta">Lo visto la última vez, qué reforzar y tarjetas vencidas</span>
+      </Link>
+
       <ul className="home__courses">
         {COURSES.map((course) => (
           <li key={course.id}>

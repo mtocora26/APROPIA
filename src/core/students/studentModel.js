@@ -4,9 +4,11 @@ export const DEFAULT_STUDENT_ID = 'yo'
 export const MAX_NAME_LENGTH = 40
 
 export const STUDENT_CARDS_VERSION = 1
+export const STUDENT_SESSIONS_VERSION = 1
 
 const PROGRESS_KEY_PREFIX = 'tukola.progress'
 const CARDS_KEY_PREFIX = 'tukola.cards'
+const SESSIONS_KEY_PREFIX = 'tukola.sessions'
 
 /**
  * Storage key of a student's course progress. The default student keeps the
@@ -25,9 +27,20 @@ export function cardsStorageKey(studentId) {
     : `${CARDS_KEY_PREFIX}.${studentId}`
 }
 
+/** Storage key of a student's tutoring sessions log (same rule as progress). */
+export function sessionsStorageKey(studentId) {
+  return studentId === DEFAULT_STUDENT_ID
+    ? SESSIONS_KEY_PREFIX
+    : `${SESSIONS_KEY_PREFIX}.${studentId}`
+}
+
 /** Every storage key that holds data belonging to one student. */
 export function studentStorageKeys(studentId) {
-  return [progressStorageKey(studentId), cardsStorageKey(studentId)]
+  return [
+    progressStorageKey(studentId),
+    cardsStorageKey(studentId),
+    sessionsStorageKey(studentId),
+  ]
 }
 
 export function normalizeStudentName(name) {

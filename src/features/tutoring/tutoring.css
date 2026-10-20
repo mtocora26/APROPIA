@@ -1,0 +1,93 @@
+.tutoring__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0 24px;
+  padding: 0;
+  list-style: none;
+}
+
+.tutoring__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.tutoring__item > :first-child {
+  flex: 1;
+  min-width: 140px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.tutoring__score {
+  font-size: 14px;
+}
+
+.tutoring__note {
+  padding: 10px 12px;
+  border-left: 4px solid var(--accent);
+  background: var(--accent-bg);
+  white-space: pre-wrap;
+}
+
+.tutoring__actions {
+  margin: 24px 0;
+}
+
+.tutoring__primary {
+  display: inline-block;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tutoring__primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.tutoring__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 16px 0;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.tutoring__field input,
+.tutoring__field textarea {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-h);
+  font: inherit;
+  font-weight: 400;
+}
+
+.tutoring__group {
+  margin: 12px 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.tutoring__check {
+  display: block;
+  padding: 2px 0;
+}
+
+.tutoring__error {
+  color: var(--error);
+}
