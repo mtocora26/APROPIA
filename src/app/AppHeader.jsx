@@ -14,18 +14,21 @@ const LINKS = [
   { to: '/laboratorio', label: 'Laboratorio' },
 ]
 
+
 /**
  * App header. On lessons and card reviews (`immersive`) it shrinks to the
  * logo so the task has the screen. Under 768px the links fold into a menu.
+ * In modo feria (`demo`) there is no navigation at all: just the logo, back
+ * to the fair presentation.
  */
-function AppHeader({ stats, immersive }) {
+function AppHeader({ stats, immersive, demo = false }) {
   const { pathname } = useLocation()
   const [open, setOpen] = useState(false)
 
-  if (immersive) {
+  if (immersive || demo) {
     return (
       <header className="app-header app-header--compact">
-        <Link to="/inicio" className="app-brand" aria-label="APROPIA, rutas">
+        <Link to={demo ? '/feria' : '/inicio'} className="app-brand" aria-label={demo ? 'APROPIA, presentación' : 'APROPIA, rutas'}>
           <Logo />
         </Link>
       </header>

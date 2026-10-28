@@ -37,7 +37,7 @@ const texts = { type: 'array', items: text }
 
 // One flat shape for every exercise type (no anyOf): Gemini's schema support
 // is narrower than Claude's. Fields that do not apply to a type come back empty.
-const EXERCISE_SCHEMA = {
+export const EXERCISE_SCHEMA = {
   type: 'object',
   properties: {
     type: { type: 'string', enum: ['choice', 'match', 'typed', 'open'] },
@@ -118,7 +118,7 @@ export async function generateRoute(input) {
 }
 
 /** The model's raw draft, before ids and cleanup. Used by the backup script. */
-export async function requestRouteDraft({ text: notes = '', pdfBase64 = '', fileName = '', size = 'full' }) {
+export async function requestRouteDraft({ text: notes = '', pdfBase64 = '', fileName = '' }) {
   notes = notes.trim()
   if (!notes && !pdfBase64) throw new AiRequestError('Sube un PDF o pega tus apuntes.')
   if (notes.length > MAX_TEXT_CHARS) throw new AiRequestError('Los apuntes son muy largos. Pega solo el tema del parcial.')
@@ -126,13 +126,9 @@ export async function requestRouteDraft({ text: notes = '', pdfBase64 = '', file
     throw new AiRequestError('El PDF pesa más de 3 MB. Sube solo las páginas del tema.')
   }
 
-  // The fair challenge only needs five questions: a short route comes back faster.
-  const ask = size === 'mini'
-    ? 'Arma una ruta corta: 1 módulo con 2 lecciones, para un reto de 5 preguntas.'
-    : 'Arma mi ruta de estudio.'
   const request = notes
-    ? `Estos son mis apuntes:\n\n<apuntes>\n${notes}\n</apuntes>\n\n${ask}`
-    : `${ask} Usa este material.`
+    ? `Estos son mis apuntes:\n\n<apuntes>\n${notes}\n</apuntes>\n\nArma mi ruta de estudio.`
+    : 'Arma mi ruta de estudio con este material.'
 
   return requestJson({ system: SYSTEM_PROMPT, text: request, schema: ROUTE_SCHEMA, pdfBase64, fileName, tag: 'generar-ruta' })
 }

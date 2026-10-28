@@ -7,7 +7,11 @@ function Leaderboard({ entries, highlightId, size = 'normal' }) {
   return (
     <ol className={`leaderboard leaderboard--${size}`}>
       {entries.map((entry, i) => (
-        <li key={entry.id} className={`leaderboard__row${entry.id === highlightId ? ' leaderboard__row--you' : ''}`}>
+        <li
+          key={entry.id}
+          className={`leaderboard__row${entry.id === highlightId ? ' leaderboard__row--you' : ''}`}
+          style={{ '--i': i }}
+        >
           <span className="leaderboard__rank">{i + 1}</span>
           <span className="leaderboard__who">
             <span className="leaderboard__alias">{entry.alias}</span>

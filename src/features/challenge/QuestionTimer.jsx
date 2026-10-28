@@ -29,7 +29,9 @@ function QuestionTimer({ limitMs, startedAt, running, onExpire }) {
 
   return (
     <div className={`reto-timer${remaining <= HURRY_MS ? ' reto-timer--hurry' : ''}`}>
-      <span className="reto-timer__bar" style={{ transform: `scaleX(${remaining / limitMs})` }} aria-hidden="true" />
+      <span className="reto-timer__track" aria-hidden="true">
+        <span className="reto-timer__bar" style={{ transform: `scaleX(${remaining / limitMs})` }} />
+      </span>
       <span className="reto-timer__seconds" aria-label={`Quedan ${seconds} segundos`}>
         {seconds} s
       </span>

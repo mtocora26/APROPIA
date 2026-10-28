@@ -48,3 +48,15 @@ test('summary uses the course-map words', () => {
   assert.equal(summarize(answers(3, 5)).mastery, 'proceso')
   assert.equal(summarize(answers(2, 5)).mastery, 'refuerzo')
 })
+
+test('typed answers ignore accents, case, punctuation and number spelling', async () => {
+  const { isTypedAnswerRight } = await import('./challenge.js')
+  const item = { type: 'typed', answer: 'aceleracion' }
+  assert.ok(isTypedAnswerRight('Aceleración.', item))
+  assert.ok(isTypedAnswerRight('  aceleracion ', item))
+  assert.ok(!isTypedAnswerRight('velocidad', item))
+  assert.ok(!isTypedAnswerRight('', item))
+  assert.ok(isTypedAnswerRight('3', { type: 'typed', answer: 'tres' }))
+  assert.ok(isTypedAnswerRight('doce', { type: 'typed', answer: '12' }))
+  assert.ok(isTypedAnswerRight('cpu', { type: 'typed', answer: 'procesador', alternatives: ['CPU'] }))
+})

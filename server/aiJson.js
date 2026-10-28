@@ -13,10 +13,17 @@ import Anthropic from '@anthropic-ai/sdk'
 const CLAUDE_MODEL = process.env.APROPIA_MODEL || 'claude-opus-5-5'
 const CLAUDE_EFFORT = process.env.APROPIA_EFFORT || 'low'
 // Free-tier models get saturated (503) at peak hours: the next one is tried.
-const GEMINI_MODELS = (process.env.GEMINI_MODEL || 'gemini-3.6-flash,gemini-3.5-flash-lite')
-  .split(',')
-  .map((model) => model.trim())
-  .filter(Boolean)
+const GEMINI_MODELS = modelList(process.env.GEMINI_MODEL, 'gemini-3.6-flash,gemini-3.5-flash-lite')
+// Short answers (a 5-question round, judging an explanation) go to the lighter
+// model first: it answers in a few seconds.
+export const GEMINI_FAST_MODELS = modelList(process.env.GEMINI_FAST_MODEL, 'gemini-3.5-flash-lite,gemini-3.6-flash')
+
+function modelList(value, fallback) {
+  return (value || fallback)
+    .split(',')
+    .map((model) => model.trim())
+    .filter(Boolean)
+}
 const GEMINI_ATTEMPT_MS = Number(process.env.GEMINI_TIMEOUT_MS) || 75_000
 const GEMINI_RETRY_STATUSES = new Set([429, 500, 503, 504])
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models'
@@ -65,6 +72,7 @@ export function activeProvider(env = process.env) {
  * @param {string} [request.fileName]
  * @param {number} [request.maxTokens]
  * @param {number} [request.attemptMs]  per-model timeout (Gemini)
+ * @param {string[]} [request.models]   Gemini models to try, in order
  * @param {string} [request.tag]        name used in the server logs
  */
 export async function requestJson(request) {
@@ -74,7 +82,7 @@ export async function requestJson(request) {
   throw new ProviderNotConfiguredError()
 }
 
-async function requestFromGemini({ system, text, schema, pdfBase64, maxTokens = 32000, attemptMs = GEMINI_ATTEMPT_MS, tag = 'ia' }) {
+async function requestFromGemini({ system, text, schema, pdfBase64, maxTokens = 32000, attemptMs = GEMINI_ATTEMPT_MS, models = GEMINI_MODELS, tag = 'ia' }) {
   const parts = []
   if (pdfBase64) parts.push({ inline_data: { mime_type: 'application/pdf', data: pdfBase64 } })
   parts.push({ text })
@@ -90,7 +98,7 @@ async function requestFromGemini({ system, text, schema, pdfBase64, maxTokens = 
   })
 
   let lastError
-  for (const model of GEMINI_MODELS) {
+  for (const model of models) {
     try {
       return await callGemini(model, body, attemptMs)
     } catch (error) {

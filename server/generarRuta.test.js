@@ -88,17 +88,35 @@ test('explanations: the verdict comes back and the model answer is only in the p
   withEnv({ GEMINI_API_KEY: 'test-key' }, async () => {
     const { evaluateExplanation } = await import('./evaluarExplicacion.js')
     const calls = stubFetch(t, 200, {
-      candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ verdict: 'partial', feedback: ' ¿Qué pasa con la condición? ' }) }] } }],
+      candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ verdict: 'partial', good: ' Dices que repite. ', missing: ' ¿Qué pasa con la condición? ' }) }] } }],
     })
     const result = await evaluateExplanation({ question: '¿Por qué?', modelAnswer: 'Porque sí', answer: 'Creo que…' })
-    assert.deepEqual(result, { verdict: 'partial', feedback: '¿Qué pasa con la condición?' })
+    assert.deepEqual(result, { verdict: 'partial', good: 'Dices que repite.', missing: '¿Qué pasa con la condición?' })
     assert.match(JSON.parse(calls[0].init.body).contents[0].parts[0].text, /<explicacion_estudiante>Creo que…/)
     await assert.rejects(evaluateExplanation({ question: 'q', modelAnswer: 'm', answer: '  ' }), RouteRequestError)
   }))
 
-test('a mini route asks for fewer lessons', (t) =>
+test('a challenge comes back as 4 quick questions and an explanation, from the fast model', (t) =>
   withEnv({ GEMINI_API_KEY: 'test-key' }, async () => {
-    const calls = stubFetch(t, 200, { candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify(draft) }] } }] })
-    await generateRoute({ text: 'apuntes', size: 'mini' })
-    assert.match(JSON.parse(calls[0].init.body).contents[0].parts.at(-1).text, /1 módulo con 2 lecciones/)
+    const { generateChallenge } = await import('./generarReto.js')
+    const q = (type, extra) => ({ type, prompt: 'p', sentence: '', options: [], answer: '', alternatives: [], pairs: [], modelAnswer: '', hints: [], explanation: 'e', ...extra })
+    const calls = stubFetch(t, 200, {
+      candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({
+        title: 'Derivadas',
+        questions: [
+          q('choice', { options: ['a', 'b', 'c'], answer: 'a' }),
+          q('choice', { options: ['a', 'b'], answer: 'z' }),
+          q('typed', { sentence: 'x ___', answer: '2' }),
+          q('match', { pairs: [{ left: '1', right: 'uno' }, { left: '2', right: 'dos' }] }),
+          q('choice', { options: ['x', 'y'], answer: 'y' }),
+          q('open', { modelAnswer: 'porque sí', hints: ['piensa'] }),
+        ],
+      }) }] } }],
+    })
+    const challenge = await generateChallenge({ topic: 'derivadas' })
+    assert.equal(challenge.title, 'Derivadas')
+    assert.deepEqual(challenge.questions.map((item) => item.type), ['choice', 'typed', 'match', 'choice', 'open'])
+    assert.match(calls[0].url, /flash-lite/)
+    assert.match(JSON.parse(calls[0].init.body).contents[0].parts[0].text, /Tema: derivadas/)
+    await assert.rejects(generateChallenge({ topic: 'x' }), RouteRequestError)
   }))

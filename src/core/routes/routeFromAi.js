@@ -56,7 +56,8 @@ function toLesson(lesson, lessonId) {
   return { id: lessonId, title: cleanTitle(lesson.title) || 'Lección', theory, exercises }
 }
 
-function toExercise(exercise, id) {
+/** One exercise from the model's flat shape, or null when it breaks the rules. */
+export function toExercise(exercise, id) {
   const prompt = clean(exercise.prompt)
   if (!prompt) return null
   const base = { id, type: exercise.type, prompt }

@@ -4,8 +4,6 @@ import Logo from '../../ui/Logo.jsx'
 import MarkLast from '../../ui/MarkLast.jsx'
 import './feria.css'
 
-const PLATFORM_PATH = '/inicio'
-
 const VIDEO_SRC = '/video/explain-video.mp4'
 // Optional: an embed URL (YouTube or Vimeo) takes precedence over the local file.
 const VIDEO_EMBED_URL = null
@@ -455,9 +453,9 @@ function FeriaPage() {
 
         <section className="feria__cta" aria-labelledby="probar" data-reveal>
           <h2 id="probar">Pruébala tú</h2>
-          <p>Entra a la plataforma y arma tu primera ruta.</p>
-          <Link to={PLATFORM_PATH} className="btn-primary">
-            Probar la plataforma
+          <p>5 preguntas contra el reloj, la IA comenta tu explicación y entras al ranking del día.</p>
+          <Link to="/reto" className="btn-primary">
+            Jugar el reto
           </Link>
         </section>
       </main>

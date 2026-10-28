@@ -1,9 +1,21 @@
-import { lazy, Suspense } from 'react'
-import { BrowserRouter, Outlet, Route, Routes, useMatch } from 'react-router-dom'
+import { lazy, Suspense, useEffect } from 'react'
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation, useMatch, useNavigate } from 'react-router-dom'
 import { COURSES } from '../content/courses/index.js'
 import { usePlayerStats } from '../hooks/usePlayerStats.js'
 import { appEvents } from './appEvents.js'
 import AppHeader from './AppHeader.jsx'
+import {
+  asksForDemoMode,
+  DEMO_FORCED,
+  DEMO_HOME,
+  DEMO_OFF_PATH,
+  DEMO_ON_PATH,
+  isDemoMode,
+  isDemoPath,
+  locksOnVisit,
+  markOrganizerDevice,
+  setDemoMode,
+} from './demoMode.js'
 import { studentRepository } from './progressRepository.js'
 import StudentProvider from '../features/students/StudentProvider.jsx'
 import { useProgressRepository } from '../features/students/studentContext.js'
@@ -44,6 +56,9 @@ function AppShell() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route element={<DemoGate />}>
+        <Route path={DEMO_ON_PATH} element={<DemoSwitch on />} />
+        <Route path={DEMO_OFF_PATH} element={<DemoSwitch on={false} />} />
         <Route path="/" element={<LandingPage />} />
         <Route path="/feria" element={<FeriaPage />} />
         <Route
@@ -74,9 +89,43 @@ function AppShell() {
           <Route path="/curso/:courseId" element={<CoursePage />} />
           <Route path="/curso/:courseId/leccion/:lessonId" element={<LessonPage />} />
         </Route>
+        </Route>
       </Routes>
     </BrowserRouter>
   )
+}
+
+/**
+ * In modo feria, anything outside the demo sends the visitor to the Reto.
+ * Opening `/feria` (the printed QR) turns it on, except on the organizer's device.
+ */
+function DemoGate() {
+  const { pathname, search } = useLocation()
+  const asked = asksForDemoMode(search) || locksOnVisit(pathname)
+
+  useEffect(() => {
+    if (asked) setDemoMode(true)
+  }, [asked])
+
+  if ((asked || isDemoMode()) && !isDemoPath(pathname)) return <Navigate to={DEMO_HOME} replace />
+  return <Outlet />
+}
+
+function DemoSwitch({ on }) {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (DEMO_FORCED) return
+    setDemoMode(on)
+    // Whoever turns it off is the organizer: /feria stops locking this device.
+    if (!on) markOrganizerDevice()
+    navigate(on ? DEMO_HOME : '/inicio', { replace: true })
+  }, [on, navigate])
+
+  if (DEMO_FORCED) {
+    return <p role="status">Esta versión de APROPIA siempre está en modo feria.</p>
+  }
+  return <p role="status">{on ? 'Activando el modo feria…' : 'Saliendo del modo feria. Este equipo queda como organizador…'}</p>
 }
 
 function AppLayout({ stats }) {
@@ -90,7 +139,7 @@ function AppLayout({ stats }) {
       <a className="skip-link" href="#contenido">
         Saltar al contenido
       </a>
-      <AppHeader stats={stats} immersive={immersive} />
+      <AppHeader stats={stats} immersive={immersive} demo={isDemoMode()} />
 
       <main className="app-main" id="contenido" tabIndex={-1}>
         <Suspense fallback={<p role="status">Cargando…</p>}>

@@ -1,22 +1,28 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { routeStore } from '../../app/courseCatalog.js'
 import { CHALLENGE_TOPICS } from '../../content/challenges/index.js'
-import { addDays, todayIso } from '../../core/routes/studyPlan.js'
+import { SAMPLE_NOTES } from '../../content/challenges/sampleNotes.js'
+import { todayIso } from '../../core/routes/studyPlan.js'
+import Icon from '../../ui/Icon.jsx'
 import Panel from '../../ui/Panel.jsx'
 import Leaderboard from './Leaderboard.jsx'
 import { leaderboard } from './leaderboardStore.js'
+import { saveOwnChallenge } from './ownChallenge.js'
 import { CHALLENGE_BOARD_PATH, challengePlayPath, OWN_TOPIC_ID } from './paths.js'
 import '../routes/routes.css'
 import './challenge.css'
 
-const OWN_TOPIC_TIMEOUT_MS = 90_000
+const OWN_TOPIC_TIMEOUT_MS = 45_000
+const MIN_TOPIC_CHARS = 3
 const MIN_NOTES_CHARS = 80
+const MAX_TOPIC_CHARS = 80
 
 function ChallengeHomePage() {
   const navigate = useNavigate()
   const [top] = useState(() => leaderboard.top(todayIso(), 5))
+  const [ownTopic, setOwnTopic] = useState('')
   const [notes, setNotes] = useState('')
+  const [showNotes, setShowNotes] = useState(false)
   const [status, setStatus] = useState('idle') // idle | working | error
   const [error, setError] = useState('')
   const [elapsed, setElapsed] = useState(0)
@@ -31,9 +37,11 @@ function ChallengeHomePage() {
 
   useEffect(() => () => abortRef.current?.abort(), [])
 
+  const canBuild = ownTopic.trim().length >= MIN_TOPIC_CHARS || notes.trim().length >= MIN_NOTES_CHARS
+
   async function handleOwnTopic(event) {
     event.preventDefault()
-    if (notes.trim().length < MIN_NOTES_CHARS) return
+    if (!canBuild) return
     const controller = new AbortController()
     abortRef.current = controller
     const timeout = setTimeout(() => controller.abort(), OWN_TOPIC_TIMEOUT_MS)
@@ -42,19 +50,17 @@ function ChallengeHomePage() {
     setError('')
 
     try {
-      const response = await fetch('/api/generar-ruta', {
+      const response = await fetch('/api/generar-reto', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: notes, size: 'mini' }),
+        body: JSON.stringify({ topic: ownTopic, notes: showNotes ? notes : '' }),
         signal: controller.signal,
       })
       const data = await response.json().catch(() => ({}))
-      if (!response.ok || !data.course) throw new Error(data.error ?? 'No pudimos armar tu reto.')
+      if (!response.ok || !data.questions) throw new Error(data.error ?? 'No pudimos armar tu reto.')
 
-      // The route stays: after the round the visitor can open the full plan.
-      const today = todayIso()
-      routeStore.save({ course: data.course, examDate: addDays(today, 7), startDate: today, createdAt: new Date().toISOString(), source: 'ia' })
-      navigate(challengePlayPath(OWN_TOPIC_ID, data.course.id))
+      saveOwnChallenge({ title: data.title, questions: data.questions })
+      navigate(challengePlayPath(OWN_TOPIC_ID))
     } catch (caught) {
       if (abortRef.current !== controller) return
       setStatus('error')
@@ -67,22 +73,25 @@ function ChallengeHomePage() {
   return (
     <section className="reto-home">
       <header className="reto-home__hero">
-        <p className="label">Reto APROPIA</p>
         <h1>
           5 preguntas. <span className="mark">Contra el reloj.</span>
         </h1>
-        <p>Elige un tema, responde rápido y entra al ranking del día. La última pregunta te pide explicar con tus palabras, y la IA te dice qué te faltó.</p>
+        <p>Elige un tema, responde rápido y entra al ranking del día. La última pregunta te pide explicarlo con tus palabras, y la IA te dice qué te faltó.</p>
       </header>
 
       <div className="reto-home__layout">
         <div className="reto-home__main">
-          <h2 className="label">Elige tu reto</h2>
+          <h2 className="reto-home__heading">Elige tu reto</h2>
           <ul className="reto-topics">
-            {CHALLENGE_TOPICS.map((topic) => (
-              <li key={topic.id}>
+            {CHALLENGE_TOPICS.map((topic, i) => (
+              <li key={topic.id} style={{ '--i': i }}>
                 <Link to={challengePlayPath(topic.id)} className="reto-topic">
                   <span className="reto-topic__title">{topic.title}</span>
                   <span className="reto-topic__meta">{topic.subtitle}</span>
+                  <span className="reto-topic__go">
+                    5 preguntas · 2 min
+                    <Icon name="forward" size={20} />
+                  </span>
                 </Link>
               </li>
             ))}
@@ -94,21 +103,59 @@ function ChallengeHomePage() {
             </h2>
             {status === 'working' ? (
               <div className="reto-own__working" aria-live="polite">
-                <p className="state state--proceso">La IA está armando tu reto con tus apuntes</p>
+                <p className="state state--proceso">La IA está escribiendo tus 5 preguntas</p>
                 <p className="notes__elapsed">{Math.round(elapsed / 1000)} s</p>
               </div>
             ) : (
               <form onSubmit={handleOwnTopic} className="notes__form">
                 <label className="notes__field">
-                  <span>Pega un párrafo de tus apuntes o de una guía. La IA arma las preguntas en unos segundos.</span>
-                  <textarea rows={5} value={notes} onChange={(event) => setNotes(event.target.value)} placeholder="Por ejemplo: la definición de derivada, las reglas que viste en clase…" />
+                  <span>Escribe lo que estás estudiando y la IA arma tus 5 preguntas en unos segundos.</span>
+                  <input
+                    type="text"
+                    className="reto-own__topic"
+                    value={ownTopic}
+                    onChange={(event) => setOwnTopic(event.target.value)}
+                    maxLength={MAX_TOPIC_CHARS}
+                    placeholder="Ej.: leyes de Newton, la Revolución francesa, verbos en inglés"
+                    autoComplete="off"
+                  />
                 </label>
+                {showNotes ? (
+                  <div className="reto-own__notes">
+                    <label className="notes__field">
+                      <span>Tus apuntes (opcional): la IA pregunta solo sobre lo que pegues.</span>
+                      <textarea rows={5} value={notes} onChange={(event) => setNotes(event.target.value)} maxLength={4000} placeholder="Pega un párrafo de tu guía o tus notas." />
+                    </label>
+                    <p className="reto-own__tip">
+                      Funciona mejor con 3 a 6 frases que tengan definiciones, reglas o datos concretos. Mira un ejemplo:
+                    </p>
+                    <div className="reto-own__samples">
+                      {SAMPLE_NOTES.map((sample) => (
+                        <button
+                          key={sample.topic}
+                          type="button"
+                          className="reto-own__sample"
+                          onClick={() => {
+                            setOwnTopic(sample.topic)
+                            setNotes(sample.notes)
+                          }}
+                        >
+                          {sample.topic}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <button type="button" className="notes__link reto-own__more" onClick={() => setShowNotes(true)}>
+                    Pegar un párrafo de mis apuntes
+                  </button>
+                )}
                 {error && (
                   <p role="alert" className="notes__error">
                     {error}
                   </p>
                 )}
-                <button type="submit" className="btn-secondary" disabled={notes.trim().length < MIN_NOTES_CHARS}>
+                <button type="submit" className="btn-secondary" disabled={!canBuild}>
                   Armar mi reto
                 </button>
               </form>
@@ -117,7 +164,7 @@ function ChallengeHomePage() {
         </div>
 
         <Panel as="aside" featured className="reto-home__board" aria-label="Top del día">
-          <h2 className="label">Top del día</h2>
+          <h2 className="reto-home__heading">Top del día</h2>
           <Leaderboard entries={top} />
           <Link to={CHALLENGE_BOARD_PATH} className="reto-home__board-link">
             Abrir el ranking en pantalla completa

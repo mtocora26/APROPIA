@@ -108,3 +108,27 @@ function shuffle(list, random) {
   }
   return copy
 }
+
+const NUMBER_WORDS = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce']
+
+/**
+ * Typed answers in the Reto are forgiving: against the clock, «aceleracion»
+ * and «aceleración», or «3» and «tres», are the same answer. (Lessons keep
+ * accents strict: in Italian «è» and «e» are different words.)
+ */
+export function normalizeChallengeText(value) {
+  const text = String(value ?? '')
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+    .replace(/[.,;:!?¡¿"'«»]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  const number = NUMBER_WORDS.indexOf(text)
+  return number === -1 ? text : String(number)
+}
+
+export function isTypedAnswerRight(value, exercise) {
+  const answer = normalizeChallengeText(value)
+  return answer !== '' && [exercise.answer, ...(exercise.alternatives ?? [])].some((accepted) => normalizeChallengeText(accepted) === answer)
+}

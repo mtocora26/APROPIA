@@ -71,7 +71,7 @@
 .notes__error {
   margin: 0;
   padding: var(--space-3);
-  border-left: 2px solid var(--state-refuerzo);
+  border: 1px solid var(--state-refuerzo);
   color: var(--ink);
 }
 

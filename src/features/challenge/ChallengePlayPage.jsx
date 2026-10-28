@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { routeStore } from '../../app/courseCatalog.js'
-import { exercisesByLesson, findChallengeTopic } from '../../content/challenges/index.js'
-import { isExplanation, pickQuestions, POINTS, scoreAnswer, summarize, timeLimitFor } from '../../core/challenge/challenge.js'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { findChallengeTopic } from '../../content/challenges/index.js'
+import { isExplanation, isTypedAnswerRight, pickQuestions, POINTS, scoreAnswer, summarize, timeLimitFor } from '../../core/challenge/challenge.js'
 import { normalizeAlias, ALIAS_MAX_LENGTH } from '../../core/challenge/leaderboard.js'
 import { todayIso } from '../../core/routes/studyPlan.js'
 import { STATE_LABELS } from '../course/courseMap.js'
 import { ANSWER_COMPONENTS } from '../exercises/types/answerComponents.js'
 import ExercisePrompt from '../exercises/types/ExercisePrompt.jsx'
 import { checkAnswer, correctAnswerText, prepareExercise } from '../exercises/types/exerciseLogic.js'
-import { routePlanPath } from '../routes/paths.js'
 import Icon from '../../ui/Icon.jsx'
 import Panel from '../../ui/Panel.jsx'
 import ExplanationAnswer from './ExplanationAnswer.jsx'
 import Leaderboard from './Leaderboard.jsx'
 import { leaderboard } from './leaderboardStore.js'
+import { loadOwnChallenge } from './ownChallenge.js'
 import { CHALLENGE_PATH, OWN_TOPIC_ID } from './paths.js'
 import QuestionTimer from './QuestionTimer.jsx'
+import { useCountUp } from './useCountUp.js'
 import '../exercises/ExerciseContainer.css'
 import '../exercises/types/exerciseTypes.css'
 import './challenge.css'
@@ -26,13 +26,11 @@ const KIOSK_RESET_MS = 45_000
 
 function ChallengePlayPage() {
   const { topicId } = useParams()
-  const [searchParams] = useSearchParams()
   const [round, setRound] = useState(0)
 
-  const ownRoute = topicId === OWN_TOPIC_ID ? routeStore.get(searchParams.get('ruta') ?? '') : null
-  const topic = ownRoute
-    ? { id: OWN_TOPIC_ID, title: ownRoute.course.title, course: () => ownRoute.course }
-    : findChallengeTopic(topicId)
+  // The own round comes from «Trae tu tema» (sessionStorage); the rest from the banks.
+  const own = topicId === OWN_TOPIC_ID ? loadOwnChallenge() : null
+  const topic = own ? { id: OWN_TOPIC_ID, title: own.title, language: 'es', questions: own.questions } : findChallengeTopic(topicId)
 
   if (!topic) {
     return (
@@ -43,15 +41,12 @@ function ChallengePlayPage() {
   }
 
   // A new key remounts the round: new questions, clock and score.
-  return <ChallengeRound key={`${topicId}-${round}`} topic={topic} ownRoute={ownRoute} onReplay={() => setRound((n) => n + 1)} />
+  return <ChallengeRound key={`${topicId}-${round}`} topic={topic} onReplay={() => setRound((n) => n + 1)} />
 }
 
-function ChallengeRound({ topic, ownRoute, onReplay }) {
-  const [course] = useState(() => topic.course())
-  const context = { alphabet: course.alphabet }
-  const [items] = useState(() =>
-    pickQuestions(exercisesByLesson(course)).map((exercise) => prepareExercise(exercise, { alphabet: course.alphabet })),
-  )
+function ChallengeRound({ topic, onReplay }) {
+  const context = {}
+  const [items] = useState(() => pickQuestions([topic.questions]).map((exercise) => prepareExercise(exercise)))
   const [phase, setPhase] = useState('ready') // ready | question | feedback | done
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState([])
@@ -81,7 +76,7 @@ function ChallengeRound({ topic, ownRoute, onReplay }) {
       record({ correct, points, value: { ...value, verdict } })
       return
     }
-    const correct = checkAnswer(value, item, context)
+    const correct = item.type === 'typed' ? isTypedAnswerRight(value, item) : checkAnswer(value, item, context)
     const combo = correct ? streakBefore(answers) + 1 : 0
     const points = scoreAnswer({ correct, elapsedMs: Date.now() - startedAt, limitMs, combo })
     record({ correct, points, value })
@@ -110,7 +105,6 @@ function ChallengeRound({ topic, ownRoute, onReplay }) {
         <Link to={CHALLENGE_PATH} className="app-back">
           <Icon name="back" size={16} /> Elegir otro tema
         </Link>
-        <p className="label">Reto APROPIA</p>
         <h1>{topic.title}</h1>
         <ul className="reto-ready__rules">
           <li>{items.length} preguntas contra el reloj.</li>
@@ -125,23 +119,17 @@ function ChallengeRound({ topic, ownRoute, onReplay }) {
   }
 
   if (phase === 'done') {
-    return <ChallengeResult topic={topic} ownRoute={ownRoute} answers={answers} onReplay={onReplay} />
+    return <ChallengeResult topic={topic} answers={answers} onReplay={onReplay} />
   }
 
   const Answer = isExplanation(item) ? ExplanationAnswer : ANSWER_COMPONENTS[item.type]
-  const score = answers.reduce((sum, answer) => sum + answer.points, 0)
   const streak = streakBefore(answers)
 
   return (
-    <section className="reto-play">
+    <section className="reto-play exercise">
       <header className="reto-play__header">
-        <span className="label">
-          Pregunta {index + 1} de {items.length}
-        </span>
-        <span className="reto-play__score">
-          {streak >= 2 && <span className="reto-play__streak">Racha ×{streak}</span>}
-          <span className="label">Puntos</span> {score}
-        </span>
+        <RoundProgress total={items.length} index={index} answers={answers} />
+        <Score answers={answers} streak={streak} />
       </header>
 
       {limitMs ? (
@@ -150,12 +138,13 @@ function ChallengeRound({ topic, ownRoute, onReplay }) {
         <p className="reto-play__untimed">Sin reloj: tómate el tiempo de explicarlo bien.</p>
       )}
 
-      <Panel featured className="exercise__prompt">
+      {/* `key` replays the entrance on every new question. */}
+      <Panel key={`prompt-${item.id}`} featured className="exercise__prompt reto-play__prompt">
         <ExercisePrompt exercise={item} />
       </Panel>
 
       <div key={`answer-${item.id}`} className="exercise__answer">
-        <Answer exercise={item} onAnswer={handleAnswer} disabled={phase !== 'question'} language={course.language} theory={[]} />
+        <Answer exercise={item} onAnswer={handleAnswer} disabled={phase !== 'question'} language={topic.language} theory={[]} />
       </div>
 
       {phase === 'feedback' && last && (
@@ -164,7 +153,7 @@ function ChallengeRound({ topic, ownRoute, onReplay }) {
             {last.timedOut ? 'Se acabó el tiempo' : feedbackTitle(item, last)}
             {last.points > 0 && <span className="reto-play__gain"> +{last.points}</span>}
           </p>
-          {isExplanation(item) && last.value?.feedback && <p className="reto-play__ai">{last.value.feedback}</p>}
+          {isExplanation(item) && <ExplanationReview review={last.value} modelAnswer={item.modelAnswer} />}
           {!isExplanation(item) && !last.correct && (
             <p className="exercise-feedback__answer">
               Respuesta: <strong>{correctAnswerText(item, context)}</strong>
@@ -180,7 +169,7 @@ function ChallengeRound({ topic, ownRoute, onReplay }) {
   )
 }
 
-function ChallengeResult({ topic, ownRoute, answers, onReplay }) {
+function ChallengeResult({ topic, answers, onReplay }) {
   const navigate = useNavigate()
   const summary = summarize(answers)
   const day = todayIso()
@@ -204,13 +193,13 @@ function ChallengeResult({ topic, ownRoute, answers, onReplay }) {
 
   return (
     <section className="reto-play reto-result">
-      <p className="label">Reto · {topic.title}</p>
-      <p className="reto-result__score">
-        {summary.score}
-        <span className="label">puntos</span>
-      </p>
+      <h1 className="reto-result__score">
+        <ResultScore value={summary.score} />
+        <span className="reto-result__unit">puntos</span>
+      </h1>
       <p className="reto-result__line">
-        {summary.correct} de {summary.total} bien · <span className={`state state--${summary.mastery}`}>{STATE_LABELS[summary.mastery]}</span>
+        {summary.correct} de {summary.total} bien en {topic.title} ·{' '}
+        <span className={`state state--${summary.mastery}`}>{STATE_LABELS[summary.mastery]}</span>
       </p>
 
       {saved ? (
@@ -219,7 +208,7 @@ function ChallengeResult({ topic, ownRoute, answers, onReplay }) {
         </p>
       ) : (
         <form className="reto-result__form" onSubmit={handleSave}>
-          <label className="notes__field">
+          <label className="reto-result__field">
             <span className="label">Tu alias para el ranking</span>
             <input
               type="text"
@@ -238,24 +227,83 @@ function ChallengeResult({ topic, ownRoute, answers, onReplay }) {
       )}
 
       <Panel as="section" className="reto-result__board">
-        <h2 className="label">Top del día</h2>
+        <h2 className="reto-home__heading">Top del día</h2>
         <Leaderboard entries={board} highlightId={saved?.entry.id} />
       </Panel>
 
       <div className="reto-result__actions">
-        <Link to={CHALLENGE_PATH} className="btn-primary">
+        {/* Before saving, saving is the one primary action. */}
+        <Link to={CHALLENGE_PATH} className={saved ? 'btn-primary' : 'btn-secondary'}>
           Siguiente jugador
         </Link>
         <button type="button" className="btn-secondary" onClick={onReplay}>
           Jugar otra vez
         </button>
-        {ownRoute && (
-          <Link to={routePlanPath(ownRoute.course.id)} className="btn-secondary">
-            Ver tu ruta completa
-          </Link>
-        )}
       </div>
     </section>
+  )
+}
+
+/** One block per question: done right (Dominio), to reinforce, current, pending. */
+function RoundProgress({ total, index, answers }) {
+  return (
+    <div className="reto-progress">
+      <ol className="reto-progress__blocks" aria-hidden="true">
+        {Array.from({ length: total }, (_, i) => {
+          const answer = answers[i]
+          let state = 'pending'
+          if (answer) state = answer.correct ? 'dominio' : 'refuerzo'
+          else if (i === index) state = 'current'
+          return <li key={i} className={`reto-progress__block reto-progress__block--${state}`} />
+        })}
+      </ol>
+      <span className="reto-progress__text">
+        Pregunta {index + 1} de {total}
+      </span>
+    </div>
+  )
+}
+
+function Score({ answers, streak }) {
+  const total = answers.reduce((sum, answer) => sum + answer.points, 0)
+  const shown = useCountUp(total)
+  return (
+    <p className="reto-score">
+      {streak >= 2 && <span className="reto-score__streak">Racha ×{streak}</span>}
+      <span className="reto-score__value">{shown}</span>
+      <span className="reto-score__unit">puntos</span>
+    </p>
+  )
+}
+
+function ResultScore({ value }) {
+  return <>{useCountUp(value, { duration: 900, from: 0 })}</>
+}
+
+/**
+ * What the AI found right, what is missing, and then a possible answer: the
+ * student wrote theirs first, so seeing one now is the payoff, not a shortcut.
+ */
+function ExplanationReview({ review, modelAnswer }) {
+  return (
+    <dl className="reto-review">
+      {review?.good && (
+        <div className="reto-review__row reto-review__row--good">
+          <dt>Lo que hiciste bien</dt>
+          <dd>{review.good}</dd>
+        </div>
+      )}
+      {review?.missing && (
+        <div className="reto-review__row reto-review__row--missing">
+          <dt>Te falta</dt>
+          <dd>{review.missing}</dd>
+        </div>
+      )}
+      <div className="reto-review__row reto-review__row--model">
+        <dt>Una respuesta posible</dt>
+        <dd>{modelAnswer}</dd>
+      </div>
+    </dl>
   )
 }
 

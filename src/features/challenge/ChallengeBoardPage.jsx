@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { isDemoMode } from '../../app/demoMode.js'
 import { todayIso } from '../../core/routes/studyPlan.js'
 import Logo from '../../ui/Logo.jsx'
 import Leaderboard from './Leaderboard.jsx'
@@ -48,10 +49,12 @@ function ChallengeBoardPage() {
       <p className="reto-board__cta">
         Juega en el stand: 5 preguntas contra el reloj. <Link to={CHALLENGE_PATH}>Ir al reto</Link>
       </p>
-      {/* For the booth staff: wipe the test runs before opening. */}
-      <button type="button" className="reto-board__clear" onClick={handleClear}>
-        Borrar el ranking de hoy
-      </button>
+      {/* For the booth staff, outside modo feria: wipe the test runs before opening. */}
+      {!isDemoMode() && (
+        <button type="button" className="reto-board__clear" onClick={handleClear}>
+          Borrar el ranking de hoy
+        </button>
+      )}
     </main>
   )
 }
