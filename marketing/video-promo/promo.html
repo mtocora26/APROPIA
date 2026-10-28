@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Apropia Promo</title>
+<style>
+@font-face{font-family:"Chakra Petch";font-weight:500;src:url(node_modules/@fontsource/chakra-petch/files/chakra-petch-latin-500-normal.woff2)}
+@font-face{font-family:"Chakra Petch";font-weight:600;src:url(node_modules/@fontsource/chakra-petch/files/chakra-petch-latin-600-normal.woff2)}
+@font-face{font-family:"Chakra Petch";font-weight:700;src:url(node_modules/@fontsource/chakra-petch/files/chakra-petch-latin-700-normal.woff2)}
+@font-face{font-family:"Barlow";font-weight:400;src:url(node_modules/@fontsource/barlow/files/barlow-latin-400-normal.woff2)}
+@font-face{font-family:"Barlow";font-weight:500;src:url(node_modules/@fontsource/barlow/files/barlow-latin-500-normal.woff2)}
+@font-face{font-family:"Barlow";font-weight:600;src:url(node_modules/@fontsource/barlow/files/barlow-latin-600-normal.woff2)}
+
+/* Tokens copiados de tokens.css del repo */
+:root{
+  --bg:#0d0f12; --surface:#12161a; --line:#262c33; --line-strong:#5a6570;
+  --ink:#eceff1; --ink-muted:#8c97a0; --accent:#c9f31d; --on-accent:#0d0f12;
+  --dominio:#6cc4ff; --refuerzo:#ff8a4c;
+  --display:"Chakra Petch",system-ui,sans-serif; --body:"Barlow",system-ui,sans-serif;
+  --cut:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;background:var(--bg);overflow:hidden;font-family:var(--body)}
+body.v #stage{width:1080px;height:1920px}
+
+.scene{position:absolute;inset:0;opacity:0;padding:110px 130px;display:flex;flex-direction:column;justify-content:center}
+body.v .scene{padding:140px 80px}
+.label{font-family:var(--display);font-weight:500;font-size:22px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-muted)}
+.big{font-family:var(--display);font-weight:700;font-size:112px;line-height:1.02;letter-spacing:-.01em;text-wrap:balance}
+.huge{font-family:var(--display);font-weight:700;font-size:300px;line-height:.9;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lead{font-family:var(--body);font-weight:500;font-size:76px;line-height:1.12;max-width:1500px;text-wrap:balance}
+.src{font-size:26px;color:var(--ink-muted);font-family:var(--body)}
+body.v .big{font-size:104px}
+body.v .huge{font-size:230px}
+body.v .lead{font-size:60px}
+
+/* Marcatextos: capa base + capa lima recortada */
+.hl{position:relative;display:inline-block;white-space:nowrap}
+.hl>.b,.hl>.t{padding:0 .12em;margin:0 -.12em}
+.hl>.t{position:absolute;inset:0;background:var(--accent);color:var(--on-accent);clip-path:inset(0 100% 0 0)}
+
+/* Medidor segmentado */
+.meter{display:flex;gap:10px}
+.meter i{display:block;width:40px;height:40px;background:var(--line)}
+.meter i.on{background:var(--accent)}
+.meter.sm i{width:22px;height:14px}
+.meter.sm{gap:5px}
+
+/* Escenas de problema */
+.stat{display:flex;flex-direction:column;gap:34px}
+.stat .row{display:flex;align-items:flex-end;gap:60px}
+body.v .stat .row{flex-direction:column;align-items:flex-start;gap:30px}
+body.v .meter i{width:34px;height:26px}
+body.v .meter{gap:8px}
+
+/* Logo */
+.logo{display:flex;align-items:center;gap:56px}
+.logo svg{width:189px;height:165px;overflow:visible}
+.logo .wm{height:118px;width:auto;margin-top:2px}
+.center{align-items:center;text-align:center}
+.slogan{font-family:var(--display);font-weight:600;font-size:76px;margin-top:70px;letter-spacing:-.005em}
+body.v .logo{flex-direction:column;gap:56px}
+body.v .logo svg{width:340px;height:297px}
+body.v .logo .wm{height:104px}
+body.v .slogan{font-size:78px;text-wrap:balance}
+
+/* Demo: pie de foto + interfaz */
+.split{display:grid;grid-template-columns:640px 1fr;gap:90px;align-items:center;height:100%}
+body.v .split{grid-template-columns:1fr;grid-template-rows:auto auto;gap:70px;align-items:start;height:auto}
+body.v .ui{zoom:1.17}
+.cap{display:flex;flex-direction:column;gap:26px}
+.cap .num{font-family:var(--display);font-weight:600;font-size:30px;letter-spacing:.2em;color:var(--accent)}
+.cap .big{font-size:96px}
+.cap .sub{font-size:40px;color:var(--ink-muted);line-height:1.2;text-wrap:balance}
+body.v .cap .big{font-size:100px}
+body.v .cap .sub{font-size:44px}
+
+.ui{position:relative;font-size:28px}
+.panel{background:var(--surface);border:1px solid var(--line);padding:44px 52px;position:relative;
+  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)))}
+.panel.feat{border-left:6px solid var(--accent)}
+.ui h3{font-family:var(--display);font-weight:700;font-size:54px;line-height:1.05;margin:10px 0 0}
+.field{display:flex;flex-direction:column;gap:12px;margin-top:30px}
+.box{border:2px solid var(--line-strong);background:var(--bg);padding:18px 22px;font-size:28px;min-height:72px;display:flex;align-items:center;gap:18px}
+.box.drop{border-style:dashed;min-height:120px}
+.chip{display:flex;align-items:center;gap:16px;font-family:var(--display);font-weight:600;font-size:28px}
+.chip .ico{width:40px;height:48px;border:3px solid var(--ink);position:relative;clip-path:polygon(0 0,70% 0,100% 25%,100% 100%,0 100%)}
+.chip small{font-family:var(--body);color:var(--ink-muted);font-size:24px;font-weight:400}
+.notes{font-size:24px;line-height:1.45;color:var(--ink-muted);align-items:flex-start;min-height:150px}
+.btn{display:inline-flex;margin-top:36px;background:var(--accent);color:var(--on-accent);font-family:var(--display);font-weight:700;
+  font-size:28px;letter-spacing:.14em;text-transform:uppercase;padding:24px 46px;
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px))}
+.caret{display:inline-block;width:3px;height:1.1em;background:var(--ink);margin-left:2px;vertical-align:-.15em}
+.cursor{position:absolute;width:44px;height:56px;left:0;top:0;z-index:5;opacity:0;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))}
+
+/* Pasos */
+.steps{list-style:none;display:flex;flex-direction:column;gap:26px;margin-top:34px}
+.steps li{display:flex;align-items:center;gap:24px;font-size:36px;font-weight:500;color:var(--ink-muted)}
+.mk{width:28px;height:28px;flex:none;border:3px solid var(--line-strong)}
+.steps li.done{color:var(--ink)}
+.steps li.done .mk{background:var(--dominio);border-color:var(--dominio)}
+.steps li.cur{color:var(--ink)}
+.steps li.cur .mk{border-color:var(--accent);background:transparent;position:relative}
+.steps li.cur .mk::after{content:"";position:absolute;inset:5px;background:var(--accent)}
+.steps .st{margin-left:auto;font-family:var(--display);font-size:20px;letter-spacing:.18em;text-transform:uppercase}
+.steps li.done .st{color:var(--dominio)}
+.steps li.cur .st{color:var(--accent)}
+
+/* Ruta */
+.stats{display:flex;gap:56px;margin-top:22px}
+.stats dd{font-family:var(--display);font-weight:600;font-size:34px;margin-top:4px}
+.days{display:flex;flex-direction:column;gap:16px;margin-top:28px}
+.day{background:var(--surface);border:1px solid var(--line);padding:22px 30px}
+.day.today{border-left:6px solid var(--accent)}
+.day .d{display:flex;gap:18px;align-items:baseline;font-family:var(--display);font-weight:600;font-size:28px}
+.day .d .label{font-size:18px}
+.day.today .d .label{color:var(--accent)}
+.lesson{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:26px}
+.lesson .m{font-size:22px;color:var(--ink-muted);display:flex;align-items:center;gap:12px}
+.state{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-size:18px;letter-spacing:.14em;text-transform:uppercase}
+.state::before{content:"";width:14px;height:14px;display:inline-block}
+.state.proceso{color:var(--accent)} .state.proceso::before{background:var(--accent)}
+.state.pend{color:var(--ink-muted)} .state.pend::before{border:2px solid var(--line-strong)}
+.state.dominio{color:var(--dominio)} .state.dominio::before{background:var(--dominio)}
+.review{font-size:24px;color:var(--ink-muted);margin-top:10px}
+.review b{color:var(--refuerzo);font-weight:600}
+
+/* Práctica */
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:24px}
+.qhead .label{white-space:nowrap}
+body.v .qhead .meter.sm i{width:14px}
+.q{font-family:var(--display);font-weight:600;font-size:44px;line-height:1.15;margin:30px 0 28px;text-wrap:balance}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.opt{border:2px solid var(--line-strong);padding:22px 24px;font-size:28px;font-weight:500;display:flex;align-items:center;gap:16px;background:var(--bg)}
+.opt .k{font-family:var(--display);font-size:20px;color:var(--ink-muted);border:2px solid var(--line-strong);width:38px;height:38px;display:grid;place-items:center;flex:none}
+.opt.ok{border-color:var(--dominio)}
+.opt.ok .k{background:var(--dominio);border-color:var(--dominio);color:var(--bg)}
+.fb{margin-top:26px;display:flex;flex-direction:column;gap:10px}
+.fb p{font-size:28px;color:var(--ink-muted)}
+.fb .state{font-size:24px}
+.fb .state::before{width:18px;height:18px}
+.boxes{display:flex;gap:14px;margin-top:30px;align-items:center}
+.boxes span{font-family:var(--display);font-weight:600;font-size:26px;border:2px solid var(--line-strong);padding:10px 18px}
+.boxes span.on{border-color:var(--accent);color:var(--accent)}
+.boxes em{font-style:normal;font-size:24px;color:var(--ink-muted);margin-right:8px}
+
+/* Cierre */
+.cta{margin-top:80px;display:flex;align-items:center;gap:48px}
+.cta .txt{font-family:var(--display);font-weight:600;font-size:44px;text-align:left}
+.cta .txt small{display:block;font-family:var(--body);font-weight:500;font-size:28px;color:var(--ink-muted);margin-top:8px}
+.qr{background:#fff;padding:18px;width:260px;height:260px}
+.qr svg{width:100%;height:100%;display:block}
+body.v .cta{flex-direction:column;gap:36px}
+body.v .cta .txt{text-align:center}
+body.v .qr{width:380px;height:380px}
+.pre{font-family:var(--display);font-weight:600;font-size:56px;color:var(--ink-muted)}
+body.v .scene#s4 .pre{margin-bottom:70px}
+.vonly{display:none}
+body.v .vonly{display:block}
+
+/* Invitación */
+.inv{display:flex;flex-direction:column;gap:64px;height:100%;justify-content:center}
+.inv-head{display:flex;flex-direction:column;gap:22px}
+.inv-feria{width:1150px;height:auto}
+.inv-body{display:flex;align-items:stretch;gap:56px}
+.inv-date{flex:none;width:640px;background:var(--accent);color:var(--on-accent);display:flex;flex-direction:column;justify-content:center;padding:34px 40px;
+  clip-path:polygon(0 0,calc(100% - 34px) 0,100% 34px,100% 100%,34px 100%,0 calc(100% - 34px));transform-origin:50% 100%}
+.inv-date .dnum{font-family:var(--display);font-weight:700;font-size:190px;white-space:nowrap;line-height:.82;letter-spacing:-.03em}
+.inv-date .dmon{font-family:var(--display);font-weight:600;font-size:30px;letter-spacing:.18em;text-transform:uppercase;margin-top:22px}
+.inv-rows{display:flex;flex-direction:column;justify-content:center;gap:40px;min-width:0}
+.inv-row{border-left:3px solid var(--line-strong);padding-left:28px;display:flex;flex-direction:column;gap:6px}
+.inv-row p{font-family:var(--display);font-weight:600;font-size:58px;line-height:1.1}
+.inv-row small{font-size:34px;color:var(--ink-muted)}
+.inv-foot{display:flex;align-items:center;gap:52px}
+.inv-foot img{height:84px;width:auto}
+.inv-foot .wmk{display:flex;align-items:center;gap:22px;border-left:2px solid var(--line-strong);padding-left:52px;height:84px}
+.inv-foot .wmk svg{height:66px;width:auto;overflow:visible}
+.inv-foot .wmk img{height:40px;width:auto}
+.inv-scan{position:absolute;left:0;right:0;height:3px;background:var(--accent);opacity:0;box-shadow:0 0 24px rgba(201,243,29,.6)}
+body.v .inv{gap:110px}
+body.v .inv-feria{width:100%}
+body.v .inv-body{flex-direction:column;gap:64px}
+body.v .inv-date{width:100%;flex-direction:column;align-items:flex-start;padding:44px 50px 40px}
+body.v .inv-date .dnum{font-size:240px;white-space:nowrap}
+.inv-date .d2{display:inline-block}
+body.v .inv-date .dmon{font-size:36px;margin-top:26px}
+body.v .inv-row p{font-size:64px}
+body.v .inv-row small{font-size:40px}
+body.v .inv-rows{gap:56px}
+body.v .pre{font-size:64px}
+body.v .inv-foot{justify-content:space-between}
+body.v .inv-foot img{height:116px}
+body.v .inv-foot .wmk{height:116px;gap:22px;padding-left:40px}
+body.v .inv-foot .wmk svg{height:80px}
+body.v .inv-foot .wmk img{height:46px}
+body.v .inv-foot{gap:40px}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- 1 · Dato 91 % -->
+<!-- Redes · gancho -->
+<section class="scene" id="h1">
+  <p class="big" data-at="-0.5">¿Le pides la respuesta a la IA…</p>
+  <p class="big" data-at="1.1" style="margin-top:36px">…y en el parcial <span class="hl" data-hl="1.7"><span class="b">no te acuerdas?</span><span class="t">no te acuerdas?</span></span></p>
+</section>
+
+<!-- Redes · validación -->
+<section class="scene" id="h2">
+  <div class="stat">
+    <p class="pre" data-at="0.05">No eres el único.</p>
+    <div class="row">
+      <span class="huge" data-at="0.4"><span data-count="91" data-at="0.45">0</span> %</span>
+      <div class="meter" data-fill="18" data-n="20" data-at="0.6"></div>
+    </div>
+    <p class="lead" data-at="0.9">de los universitarios usa IA para estudiar.</p>
+    <p class="lead" data-at="2.2">Y al <span class="hl" data-hl="2.7"><span class="b">61 %</span><span class="t">61 %</span></span> nadie le enseñó a hacerlo bien.</p>
+    <p class="src" data-at="1.2">GAD3 y Planeta Formación, 2024</p>
+  </div>
+</section>
+
+<section class="scene" id="s1">
+  <div class="stat">
+    <p class="label" data-at="0.1">El problema</p>
+    <div class="row">
+      <span class="huge" data-at="0.2"><span data-count="91" data-at="0.25">0</span> %</span>
+      <div class="meter" data-fill="18" data-n="20" data-at="0.4"></div>
+    </div>
+    <p class="lead" data-at="0.9">de los universitarios colombianos usa <span class="hl" data-hl="1.7"><span class="b">IA</span><span class="t">IA</span></span> para estudiar.</p>
+    <p class="src" data-at="1.2">GAD3 y Planeta Formación, 2024</p>
+  </div>
+</section>
+
+<!-- 2 · Dato 61 % -->
+<section class="scene" id="s2">
+  <div class="stat">
+    <p class="label" data-at="0.1">El problema</p>
+    <div class="row">
+      <span class="huge" data-at="0.2"><span data-count="61" data-at="0.25">0</span> %</span>
+      <div class="meter" data-fill="12" data-n="20" data-at="0.4"></div>
+    </div>
+    <p class="lead" data-at="0.9">dice que <span class="hl" data-hl="1.7"><span class="b">nadie le enseñó</span><span class="t">nadie le enseñó</span></span> a usarla bien.</p>
+    <p class="src" data-at="1.2">GAD3 y Planeta Formación, 2024</p>
+  </div>
+</section>
+
+<!-- 3 · Copias / aprendiste -->
+<section class="scene" id="s3">
+  <p class="big" data-at="0.15" style="color:var(--ink-muted)">Copias la respuesta.</p>
+  <p class="big" data-at="1.3" style="margin-top:28px">¿La <span class="hl" data-hl="1.9"><span class="b">aprendiste?</span><span class="t">aprendiste?</span></span></p>
+</section>
+
+<!-- 4 · Logo -->
+<section class="scene center" id="s4">
+  <p class="pre vonly" data-at="0">Por eso creamos</p>
+  <div class="logo">
+    <svg viewBox="209 209 782 684" aria-label="Apropia">
+      <rect class="bar" x="209" y="642" width="782" height="167" fill="#c9f31d"/>
+      <path class="arch" d="M349 893 L349 530 A251 251 0 0 1 851 530 L851 893" fill="none" stroke="#eceff1" stroke-width="140"/>
+    </svg>
+    <img class="wm" src="wordmark.png" alt="APROPIA">
+  </div>
+  <p class="slogan" data-at="2.0">Haz tuyo lo que <span class="hl" data-hl="2.6"><span class="b">aprendes</span><span class="t">aprendes</span></span></p>
+</section>
+
+<!-- 5 · Sube tus apuntes -->
+<section class="scene" id="s5">
+  <div class="split">
+    <div class="cap">
+      <span class="num" data-at="0.1">01</span>
+      <p class="big" data-at="0.2">Sube tus apuntes.</p>
+      <p class="sub" data-at="0.5">Guías, diapositivas o tus notas del tema.</p>
+    </div>
+    <div class="ui" data-at="0.35">
+      <div class="panel">
+        <p class="label">Sube tus apuntes</p>
+        <div class="field"><span class="label">Material (PDF o texto)</span>
+          <div class="box drop"><div class="chip" data-at="0.9" data-anim="drop"><span class="ico"></span><span>apuntes-ciclos.txt <small>· texto</small></span></div></div>
+        </div>
+        <div class="field"><span class="label">Fecha del parcial</span>
+          <div class="box"><span data-type="4 / 11 / 2026" data-at="1.7"></span></div>
+        </div>
+        <span class="btn" id="s5btn">Armar mi ruta</span>
+      </div>
+      <svg class="cursor" id="s5cur" viewBox="0 0 22 28"><path d="M1 1 L1 23 L7 17 L11 27 L15 25 L11 16 L19 16 Z" fill="#eceff1" stroke="#0d0f12" stroke-width="1.6"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · Armando tu ruta -->
+<section class="scene" id="s6">
+  <div class="split">
+    <div class="cap">
+      <span class="num" data-at="0.1">02</span>
+      <p class="big" data-at="0.2">La IA arma tu ruta.</p>
+      <p class="sub" data-at="0.5">Lee tu material, ordena los temas y escribe la práctica.</p>
+    </div>
+    <div class="ui" data-at="0.35">
+      <div class="panel feat">
+        <p class="label">Armando tu ruta</p>
+        <ol class="steps" id="s6steps">
+          <li><span class="mk"></span>Leyendo tu material<span class="st"></span></li>
+          <li><span class="mk"></span>Ordenando los temas<span class="st"></span></li>
+          <li><span class="mk"></span>Escribiendo la práctica<span class="st"></span></li>
+          <li><span class="mk"></span>Revisando los ejercicios<span class="st"></span></li>
+        </ol>
+        <div style="margin-top:40px" class="meter sm" id="s6meter" data-n="24"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · Tu ruta -->
+<section class="scene" id="s7">
+  <div class="split">
+    <div class="cap">
+      <span class="num" data-at="0.1">03</span>
+      <p class="big" data-at="0.2">Tu ruta hasta el parcial.</p>
+      <p class="sub" data-at="0.5">Qué estudiar hoy y en qué orden.</p>
+    </div>
+    <div class="ui">
+      <div data-at="0.3">
+        <p class="label">Generada de tus apuntes</p>
+        <h3>Ciclos en <span class="hl" data-hl="0.9"><span class="b">PSeInt</span><span class="t">PSeInt</span></span></h3>
+        <dl class="stats">
+          <div><dt class="label">Parcial</dt><dd>en 7 días</dd></div>
+          <div><dt class="label">Avance</dt><dd>0/5 lecciones</dd></div>
+          <div><dt class="label">Lecciones</dt><dd>3 módulos</dd></div>
+        </dl>
+      </div>
+      <div class="days">
+        <div class="day today" data-at="1.0"><div class="d"><span class="label">Hoy</span>martes 28 de octubre</div>
+          <div class="lesson"><span>¿Qué es un ciclo?</span><span class="m">8 min <span class="state proceso">En proceso</span></span></div>
+          <div class="lesson"><span>Estructura Mientras</span><span class="m">10 min <span class="state pend">Bloqueada</span></span></div>
+        </div>
+        <div class="day" data-at="1.35"><div class="d"><span class="label">Día</span>jueves 30 de octubre</div>
+          <div class="lesson"><span>Repetir … Hasta Que · Estructura Para</span><span class="m">18 min</span></div>
+        </div>
+        <div class="day" data-at="1.7"><div class="d"><span class="label">Día</span>sábado 1 de noviembre</div>
+          <div class="lesson"><span>Contadores y acumuladores</span><span class="m">10 min</span></div>
+        </div>
+        <div class="day" data-at="2.05"><div class="d"><span class="label">Antes del parcial</span>lunes 3 de noviembre</div>
+          <p class="review">Repaso general: vuelve a lo marcado <b>Reforzar</b>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · Primero practicas -->
+<section class="scene" id="s8">
+  <div class="split">
+    <div class="cap">
+      <span class="num" data-at="0.1">04</span>
+      <p class="big" data-at="0.2">Primero practicas.</p>
+      <p class="sub" data-at="0.5">La respuesta viene después. Lo que olvidas, vuelve.</p>
+    </div>
+    <div class="ui" data-at="0.35">
+      <div class="panel">
+        <div class="qhead"><span class="label">Estructura Mientras · 1 de 3</span><div class="meter sm" id="s8timer" data-n="12"></div></div>
+        <p class="q">¿Cuándo se evalúa la condición en el ciclo Mientras?</p>
+        <div class="opts">
+          <div class="opt" id="s8ok"><span class="k">A</span>Antes de cada iteración</div>
+          <div class="opt"><span class="k">B</span>Después de cada iteración</div>
+          <div class="opt"><span class="k">C</span>Solo al finalizar el programa</div>
+          <div class="opt"><span class="k">D</span>Al azar</div>
+        </div>
+        <div class="fb" data-at="2.55" data-anim="fade">
+          <span class="state dominio">Correcto</span>
+          <p>La condición se revisa antes de entrar al cuerpo del ciclo.</p>
+        </div>
+        <div class="boxes" data-at="3.3"><em>Vuelve en</em><span class="on">1</span><span>2</span><span>4</span><span>7</span><span>14</span><em style="margin-left:4px">días</em></div>
+      </div>
+      <svg class="cursor" id="s8cur" viewBox="0 0 22 28"><path d="M1 1 L1 23 L7 17 L11 27 L15 25 L11 16 L19 16 Z" fill="#eceff1" stroke="#0d0f12" stroke-width="1.6"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · Cierre -->
+<section class="scene center" id="s9">
+  <div class="logo" data-at="0.1">
+    <svg viewBox="209 209 782 684">
+      <rect class="bar" x="209" y="642" width="782" height="167" fill="#c9f31d"/>
+      <path class="arch" d="M349 893 L349 530 A251 251 0 0 1 851 530 L851 893" fill="none" stroke="#eceff1" stroke-width="140"/>
+    </svg>
+    <img class="wm" src="wordmark.png" alt="APROPIA">
+  </div>
+  <p class="slogan" data-at="0.5">Haz tuyo lo que <span class="hl" data-hl="0.9"><span class="b">aprendes</span><span class="t">aprendes</span></span></p>
+  <div class="cta" data-at="1.5" id="cta"></div>
+</section>
+
+<!-- Tarjeta de invitación a la feria (solo con ?inv=1) -->
+<section class="scene" id="inv">
+  <div class="inv">
+    <div class="inv-head">
+      <p class="pre" data-at="0.1">Encuéntranos en la</p>
+      <img class="inv-feria" id="invFeria" src="feria_t.png" alt="XV Feria de Emprendimiento">
+    </div>
+    <div class="inv-body">
+      <div class="inv-date" id="invDate">
+        <span class="dnum"><span class="d1">29</span><span class="d2">–30</span></span>
+        <span class="dmon">Jue y vie · Oct 2026</span>
+      </div>
+      <div class="inv-rows">
+        <div class="inv-row" data-at="1.7"><span class="label">Lugar</span><p>Universidad Popular del Cesar</p><small>Seccional Aguachica</small></div>
+        <div class="inv-row" data-at="2.0"><span class="label">Stand</span><p><span class="hl" data-hl="2.9"><span class="b">Salón FACE 2</span><span class="t">Salón FACE 2</span></span></p><small>Busca el stand de Apropia y prueba la demo</small></div>
+      </div>
+    </div>
+    <div class="inv-foot" data-at="2.5">
+      <img src="upc_t.png" alt="Universidad Popular del Cesar">
+      <span class="wmk" id="invLogo"><svg viewBox="209 209 782 684" aria-hidden="true"><rect class="bar" x="209" y="642" width="782" height="167" fill="#c9f31d"/><path class="arch" d="M349 893 L349 530 A251 251 0 0 1 851 530 L851 893" fill="none" stroke="#eceff1" stroke-width="140"/></svg><img class="wm" src="wordmark.png" alt="Apropia"></span>
+    </div>
+  </div>
+  <div class="inv-scan" id="invScan"></div>
+</section>
+
+</div>
+<script>
+const P = new URLSearchParams(location.search);
+const VERTICAL = P.get('v') === '1';
+const QR_URL = P.get('qr') || null;          // dirección de la landing cuando exista
+const CTA_TEXT = P.get('cta') || (VERTICAL ? 'none' : 'stand');     // 'stand' | 'qr' | 'none'
+if (VERTICAL) document.body.classList.add('v');
+
+// Duraciones en segundos. La vertical usa menos escenas y más cortas.
+const H = [['s1',4.2],['s2',4.2],['s3',3.6],['s4',5.0],['s5',4.5],['s6',4.0],['s7',4.8],['s8',5.0],['s9',6.0]];
+const V = [['h1',3.2],['h2',4.6],['s4',4.0],['s5',3.6],['s7',4.0],['s8',4.4],['s9',4.6]];
+const BASE = Object.fromEntries(H);
+function SCENES_ORDER(){return (VERTICAL?V:H).map(x=>x[0])}
+if (P.get('inv')==='1'){H.push(['inv',6.5]);V.push(['inv',6.5])}
+const SCENES = (VERTICAL ? V : H).map(([id,d]) => ({ id, d, el: document.getElementById(id), k: BASE[id] ? d / BASE[id] : 1 }));
+window.DURATION = SCENES.reduce((a,s)=>a+s.d,0);
+
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const eo=x=>1-Math.pow(1-clamp(x),3);
+const eio=x=>{x=clamp(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const lerp=(a,b,x)=>a+(b-a)*x;
+
+// Medidores
+document.querySelectorAll('.meter').forEach(m=>{const n=+m.dataset.n||20;m.innerHTML='<i></i>'.repeat(n)});
+function setMeter(m,on){[...m.children].forEach((b,i)=>b.classList.toggle('on',i<on))}
+
+// Cierre: QR o llamado al stand
+const cta=document.getElementById('cta');
+if (CTA_TEXT==='qr' || QR_URL){
+  cta.innerHTML = '<div class="qr" id="qr"></div><p class="txt">Escanéalo y pruébala<small>'+(QR_URL?QR_URL.replace(/^https?:\/\//,''):'apropia')+'</small></p>';
+  if (window.QR_SVG) document.getElementById('qr').innerHTML = window.QR_SVG;
+} else if (CTA_TEXT==='stand') {
+  cta.innerHTML = '<p class="txt" style="text-align:center">Pruébala aquí, en el stand.</p>';
+}
+// Numera los pasos de la demo según las escenas que entran en este corte
+let n=0; SCENES_ORDER().forEach(id=>{const num=document.querySelector('#'+id+' .num'); if(num) num.textContent=String(++n).padStart(2,'0')});
+
+function reveal(el, local, k){
+  const at=(+el.dataset.at)*k, p=eo((local-at)/0.5), anim=el.dataset.anim||'up';
+  el.style.opacity=p;
+  if(anim==='up') el.style.transform=`translateY(${(1-p)*28}px)`;
+  if(anim==='drop') el.style.transform=`translateY(${(1-p)*-40}px) scale(${lerp(1.08,1,p)})`;
+}
+
+function cursor(el, local, keys){ // keys: [t, x, y, opacity]
+  let a=keys[0],b=keys[keys.length-1];
+  for(let i=0;i<keys.length-1;i++) if(local>=keys[i][0]&&local<=keys[i+1][0]){a=keys[i];b=keys[i+1];break}
+  const x=eio((local-a[0])/Math.max(.001,b[0]-a[0]));
+  if(local<keys[0][0]){a=b=keys[0]} if(local>keys.at(-1)[0]){a=b=keys.at(-1)}
+  el.style.opacity=lerp(a[3],b[3],x);
+  el.style.transform=`translate(${lerp(a[1],b[1],x)}px,${lerp(a[2],b[2],x)}px)`;
+}
+
+const easeBack=x=>{x=clamp(x);const c=1.6;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const CUSTOM = {
+  inv(local,k,el){
+    const t=local;
+    // escáner lima que barre la pantalla y "revela" el logo de la feria
+    const sc=el.querySelector('#invScan'), ps=clamp((t-0.25)/0.9);
+    sc.style.top=(ps*100)+'%'; sc.style.opacity=ps>0&&ps<1?1:0;
+    const f=el.querySelector('#invFeria'), pf=eo((t-0.35)/0.8);
+    f.style.clipPath=`inset(0 ${100-pf*100}% 0 0)`; f.style.transform=`translateX(${(1-pf)*-30}px)`;
+    // la fecha cae y rebota
+    const d=el.querySelector('#invDate'), pd=clamp((t-1.0)/0.6);
+    d.style.opacity=clamp(pd*3);
+    d.style.transform=`translateY(${(1-easeBack(pd))*-60}px) scale(${lerp(.85,1,easeBack(pd))})`;
+    logo(el.querySelector('#invLogo'), t-2.5, 1);
+    d.querySelector('.d1').textContent=String(Math.round(lerp(1,29,eo((t-1.0)/0.7)))).padStart(2,'0');
+    const d2=d.querySelector('.d2'), p2=eo((t-1.7)/0.45); d2.style.opacity=p2; d2.style.transform=`translateX(${(1-p2)*40}px)`;
+  },
+  s4(local,k,el){ logo(el, local/k, 0) },
+  s9(local,k,el){ logo(el, local/k, 1) },
+  s5(local,k,el){
+    const ui=el.querySelector('.ui'), btn=el.querySelector('#s5btn');
+    const bx=btn.offsetLeft+btn.offsetWidth*0.86, by=btn.offsetTop+btn.offsetHeight*0.62;
+    const t=local/k;
+    cursor(el.querySelector('#s5cur'), t, [[2.2,bx+260,by+180,0],[2.5,bx+200,by+130,1],[3.1,bx,by,1],[4.5,bx,by,1]]);
+    const press = t>3.15&&t<3.4 ? .95 : 1;
+    btn.style.transform=`scale(${press})`;
+    btn.style.background = t>3.15&&t<3.4 ? 'var(--ink)' : '';
+  },
+  s6(local,k,el){
+    const t=local/k, marks=[0.5,1.3,2.1,2.9,3.5];
+    el.querySelectorAll('#s6steps li').forEach((li,i)=>{
+      const done=t>=marks[i+1], cur=!done&&t>=marks[i];
+      li.className=done?'done':cur?'cur':'';
+      li.querySelector('.st').textContent=done?'Listo':cur?'En proceso':'';
+    });
+    setMeter(el.querySelector('#s6meter'), Math.round(24*clamp((t-0.5)/3.0)));
+  },
+  s8(local,k,el){
+    const t=local/k, ok=el.querySelector('#s8ok');
+    setMeter(el.querySelector('#s8timer'), Math.round(12*(1-clamp((t-0.5)/1.9)*0.6)));
+    const ox=ok.offsetLeft+ok.offsetWidth*0.85+ok.offsetParent.offsetLeft, oy=ok.offsetTop+ok.offsetHeight*0.7+ok.offsetParent.offsetTop;
+    cursor(el.querySelector('#s8cur'), t, [[1.0,ox+380,oy+260,0],[1.3,ox+300,oy+200,1],[2.2,ox,oy,1],[5,ox,oy,1]]);
+    ok.classList.toggle('ok', t>=2.4);
+    ok.style.transform = t>2.25&&t<2.45 ? 'scale(.97)' : '';
+  },
+};
+
+function logo(el, t, quick){
+  const s=quick?0.45:1, o=quick?0.1:0;
+  const bar=el.querySelector('.bar'), arch=el.querySelector('.arch'), wm=el.querySelector('.wm');
+  const pb=eo((t-o-0.05)/(0.55*s));
+  bar.setAttribute('width', 782*pb);
+  const L=arch.getTotalLength(), pa=eio((t-o-0.4*s)/(0.9*s));
+  arch.style.strokeDasharray=L; arch.style.strokeDashoffset=L*(1-pa);
+  const pw=eo((t-o-1.1*s)/(0.7*s));
+  wm.style.clipPath=`inset(0 ${100-pw*100}% 0 0)`;
+  wm.style.transform=`translateX(${(1-pw)*-20}px)`;
+}
+
+window.renderAt = function(t){
+  let acc=0;
+  for(const s of SCENES){
+    const local=t-acc, on=local>=0&&local<s.d;
+    if(on){
+      const fin=(VERTICAL&&s===SCENES[0])?1:clamp(local/0.3), fout=s===SCENES.at(-1)?clamp((s.d-local)/0.8):clamp((s.d-local)/0.3);
+      s.el.style.opacity=Math.min(fin,fout);
+      s.el.querySelectorAll('[data-at]').forEach(e=>{ if(!e.hasAttribute('data-count')&&!e.hasAttribute('data-type')&&!e.classList.contains('meter')) reveal(e,local,s.k) });
+      s.el.querySelectorAll('.hl').forEach(h=>{const p=eio((local-(+h.dataset.hl)*s.k)/0.45);h.querySelector('.t').style.clipPath=`inset(0 ${100-p*100}% 0 0)`});
+      s.el.querySelectorAll('[data-count]').forEach(c=>{const p=eo((local-(+c.dataset.at)*s.k)/1.1);c.textContent=Math.round(+c.dataset.count*p)});
+      s.el.querySelectorAll('.meter[data-fill]').forEach(m=>{const p=eo((local-(+m.dataset.at)*s.k)/1.1);setMeter(m,Math.round(+m.dataset.fill*p));m.style.opacity=clamp((local-(+m.dataset.at)*s.k)/0.3)});
+      s.el.querySelectorAll('[data-type]').forEach(e=>{const txt=e.dataset.type,n=Math.floor(clamp((local-(+e.dataset.at)*s.k)*16,0,txt.length));e.innerHTML=txt.slice(0,n)+(n<txt.length&&local>(+e.dataset.at)*s.k-0.4?'<span class="caret"></span>':'')});
+      if(CUSTOM[s.id]) CUSTOM[s.id](local,s.k,s.el);
+    } else s.el.style.opacity=0;
+    acc+=s.d;
+  }
+};
+document.fonts.ready.then(()=>{window.READY=true; renderAt(+(P.get('t')||0))});
+</script>
+</body>
+</html>

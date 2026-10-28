@@ -1,15 +1,17 @@
 .course-map {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-8);
 }
 
 .course-map__header {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-4);
 }
 
 .course-map__header h1 {
@@ -18,157 +20,171 @@
 
 .course-map__stats {
   display: flex;
-  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
   margin: 0;
-  font-weight: 700;
-  color: var(--text-h);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
-.course-map__star {
-  color: #f5b700;
+.course-map__stars {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.course-map__stats .label {
+  margin-right: var(--space-1);
+}
+
+.course-map .meter__block {
+  height: 12px;
+}
+
+.course-map__stars .meter,
+.course-map__progress .meter {
+  flex: none;
+  width: 96px;
 }
 
 .course-map__banner {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.course-map__banner h2 {
   margin: 0;
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: var(--accent);
-  color: var(--on-accent);
-  font-size: 20px;
+  font-size: var(--text-2xl);
+  line-height: 30px;
 }
 
-.course-map__banner span {
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  opacity: 0.85;
+.course-map__duration {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-md);
+  line-height: 22px;
+  color: var(--ink-muted);
 }
 
+.course-map__progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-muted);
+}
+
+/* Entrance: one moment per visit. Modules rise in turn; with reduced motion they only fade. */
+.course-map__module {
+  animation: course-map-fade 200ms ease-out backwards;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .course-map__module {
+    animation: course-map-in 280ms var(--ease-out) backwards;
+    animation-delay: calc(min(var(--i, 0), 4) * 50ms);
+  }
+}
+
+@keyframes course-map-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes course-map-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Route: vertical list, one row per lesson */
 .course-map__path {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 18px;
-  margin: 24px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .course-map__step {
-  transform: translateX(var(--offset));
+  border-bottom: 1px solid var(--line);
 }
 
-/* Node */
+.course-map__step:last-child {
+  border-bottom: 0;
+}
+
 .map-node {
-  position: relative;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
-  width: 120px;
-  color: var(--text-h);
-  text-align: center;
+  gap: var(--space-2) var(--space-4);
+  min-height: 44px;
+  margin-inline: calc(var(--space-3) * -1);
+  padding: var(--space-3);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--text-md);
   text-decoration: none;
 }
 
-.map-node__circle {
-  display: grid;
-  place-items: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  border-bottom: 5px solid rgba(0, 0, 0, 0.2);
+.map-node__title {
+  display: inline-flex;
+  align-items: center;
+  flex: 1 1 200px;
+  gap: var(--space-2);
+}
+
+.map-node .meter {
+  flex: none;
+  width: 60px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a.map-node {
+    transition: background-color 120ms ease;
+  }
+
+  a.map-node:not(.map-node--current):hover {
+    background: var(--bg);
+  }
+}
+
+a.map-node:hover .map-node__title {
+  color: var(--accent);
+}
+
+.map-node--pendiente {
+  color: var(--ink-muted);
+}
+
+/* The current step is the highlighted row */
+.map-node--current {
   background: var(--accent);
   color: var(--on-accent);
-  font-size: 24px;
   font-weight: 700;
-  transition: transform 0.08s ease;
 }
 
-a.map-node:active .map-node__circle {
-  transform: translateY(3px);
+a.map-node--current:hover .map-node__title {
+  color: var(--on-accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-a.map-node:focus-visible {
-  outline: none;
+.map-node--current .state {
+  color: var(--on-accent);
 }
 
-a.map-node:focus-visible .map-node__circle {
-  outline: 3px solid var(--accent);
-  outline-offset: 4px;
-}
-
-.map-node__title {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-.map-node--completed .map-node__circle {
-  background: var(--success);
-  color: var(--on-success);
-}
-
-.map-node--review .map-node__circle {
-  background: #f5b700;
-}
-
-.map-node--locked {
-  color: var(--text);
-}
-
-.map-node--locked .map-node__circle {
-  background: var(--border);
-  font-size: 22px;
-}
-
-.map-node--current .map-node__circle {
-  box-shadow: 0 0 0 6px var(--accent-bg);
-  animation: node-pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes node-pulse {
-  50% { box-shadow: 0 0 0 12px var(--accent-bg); }
-}
-
-.map-node__bubble {
-  position: absolute;
-  top: -34px;
-  padding: 3px 10px;
-  border: 2px solid var(--accent);
-  border-radius: 8px;
-  background: var(--bg);
-  color: var(--accent);
-  font-size: 13px;
-  font-weight: 700;
-  animation: bubble-bounce 1.8s ease-in-out infinite;
-}
-
-@keyframes bubble-bounce {
-  50% { transform: translateY(-4px); }
-}
-
-.map-node--current {
-  margin-top: 30px;
-}
-
-.map-node__stars {
-  display: flex;
-  gap: 2px;
-  font-size: 16px;
-  color: var(--border);
-}
-
-.map-node__star--on {
-  color: #f5b700;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .map-node--current .map-node__circle,
-  .map-node__bubble {
-    animation: none;
-  }
+.map-node--current .state::before {
+  background: var(--on-accent);
 }

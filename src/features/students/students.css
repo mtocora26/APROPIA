@@ -1,0 +1,117 @@
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.student-switcher {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.student-switcher select,
+.students input[type='text'],
+.students input:not([type]) {
+  min-height: 44px;
+  padding: 6px var(--space-3);
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-md);
+}
+
+.student-switcher__manage {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--text-md);
+}
+
+.students__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: var(--space-4) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.students__item {
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.students__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.students__name {
+  flex: 1;
+  min-width: 120px;
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.students__active {
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.students button,
+.students__import {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px var(--space-4);
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.students button:hover,
+.students__import:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.students__import input {
+  display: none;
+}
+
+.students__add {
+  margin-bottom: var(--space-6);
+}
+
+.students__message {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line-strong);
+}
+
+.students__message--error {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.app-header .player-badge {
+  margin: 0;
+}
+
+
+.app-header .student-switcher select {
+  max-width: 150px;
+}

@@ -33,6 +33,12 @@ export function prepareExercise(exercise, { alphabet = [], random = Math.random 
         view: { right: shuffle(exercise.pairs.map(([, right]) => right), random) },
       }
 
+    case 'dialogue':
+      return {
+        ...exercise,
+        view: { options: exercise.lines.map((line) => (line.options ? shuffle(line.options, random) : null)) },
+      }
+
     case 'spelling': {
       const letters = new Set(exercise.word.toUpperCase())
       const own = [...letters].map((letter) => findEntry(alphabet, letter).cities[0])
@@ -51,7 +57,9 @@ export function prepareExercise(exercise, { alphabet = [], random = Math.random 
 
 /**
  * `validateAnswer` for `useExercise`. The shape of `value` depends on the type:
- * choice/typed → string, reorder/spelling → string[], match → { attempts }.
+ * choice/typed → string, hunt → index of the tapped word, reorder/spelling → string[], match → { attempts },
+ * open → { selfRating: 'ok' | 'miss', text }, dialogue → { choices: string[] }
+ * (one choice per line with options, in order).
  */
 export function checkAnswer(value, exercise, { alphabet = [] } = {}) {
   switch (exercise.type) {
@@ -62,6 +70,9 @@ export function checkAnswer(value, exercise, { alphabet = [] } = {}) {
       return validateTextAnswer(value, {
         answers: [exercise.answer, ...(exercise.alternatives ?? [])],
       })
+
+    case 'hunt':
+      return value === exercise.wrongIndex
 
     case 'reorder':
       return Array.isArray(value) && isAcceptedOrder(value, exercise)
@@ -75,6 +86,21 @@ export function checkAnswer(value, exercise, { alphabet = [] } = {}) {
     case 'spelling':
       return isCorrectSpelling(value, exercise.word, alphabet)
 
+    case 'open':
+      return value?.selfRating === 'ok'
+
+    case 'code':
+      return value?.passed === true
+
+    case 'dialogue': {
+      const answers = dialogueBlanks(exercise).map((line) => line.answer)
+      return (
+        Array.isArray(value?.choices) &&
+        value.choices.length === answers.length &&
+        answers.every((answer, i) => value.choices[i] === answer)
+      )
+    }
+
     default:
       return false
   }
@@ -86,6 +112,10 @@ export function correctAnswerText(exercise, { alphabet = [] } = {}) {
     case 'choice':
     case 'typed':
       return exercise.answer
+    case 'code':
+      return exercise.modelAnswer
+    case 'hunt':
+      return exercise.correction
     case 'reorder':
       return exercise.answer.join(' ')
     case 'spelling':
@@ -94,6 +124,8 @@ export function correctAnswerText(exercise, { alphabet = [] } = {}) {
         .join(' – ')
     case 'match':
       return exercise.pairs.map(([left, right]) => `${left} → ${right}`).join(' · ')
+    case 'dialogue':
+      return exercise.lines.map((line) => `${line.who}: ${line.text ?? line.answer}`).join(' / ')
     default:
       return null
   }
@@ -104,7 +136,24 @@ export function correctAnswerText(exercise, { alphabet = [] } = {}) {
  * Match exercises mix both languages, so they are not read.
  */
 export function speakableText(exercise, context) {
-  return exercise.type === 'match' ? null : correctAnswerText(exercise, context)
+  if (exercise.type === 'open') return exercise.code ? null : exercise.modelAnswer
+  if (['match', 'dialogue', 'code'].includes(exercise.type)) return null
+  return correctAnswerText(exercise, context)
+}
+
+/** Lines of a dialogue the student has to answer, in order. */
+export function dialogueBlanks(exercise) {
+  return exercise.lines.filter((line) => line.options)
+}
+
+/**
+ * How much of a dialogue is on screen after `answered` blanks were chosen:
+ * everything up to the next blank, or all of it once the last one is done.
+ */
+export function visibleDialogueLines(exercise, answered) {
+  const blankIndexes = exercise.lines.flatMap((line, i) => (line.options ? [i] : []))
+  const last = answered < blankIndexes.length ? blankIndexes[answered] : exercise.lines.length - 1
+  return exercise.lines.slice(0, last + 1)
 }
 
 export function isCorrectPair(exercise, [left, right]) {

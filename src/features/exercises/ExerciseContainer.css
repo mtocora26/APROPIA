@@ -1,63 +1,79 @@
 .exercise {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-5);
 }
 
-.exercise h2 {
-  margin: 0;
-}
 
+/* Primary action: highlighted, cut corner */
 .exercise button {
-  font: inherit;
-  padding: 8px 18px;
-  border: 1px solid var(--accent);
-  border-radius: 8px;
+  min-height: 44px;
+  padding: 10px 26px;
+  border: 0;
   background: var(--accent);
   color: var(--on-accent);
+  clip-path: var(--cut-shape);
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 
-.exercise button:disabled {
-  opacity: 0.5;
+.exercise button:hover:not(:disabled) {
+  background: var(--ink);
+}
+
+.exercise .button--secondary {
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+  clip-path: none;
+  font-weight: 400;
+}
+
+.exercise .button--secondary:hover:not(:disabled) {
+  background: transparent;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.exercise button:disabled:not(.tile) {
+  background: var(--line-strong);
+  color: var(--bg);
   cursor: not-allowed;
 }
 
 .exercise__header {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .exercise__progress {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 14px;
-}
-
-.exercise__progress progress {
-  flex: 1;
-  accent-color: var(--accent);
+  gap: var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
 }
 
 .exercise__prompt {
-  padding: 24px 16px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface);
+  padding: var(--space-6) var(--space-5);
   text-align: center;
-  font-size: 24px;
-  color: var(--text-h);
+  font-size: var(--text-xl);
 }
 
 .exercise__feedback {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
-  padding: 12px 16px;
-  border-radius: 12px;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
 }
 
 .exercise__feedback p {
@@ -65,30 +81,51 @@
 }
 
 .exercise__feedback--correct {
-  background: var(--success-bg);
+  border-color: var(--success);
 }
 
 .exercise__feedback--incorrect {
-  background: var(--error-bg);
+  border-color: var(--error);
 }
 
 .exercise__feedback-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
   font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.exercise__feedback-title::before {
+  content: '';
+  width: 10px;
+  height: 10px;
 }
 
 .exercise__feedback--correct .exercise__feedback-title {
   color: var(--success);
 }
 
+.exercise__feedback--correct .exercise__feedback-title::before {
+  background: var(--success);
+}
+
 .exercise__feedback--incorrect .exercise__feedback-title {
   color: var(--error);
+}
+
+.exercise__feedback--incorrect .exercise__feedback-title::before {
+  background: var(--error);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
 }
 
 .exercise__summary {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-3);
   text-align: center;
 }
 
@@ -97,31 +134,36 @@
 }
 
 .exercise__score {
-  font-size: 48px;
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
   font-weight: 700;
-  color: var(--text-h);
+  line-height: 1;
 }
 
 .exercise__phase {
   margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--state-refuerzo);
 }
 
 .exercise__combo {
+  font-family: var(--font-display);
   font-weight: 700;
-  color: var(--text-h);
-  animation: pop 0.25s ease-out;
+  white-space: nowrap;
 }
 
-@keyframes pop {
-  from { transform: scale(1.5); }
-  to { transform: scale(1); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .exercise__combo {
-    animation: none;
+/* Phones: the feedback pins to the bottom edge once its natural spot is below the fold */
+@media (max-width: 640px) {
+  .exercise__feedback {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    margin-inline: calc(var(--space-5) * -1);
+    padding-inline: var(--space-5);
+    border-inline: 0;
+    border-bottom: 0;
   }
 }

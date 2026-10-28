@@ -2,22 +2,29 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .text-answer__label {
   display: flex;
   flex: 1 1 220px;
   flex-direction: column;
-  gap: 4px;
-  font-size: 14px;
+  gap: var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
 }
 
 .text-answer__input {
-  font: inherit;
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  min-height: 52px;
+  padding: 10px var(--space-3);
+  border: 1px solid var(--line-strong);
   background: var(--bg);
-  color: var(--text-h);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--text-xl);
+  letter-spacing: normal;
+  text-transform: none;
 }

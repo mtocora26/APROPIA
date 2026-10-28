@@ -5,7 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'legacy']),
+  globalIgnores(['dist', 'legacy', 'marketing']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [
@@ -17,5 +17,10 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+  },
+  {
+    // Code that runs in Node: Vercel functions, the dev server and scripts.
+    files: ['api/**/*.js', 'server/**/*.js', 'tools/**/*.{js,mjs}', 'vite.config.js'],
+    languageOptions: { globals: globals.node },
   },
 ])

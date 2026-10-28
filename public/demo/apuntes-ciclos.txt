@@ -1,0 +1,66 @@
+Apuntes — Ciclos (estructuras repetitivas) en PSeInt
+Fundamentos de programación
+
+1. ¿Qué es un ciclo?
+Un ciclo repite un bloque de instrucciones. Cada repetición se llama iteración.
+Sirve cuando no queremos escribir lo mismo muchas veces o cuando no sabemos
+cuántas veces hay que repetir (por ejemplo, pedir datos hasta que sean válidos).
+
+Todo ciclo tiene:
+- Una condición o un contador que decide si se sigue repitiendo.
+- Un cuerpo: las instrucciones que se repiten.
+- Algo dentro del cuerpo que cambia y acerca el ciclo a terminar.
+  Si nada cambia, el ciclo es infinito.
+
+2. Mientras
+Mientras condicion Hacer
+    instrucciones
+FinMientras
+
+- La condición se evalúa ANTES de cada iteración.
+- Si la condición es falsa desde el principio, el cuerpo no se ejecuta ni una vez.
+- Se usa cuando no sabemos cuántas veces se va a repetir.
+
+Ejemplo: sumar números hasta que el usuario escriba 0.
+suma <- 0
+Leer n
+Mientras n <> 0 Hacer
+    suma <- suma + n
+    Leer n
+FinMientras
+Escribir suma
+
+3. Repetir ... Hasta Que
+Repetir
+    instrucciones
+Hasta Que condicion
+
+- La condición se evalúa DESPUÉS de cada iteración.
+- El cuerpo se ejecuta al menos una vez.
+- Termina cuando la condición se vuelve VERDADERA (al revés que Mientras).
+- Útil para validar datos: pedir una nota hasta que esté entre 0 y 5.
+
+Repetir
+    Leer nota
+Hasta Que nota >= 0 Y nota <= 5
+
+4. Para
+Para i <- 1 Hasta 10 Con Paso 1 Hacer
+    instrucciones
+FinPara
+
+- Se usa cuando sabemos cuántas veces se repite.
+- La variable de control (i) cambia sola en cada iteración según el paso.
+- Con Paso -1 se cuenta hacia atrás: Para i <- 10 Hasta 1 Con Paso -1.
+
+5. Contadores y acumuladores
+- Contador: variable que aumenta de a uno (cont <- cont + 1). Cuenta cuántas veces pasa algo.
+- Acumulador: variable que suma valores (suma <- suma + n). Guarda un total.
+- Los dos se inicializan ANTES del ciclo, casi siempre en 0.
+- Promedio = acumulador / contador (cuidado: si el contador es 0, no se divide).
+
+6. Errores frecuentes
+- Olvidar actualizar la variable de la condición: ciclo infinito.
+- Inicializar el acumulador dentro del ciclo: se reinicia en cada vuelta.
+- Confundir la condición de Repetir (termina cuando es verdadera) con la de Mientras (sigue mientras es verdadera).
+- Usar Para cuando no se sabe cuántas veces hay que repetir.

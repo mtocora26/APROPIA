@@ -1,4 +1,4 @@
-# Backlog — Tukola
+# Backlog — APROPIA
 
 Convención de ID: `EPIC-XX` para épicas, `EPIC-XX-YY` para historias.
 Prioridad: 🔴 Alta · 🟡 Media · 🟢 Baja. Estimación en "sesiones de estudio" (≈1-2h cada una, pensado para tu ritmo actual).
@@ -23,7 +23,7 @@ _Objetivo: tener el esqueleto de la app en React con los patrones clave funciona
 | ✅ EPIC-07-01 | Scaffold Vite + React + React Router | 🔴 | 1 |
 | ✅ EPIC-07-02 | `core/storage/ProgressRepository.js` (interfaz) + `LocalStorageRepository.js` (impl inicial — se reemplaza en EPIC-09 sin tocar UI) | 🔴 | 2 |
 | ✅ EPIC-07-03 | Definir "shape" común de ejercicio vía custom hook (contrato `useExercise`: `state, answer(), next(), stats`) | 🔴 | 2 |
-| EPIC-07-04 | Portar `fsrs.js` (repetición espaciada) a `core/fsrs/` como módulo ES puro, con tests | 🟡 | 2 |
+| ✅ EPIC-07-04 (#7) | **Ahora núcleo de flashcards por estudiante.** Portar `fsrs.js` (repetición espaciada) a `core/fsrs/` como módulo ES puro, con tests | 🟡 | 2 |
 | EPIC-07-05 | Componente `ExerciseContainer` genérico (Container/Presentational) que consuma cualquier hook de ejercicio | 🟡 | 2 |
 | EPIC-07-06 | Reducer de sesión de estudio (`idle → active → reviewing → done`) con `useReducer` | 🟢 | 1 |
 
@@ -39,8 +39,28 @@ _Objetivo: modelar el contenido para que agregar un curso sea "solo agregar dato
 | EPIC-08-05 | Definir proceso repetible: "cómo convierto una clase de mi curso en contenido de la app" (plantilla) | 🟡 | 1 |
 | ✅ EPIC-08-06 | Curso `english-tenses`: un módulo por tiempo verbal, contenido migrado de legacy (#20) + despliegue en Vercel | 🔴 | 2 |
 
+## EPIC-11 — Estudiantes locales (tutorías)
+_Objetivo: usar APROPIA con varios estudiantes sin login ni backend. Ver [ADR-0006](../01-arquitectura/decisiones/ADR-0006-estudiantes-locales.md)._
+
+| ID | Historia | Prioridad | Est. |
+|---|---|---|---|
+| EPIC-11-01 (#22) | Selector de estudiante, progreso separado por estudiante, respaldo JSON | 🔴 | 2 |
+
+## EPIC-12 — Flashcards, recap y sesiones de tutoría
+_Objetivo: proceso de aprendizaje continuo por estudiante._
+
+| ID | Historia | Prioridad | Est. |
+|---|---|---|---|
+| ✅ EPIC-12-01 (#23) | Flashcards (verbos, vocabulario) con FSRS y calendario por estudiante | 🔴 | 3 |
+| ✅ EPIC-12-02 (#24) | Recap de inicio de clase + registro de sesiones de tutoría (la mini práctica de 5-8 preguntas mixtas queda para EPIC-13: hoy el recap enlaza a las lecciones débiles) | 🔴 | 3 |
+
+## EPIC-13 — Ejercicios creativos y modo clase
+| ID | Historia | Prioridad | Est. |
+|---|---|---|---|
+| ✅ EPIC-13-01 (#25) | Tipos de ejercicio `open` (respuesta abierta autoevaluada: situación, traducción libre) y `dialogue` (conversación guiada) + modo clase `/clase/:curso/:lección`. Pendiente: mini práctica mixta del recap (requiere registrar ítems fallados) | 🟡 | 3 |
+
 ## EPIC-09 — Firebase (Firestore + Auth email/password)
-_Objetivo: sincronizar progreso entre dispositivos, con el mismo contrato `ProgressRepository` ya en uso._
+_⏸️ Diferido por ADR-0006 (multiusuario local primero). Objetivo: sincronizar progreso entre dispositivos, con el mismo contrato `ProgressRepository` ya en uso._
 
 | ID | Historia | Prioridad | Est. |
 |---|---|---|---|

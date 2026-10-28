@@ -3,21 +3,34 @@
   display: inline-grid;
   place-items: center;
   flex: none;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   padding: 0;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  background: var(--bg);
-  color: var(--text-h);
-  font-size: 17px;
-  line-height: 1;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  clip-path: none;
   vertical-align: middle;
   cursor: pointer;
 }
 
 .speak-button.speak-button:hover {
   border-color: var(--accent);
+  color: var(--accent);
+  background: transparent;
+}
+
+.speak-button.speak-button--error {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.speak-button__problem {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--error);
+  font-size: var(--text-sm);
 }
 
 .speak-button-wrapper {

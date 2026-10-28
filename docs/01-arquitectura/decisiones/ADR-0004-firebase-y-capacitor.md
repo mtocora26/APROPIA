@@ -1,7 +1,7 @@
 # ADR-0004: Firebase (Firestore + Auth email/password) como backend, y Capacitor para empaquetar app nativa — de forma progresiva
 
 - **Fecha**: 2026-09-22 (corregida el mismo día: auth pasa de anónima a email/password)
-- **Estado**: Aceptada
+- **Estado**: Aceptada — ejecución **diferida** por [ADR-0006](./ADR-0006-estudiantes-locales.md) (2026-10-20): primero multiusuario local, Firebase solo si hace falta usar varios dispositivos
 - **Supera a**: [ADR-0003](./ADR-0003-diferir-backend.md)
 
 ## Contexto

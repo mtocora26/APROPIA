@@ -1,45 +1,37 @@
 import { useState } from 'react'
-import { speak, SpeechUnavailableError } from '../core/speech/speech.js'
+import { isSpeechAvailable, speak, speechProblemMessage } from '../core/speech/speech.js'
+import Icon from './Icon.jsx'
 import './SpeakButton.css'
 
-const HINTS = {
-  unavailable: 'Este navegador no tiene voz para este idioma',
-  error: 'No se pudo reproducir el audio',
-}
-
-/**
- * 🔊 button that reads `text` aloud. If the browser has no voice for `lang`
- * (or speaking fails) it says so instead of staying silent.
- */
+/** Speaker button that reads `text` aloud. Renders nothing if the browser can't speak. */
 function SpeakButton({ text, lang, label = 'Escuchar' }) {
-  const [hint, setHint] = useState(null) // { kind, id } — id restarts the fade
+  const [problem, setProblem] = useState(null)
 
-  if (!text) return null
+  if (!text || !isSpeechAvailable()) return null
 
-  function handleClick() {
-    speak(text, lang).catch((error) => {
-      const kind = error instanceof SpeechUnavailableError ? 'unavailable' : 'error'
-      setHint((previous) => ({ kind, id: (previous?.id ?? 0) + 1 }))
-    })
+  async function onClick() {
+    setProblem(null)
+    const result = await speak(text, lang)
+    if (!result.ok) setProblem(speechProblemMessage(result.reason, lang))
   }
 
   return (
-    <span className="speak-button-wrapper">
+    <>
       <button
         type="button"
-        className="speak-button"
-        onClick={handleClick}
+        className={problem ? 'speak-button speak-button--error' : 'speak-button'}
+        onClick={onClick}
         aria-label={label}
-        title={label}
+        title={problem ?? label}
       >
-        🔊
+        <Icon name={problem ? 'mute' : 'volume'} size={18} />
       </button>
-      {hint && (
-        <span key={hint.id} className="speak-button__hint" role="status">
-          {HINTS[hint.kind]}
+      {problem && (
+        <span className="speak-button__problem" role="status">
+          {problem}
         </span>
       )}
-    </span>
+    </>
   )
 }
 

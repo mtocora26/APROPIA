@@ -1,0 +1,169 @@
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { getCourse } from '../../app/courseCatalog.js'
+import { findLesson } from '../../domain/course.js'
+import { speechLang } from '../../core/speech/speech.js'
+import Icon from '../../ui/Icon.jsx'
+import SpeakButton from '../../ui/SpeakButton.jsx'
+import ExercisePrompt from '../exercises/types/ExercisePrompt.jsx'
+import PseintSandbox from '../sandbox/PseintSandbox.jsx'
+import { buildClassSlides, exerciseMaterial, firstExerciseIndex, moveSlide, revealedAnswer, slideStage } from './classMode.js'
+import LessonTheory from './LessonTheory.jsx'
+import { lessonPath } from './paths.js'
+import './classMode.css'
+
+/** Big-type, step-by-step view of a lesson for the tutor to project. No XP, no saving. */
+function ClassModePage() {
+  const { courseId, lessonId } = useParams()
+  const course = getCourse(courseId)
+  const found = course && findLesson(course, lessonId)
+
+  if (!found) {
+    return (
+      <p>
+        No encontramos esta lección. <Link to="/inicio">Volver al inicio</Link>
+      </p>
+    )
+  }
+
+  return <ClassMode key={lessonId} course={course} lesson={found.lesson} />
+}
+
+function ClassMode({ course, lesson }) {
+  const slides = buildClassSlides(lesson)
+  const lang = speechLang(course.language)
+  const context = { alphabet: course.alphabet }
+  const [index, setIndex] = useState(0)
+  const [revealed, setRevealed] = useState(false)
+  const [hintShown, setHintShown] = useState(false)
+
+  function show(next) {
+    setIndex(next)
+    setRevealed(false)
+    setHintShown(false)
+  }
+
+  function go(step) {
+    show(moveSlide(index, step, slides.length))
+  }
+
+  const firstExercise = firstExerciseIndex(slides)
+
+  useEffect(() => {
+    function onKeyDown(event) {
+      if (event.target.closest?.('input, textarea, select')) return
+      if (event.key === 'ArrowRight') go(1)
+      if (event.key === 'ArrowLeft') go(-1)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  })
+
+  const slide = slides[index]
+  const answer = slide.kind === 'exercise' ? revealedAnswer(slide.exercise, context) : null
+
+  return (
+    <section className="class-mode">
+      <header className="class-mode__header">
+        <Link to={lessonPath(course.id, lesson.id)}><Icon name="back" size={18} /> Salir</Link>
+        <h1>{lesson.title}</h1>
+        <span>
+          {index + 1} / {slides.length}
+        </span>
+      </header>
+
+      {lesson.tutorNotes?.length > 0 && (
+        <details className="class-mode__notes">
+          <summary>Notas para ti, tutor (no las proyectes)</summary>
+          <ul>
+            {lesson.tutorNotes.map((note) => <li key={note}>{note}</li>)}
+          </ul>
+        </details>
+      )}
+
+      <div className="class-mode__slide">
+        <p className="class-mode__stage">
+          {slideStage(slide, { index, slides })}
+        </p>
+        {slide.kind === 'theory' ? (
+          <LessonTheory key={index} blocks={[slide.block]} lang={lang} />
+        ) : (
+          <>
+            <p className="class-mode__instruction">
+              {slide.exercise.classInstruction ?? (slide.exercise.code || slide.exercise.type === 'code'
+                ? 'En parejas: escriban y prueben el algoritmo aquí mismo. Luego comparen soluciones.'
+                : 'Pidan una respuesta al grupo y que alguien explique por qué.')}
+            </p>
+            <ExercisePrompt exercise={slide.exercise} />
+            {slide.exercise.type === 'dialogue' ? (
+              <ol className="class-mode__material">
+                {slide.exercise.lines.map((line, i) => (
+                  <li key={i}>
+                    <strong>{line.who}:</strong> {line.text ?? (line.options ?? []).join('  /  ')}
+                  </li>
+                ))}
+              </ol>
+            ) : slide.exercise.type === 'code' ? (
+              <PseintSandbox key={slide.exercise.id} initialCode={slide.exercise.starter ?? ''} rows={10} />
+            ) : slide.exercise.type !== 'open' ? (
+              <ul className="class-mode__material">
+                {exerciseMaterial(slide.exercise).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            ) : null}
+
+            {(slide.exercise.type === 'open' || slide.exercise.type === 'code') && !revealed && slide.exercise.hints?.length > 0 && (
+              <div className="class-mode__hints">
+                <button type="button" onClick={() => setHintShown(true)} disabled={hintShown}>
+                  {hintShown ? 'Pista visible' : 'Mostrar pista'}
+                </button>
+                {hintShown && <p>{slide.exercise.hints[0]}</p>}
+              </div>
+            )}
+
+            {revealed ? (
+              <>
+                {answer && (
+                  <p className={`class-mode__answer${slide.exercise.code || slide.exercise.type === 'code' ? ' class-mode__answer--code' : ''}`}>
+                    <strong lang={course.language}>{answer}</strong>
+                    {slide.exercise.type !== 'match' && slide.exercise.type !== 'dialogue' && !slide.exercise.code && slide.exercise.type !== 'code' && (
+                      <SpeakButton text={answer} lang={lang} />
+                    )}
+                  </p>
+                )}
+                {slide.exercise.explanation && <p>{slide.exercise.explanation}</p>}
+              </>
+            ) : (
+              <button type="button" className="class-mode__reveal" onClick={() => setRevealed(true)}>
+                Mostrar respuesta
+              </button>
+            )}
+          </>
+        )}
+      </div>
+
+      <footer className="class-mode__footer">
+        <button type="button" onClick={() => go(-1)} disabled={index === 0}>
+          <Icon name="back" size={18} /> Anterior
+        </button>
+        {firstExercise > 0 && (
+          index < firstExercise ? (
+            <button type="button" className="class-mode__jump" onClick={() => show(firstExercise)}>
+              Ir a ejercicios <Icon name="forward" size={18} />
+            </button>
+          ) : (
+            <button type="button" className="class-mode__jump" onClick={() => show(0)}>
+              Volver a la teoría
+            </button>
+          )
+        )}
+        <button type="button" onClick={() => go(1)} disabled={index === slides.length - 1}>
+          Siguiente <Icon name="forward" size={18} />
+        </button>
+      </footer>
+    </section>
+  )
+}
+
+export default ClassModePage

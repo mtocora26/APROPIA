@@ -1,4 +1,4 @@
-# Tukola — Plataforma personal de idiomas
+# APROPIA — Plataforma de aprendizaje personalizado
 
 Proyecto personal de aprendizaje de idiomas (italiano + inglés de negocios), construido como ejercicio deliberado de ingeniería de software: arquitectura, patrones de diseño, backlog y kanban — no solo "vibe coding".
 
@@ -27,10 +27,16 @@ npm test          # correr pruebas automatizadas
 
 ## Persistencia local de progreso
 
+En el selector de perfiles, **Tutor (admin)** puede abrir cualquier lección de
+cualquier curso sin completar las anteriores. Su progreso se guarda por separado
+del de los estudiantes. Es un perfil local de navegación, no una cuenta con
+contraseña: la aplicación aún no tiene autenticación ni control de acceso seguro.
+Los perfiles existentes reciben esta opción automáticamente sin perder su avance.
+
 El código de aplicación consume el contrato asíncrono
 `src/core/storage/ProgressRepository.js`. La implementación inicial,
 `LocalStorageRepository`, guarda un documento versionado bajo la clave
-`tukola.progress`:
+`apropia.progress`:
 
 ```js
 {

@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { appEvents } from '../../app/appEvents.js'
-import { progressRepository } from '../../app/progressRepository.js'
-import { getCourse } from '../../content/courses/index.js'
+import { useProgressRepository, useStudents } from '../students/studentContext.js'
+import { getCourse } from '../../app/courseCatalog.js'
 import { starsForAccuracy, xpForSession } from '../../core/gamification/scoring.js'
 import { speechLang } from '../../core/speech/speech.js'
-import { findLesson, findNextLesson } from '../../domain/course.js'
+import { ADMIN_STUDENT_ID } from '../../core/students/studentModel.js'
+import { findLesson, findNextLesson, sampleReview } from '../../domain/course.js'
 import { EXERCISE_STATES, useExercise } from '../../hooks/useExercise.js'
 import { useCourseProgress } from '../../hooks/useCourseProgress.js'
 import { useExerciseProgress } from '../../hooks/useExerciseProgress.js'
@@ -17,18 +18,22 @@ import {
   checkAnswer,
   correctAnswerText,
   prepareExercise,
-  shuffle,
   speakableText,
 } from '../exercises/types/exerciseLogic.js'
+import Icon from '../../ui/Icon.jsx'
 import SpeakButton from '../../ui/SpeakButton.jsx'
 import LessonResult from './LessonResult.jsx'
+import { formatMinutes, lessonMinutes } from './duration.js'
 import LessonTheory from './LessonTheory.jsx'
-import { coursePath, lessonPath } from './paths.js'
+import { classPath, coursePath, lessonPath } from './paths.js'
 import '../exercises/types/exerciseTypes.css'
+import './classMode.css'
 import './lesson.css'
 
 function LessonPage() {
   const { courseId, lessonId } = useParams()
+  const progressRepository = useProgressRepository()
+  const { activeStudent } = useStudents()
   const [round, setRound] = useState(0)
   const course = getCourse(courseId)
   const found = course && findLesson(course, lessonId)
@@ -41,7 +46,7 @@ function LessonPage() {
   if (!found) {
     return (
       <p>
-        No encontramos esta lección. <Link to="/">Volver al inicio</Link>
+        No encontramos esta lección. <Link to="/inicio">Volver al inicio</Link>
       </p>
     )
   }
@@ -54,10 +59,10 @@ function LessonPage() {
     return <p>Cargando…</p>
   }
 
-  if (findMapNode(buildCourseMap(course, progress), lessonId).status === LESSON_STATUS.LOCKED) {
+  if (findMapNode(buildCourseMap(course, progress, { unlockAll: activeStudent.id === ADMIN_STUDENT_ID }), lessonId).status === LESSON_STATUS.LOCKED) {
     return (
       <p>
-        🔒 Completa la lección anterior para desbloquear «{found.lesson.title}».{' '}
+        <Icon name="lock" size={18} /> Completa la lección anterior para desbloquear «{found.lesson.title}».{' '}
         <Link to={coursePath(course.id)}>Volver al mapa</Link>
       </p>
     )
@@ -76,12 +81,13 @@ function LessonPage() {
 
 /** Theory → exercises → review of mistakes → result (stars and XP). */
 function LessonPlayer({ course, lesson, onRestart }) {
+  const progressRepository = useProgressRepository()
   const context = { alphabet: course.alphabet }
   const lang = speechLang(course.language)
   const [items] = useState(() => {
-    // Module reviews practise a random sample of all their exercises.
+    // Module reviews are short and balanced across the module's lessons.
     const exercises = lesson.sampleSize
-      ? shuffle(lesson.exercises, Math.random).slice(0, lesson.sampleSize)
+      ? sampleReview(lesson.exerciseGroups, lesson.sampleSize, Math.random)
       : lesson.exercises
     return exercises.map((exercise) =>
       prepareExercise(exercise, { alphabet: course.alphabet, random: Math.random }),
@@ -106,49 +112,85 @@ function LessonPlayer({ course, lesson, onRestart }) {
 
   if (exercise.state.status === EXERCISE_STATES.IDLE) {
     return (
-      <section className="lesson-intro">
-        <h2>{lesson.title}</h2>
-        <LessonTheory blocks={lesson.theory} lang={lang} />
-        <div className="lesson-intro__footer">
-          <button type="button" className="lesson-intro__start" onClick={exercise.start}>
-            Empezar · {items.length} ejercicios
-          </button>
-        </div>
-      </section>
+      <>
+        <Link to={coursePath(course.id)} className="app-back">
+          <Icon name="back" size={16} /> Volver al mapa del curso
+        </Link>
+        <section className="lesson-intro">
+          <h1 className="page-title">{lesson.title}</h1>
+          <LessonTheory blocks={lesson.theory} lang={lang} />
+          <div className="lesson-intro__footer">
+            <button type="button" className="lesson-intro__start" onClick={exercise.start}>
+              Empezar · {items.length} ejercicios
+              <span className="lesson-intro__time">{formatMinutes(lessonMinutes(lesson))}</span>
+            </button>
+            <Link to={classPath(course.id, lesson.id)} className="lesson-intro__class">
+              <span className="lesson-intro__class-icon"><Icon name="play" size={16} /></span>
+              <span className="lesson-intro__class-text">
+                <strong>Modo clase</strong>
+                <small>Pantalla grande para proyectar · {formatMinutes(lessonMinutes(lesson, 'class'))}</small>
+              </span>
+            </Link>
+          </div>
+        </section>
+      </>
     )
   }
 
   return (
-    <ExerciseContainer
-      title={lesson.title}
-      exercise={exercise}
-      renderPrompt={(item) => <ExercisePrompt exercise={item} />}
-      renderAnswer={({ item, onAnswer, disabled }) => {
-        const Answer = ANSWER_COMPONENTS[item.type]
-        return <Answer exercise={item} onAnswer={onAnswer} disabled={disabled} />
-      }}
-      renderFeedback={({ item, result }) => (
-        <>
-          <FeedbackAnswer
-            answerText={result === 'incorrect' ? correctAnswerText(item, context) : null}
-            speechText={speakableText(item, context)}
-            lang={lang}
-          />
-          {item.explanation && (
-            <p className="exercise-feedback__explanation">{item.explanation}</p>
-          )}
-        </>
+    <>
+      {exercise.state.status !== EXERCISE_STATES.DONE && (
+        <nav className="lesson-back-nav" aria-label="Volver al curso">
+          <Link to={coursePath(course.id)} className="app-back">
+            <Icon name="back" size={16} /> Volver al mapa del curso
+          </Link>
+          <small>El intento se guarda al terminar la lección.</small>
+        </nav>
       )}
-      onRestart={onRestart}
-    >
-      <LessonResult
-        stars={starsForAccuracy(exercise.stats.accuracy)}
-        xp={xp}
-        progress={progress}
-        nextLessonPath={nextLesson && lessonPath(course.id, nextLesson.id)}
-        mapPath={coursePath(course.id)}
-      />
-    </ExerciseContainer>
+      <ExerciseContainer
+        title={lesson.title}
+        exercise={exercise}
+        renderPrompt={(item) => <ExercisePrompt exercise={item} />}
+        renderAnswer={({ item, onAnswer, disabled }) => {
+          const Answer = ANSWER_COMPONENTS[item.type]
+          return (
+            <Answer
+              exercise={item}
+              onAnswer={onAnswer}
+              disabled={disabled}
+              language={course.language}
+              theory={lesson.theory}
+            />
+          )
+        }}
+        renderFeedback={({ item, result }) => (
+          <>
+            <FeedbackAnswer
+              answerText={result === 'incorrect' ? correctAnswerText(item, context) : null}
+              speechText={speakableText(item, context)}
+              lang={lang}
+            />
+            {item.explanation && (
+              <p className="exercise-feedback__explanation">{item.explanation}</p>
+            )}
+          </>
+        )}
+        onRestart={onRestart}
+      >
+        {({ onRestart: restart }) => (
+          <LessonResult
+            stars={starsForAccuracy(exercise.stats.accuracy)}
+            stats={exercise.stats}
+            lessonTitle={lesson.title}
+            xp={xp}
+            progress={progress}
+            nextLessonPath={nextLesson && lessonPath(course.id, nextLesson.id)}
+            mapPath={coursePath(course.id)}
+            onRestart={restart}
+          />
+        )}
+      </ExerciseContainer>
+    </>
   )
 }
 

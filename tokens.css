@@ -1,0 +1,94 @@
+/* Apropia · dirección HUD · tokens de diseño
+   Fuentes: Chakra Petch (títulos y etiquetas) y Barlow (texto), alojadas con @fontsource (ver src/app/main.jsx). */
+
+:root {
+  /* Superficies */
+  --bg: #0d0f12;            /* fondo de página */
+  --surface: #12161a;       /* paneles y tarjetas */
+  --line: #262c33;          /* filetes decorativos */
+  --line-strong: #5a6570;   /* bordes de controles (3:1 o más sobre --bg) */
+
+  /* Texto */
+  --ink: #eceff1;           /* texto principal */
+  --ink-muted: #8c97a0;     /* texto secundario (6:1 sobre --bg) */
+
+  /* Acento: lima ácida. Es el marcatextos de Apropia. */
+  --accent: #c9f31d;
+  --on-accent: #0d0f12;     /* texto sobre relleno --accent */
+
+  /* Estados de aprendizaje (cada uno con palabra y forma, nunca solo color) */
+  --state-dominio: #6cc4ff;   /* propuesto, no aparece aún en el tablero */
+  --state-proceso: var(--accent);
+  --state-refuerzo: #ff8a4c;  /* propuesto, no aparece aún en el tablero */
+
+  /* Foco */
+  --focus: #6cc4ff;
+
+  /* Tipografía */
+  --font-display: "Chakra Petch", system-ui, sans-serif;
+  --font-body: "Barlow", system-ui, sans-serif;
+
+  --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace; /* solo código y datos */
+
+  /* Escala de tamaños de letra */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-base: 18px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 28px;
+  --text-3xl: 36px;
+  --text-4xl: 40px;
+  --text-5xl: 64px;
+
+  /* Espaciado (base 4px) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-8: 48px;
+  --space-10: 64px;
+
+  /* Forma: ángulos rectos; la esquina cortada es la firma */
+  --radius: 0;
+  --cut: 12px;
+  --cut-shape: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+}
+
+/* Esquina cortada para botones primarios */
+.cut-corners {
+  clip-path: var(--cut-shape);
+}
+
+/* Marcatextos: el resaltado de Apropia */
+.mark {
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: 0 0.15em;
+}
+
+/* Rótulo técnico */
+.label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: 24px;
+}

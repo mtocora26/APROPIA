@@ -1,0 +1,115 @@
+.tutoring__list {
+  display: flex;
+  flex-direction: column;
+  margin: var(--space-3) 0 var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.tutoring__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.tutoring__item > :first-child {
+  flex: 1;
+  min-width: 140px;
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.tutoring__score {
+  font-size: var(--text-md);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-muted);
+}
+
+.tutoring__note {
+  padding: var(--space-3);
+  border: 1px solid var(--accent);
+  background: var(--surface);
+  white-space: pre-wrap;
+}
+
+.tutoring__actions {
+  margin: var(--space-5) 0;
+}
+
+.tutoring__primary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 26px;
+  border: 0;
+  background: var(--accent);
+  color: var(--on-accent);
+  clip-path: var(--cut-shape);
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.tutoring__primary:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--on-accent);
+}
+
+.tutoring__primary:disabled {
+  background: var(--line-strong);
+  color: var(--bg);
+  cursor: not-allowed;
+}
+
+.tutoring__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: var(--space-4) 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.tutoring__field input,
+.tutoring__field textarea {
+  min-height: 44px;
+  padding: var(--space-2);
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.tutoring__group {
+  margin: var(--space-3) 0;
+  border: 1px solid var(--line);
+}
+
+.tutoring__check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+}
+
+.tutoring__check input {
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+
+.tutoring__error {
+  color: var(--error);
+}

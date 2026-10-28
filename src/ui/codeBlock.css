@@ -1,0 +1,44 @@
+.code-block {
+  max-width: 100%;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  line-height: 1.6;
+  tab-size: 4;
+}
+
+.code-block code { font: inherit; }
+
+/* Cada tipo de palabra se distingue también por peso o forma, no solo por color. */
+.tok--struct { color: var(--accent); font-weight: 700; }
+.tok--io { color: var(--state-dominio); font-weight: 600; }
+.tok--type { color: var(--state-dominio); font-style: italic; }
+.tok--logic { color: #f0c987; font-weight: 700; }
+.tok--number { color: #f0c987; }
+.tok--string { color: #9fd3a8; }
+.tok--comment { color: var(--ink-muted); font-style: italic; }
+.tok--arrow { color: var(--accent); font-weight: 700; }
+.tok--op { color: var(--ink); font-weight: 600; }
+
+.tok--placeholder {
+  padding: 0 6px;
+  border: 1px dashed var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--ink);
+  font-style: italic;
+}
+
+.inline-code {
+  padding: 1px 6px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  white-space: nowrap;
+}

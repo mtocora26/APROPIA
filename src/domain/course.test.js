@@ -4,6 +4,7 @@ import {
   findLesson,
   findNextLesson,
   listLessons,
+  sampleReview,
   validateCourse,
 } from './course.js'
 
@@ -173,4 +174,28 @@ test('the review lesson id is reserved', () => {
   course.modules[0].lessons[1].id = 'm1-repaso'
 
   assert.throws(() => validateCourse(course), /reserved for the module review/)
+})
+
+test('review draws from module reviewExercises, balanced across lessons', () => {
+  const course = twoLessonCourse()
+  course.modules[0].reviewExercises = [
+    { ...choice, id: 'r1', from: 'l1' },
+    { ...choice, id: 'r2', from: 'l1' },
+    { ...choice, id: 'r3', from: 'l2' },
+  ]
+  validateCourse(course)
+
+  const review = findLesson(course, 'm1-repaso').lesson
+  assert.deepEqual(review.exercises.map((exercise) => exercise.id), ['r1', 'r2', 'r3'])
+
+  const picked = sampleReview(review.exerciseGroups, 2).map((exercise) => exercise.from)
+  assert.deepEqual([...picked].sort(), ['l1', 'l2'])
+  assert.equal(sampleReview(review.exerciseGroups, 10).length, 3)
+})
+
+test('reviewExercises must cover every lesson of the module', () => {
+  const course = twoLessonCourse()
+  course.modules[0].reviewExercises = [{ ...choice, id: 'r1', from: 'l1' }]
+
+  assert.throws(() => validateCourse(course), /needs at least one exercise from "l2"/)
 })

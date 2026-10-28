@@ -1,7 +1,7 @@
 import { ProgressRepository } from './ProgressRepository.js'
 import { createEmptyProgress, validateProgress } from './progressModel.js'
 
-const DEFAULT_STORAGE_KEY = 'tukola.progress'
+const DEFAULT_STORAGE_KEY = 'apropia.progress'
 const STORAGE_VERSION = 1
 
 export class ProgressStorageError extends Error {

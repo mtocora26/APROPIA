@@ -1,0 +1,690 @@
+.feria {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-5) var(--space-10);
+}
+
+.feria__top {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.feria__main {
+  display: flex;
+  flex-direction: column;
+}
+
+.feria__main:focus {
+  outline: none;
+}
+
+.feria__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-10) 0 var(--space-8);
+}
+
+.feria__hero h1 {
+  max-width: 9ch;
+  margin: 0;
+  font-size: clamp(44px, 7.4vw, 96px);
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.feria__video {
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+}
+
+.feria__video iframe,
+.feria__video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+  object-fit: contain;
+}
+
+.feria__video-pending {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  height: 100%;
+  color: var(--ink-muted);
+}
+
+.feria__video-pending p {
+  margin: 0;
+  font-size: var(--text-md);
+}
+
+.feria__block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--space-5) var(--space-8);
+  margin-top: var(--space-10);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--line);
+}
+
+.feria__block h2,
+.feria__cta h2 {
+  margin: 0;
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.12;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.feria__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 68ch;
+  min-width: 0;
+}
+
+.feria__body p,
+.feria__row dd,
+.feria__row p {
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: 28px;
+  text-wrap: pretty;
+}
+
+.feria__source {
+  font-size: var(--text-sm);
+  line-height: 20px;
+  color: var(--ink-muted);
+}
+
+.feria__body .feria__source {
+  font-size: var(--text-sm);
+  line-height: 20px;
+}
+
+.feria__list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feria__row {
+  display: grid;
+  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+  gap: var(--space-2) var(--space-5);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--line);
+}
+
+.feria__row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.feria__row dt {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.feria__row dd {
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.feria__status {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--ink-muted);
+}
+
+.feria__status::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: var(--space-2);
+  border: 1px solid var(--ink-muted);
+}
+
+.feria__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-top: var(--space-10);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--line);
+}
+
+.feria__cta p {
+  margin: 0;
+  font-size: var(--text-lg);
+  color: var(--ink-muted);
+}
+
+
+
+.feria__glyph {
+  flex: none;
+  color: var(--ink);
+}
+
+.feria__glyph path {
+  stroke-dasharray: 1;
+}
+
+.feria__title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.feria__title h2 {
+  margin: 0;
+}
+
+.feria__dots-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 200px));
+  gap: var(--space-5);
+}
+
+.feria__dots {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.feria__grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 3px;
+}
+
+.feria__grid span {
+  aspect-ratio: 1;
+  background: var(--line);
+}
+
+.feria__grid .is-lit {
+  background: var(--accent);
+}
+
+.feria__dots figcaption {
+  font-size: var(--text-md);
+  line-height: 22px;
+  color: var(--ink-muted);
+}
+
+.feria__dots figcaption strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  line-height: 1.1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.feria__status-line {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+}
+
+.feria__row--goal {
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: center;
+}
+
+.feria__tile {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  gap: 0 var(--space-2);
+  aspect-ratio: 1;
+  padding: var(--space-3);
+  font-family: var(--font-display);
+}
+
+.feria__tile-label {
+  grid-column: 1 / -1;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.feria__tile-number {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.feria__tile .feria__glyph {
+  justify-self: end;
+  color: inherit;
+}
+
+.feria__row--goal p:last-child {
+  color: var(--ink-muted);
+}
+
+.feria__goal-name {
+  margin-bottom: var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.feria__row--person {
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.feria__avatar {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 2px solid var(--accent);
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.feria__person {
+  margin-bottom: var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+/* Route diagram: notes become a stepped route that ends at the exam date. */
+.feria__route {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.feria__sheet rect {
+  fill: var(--surface);
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.feria__sheet path {
+  fill: none;
+  stroke: var(--ink-muted);
+  stroke-width: 1.75;
+}
+
+.feria__trail {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 2;
+  stroke-dasharray: 1;
+}
+
+.feria__step {
+  fill: var(--line);
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.feria__flag path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linejoin: miter;
+}
+
+/* Hidden-until-revealed states exist only once the script has armed the page. */
+@media (prefers-reduced-motion: no-preference) {
+  .feria {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .feria__hero h1 {
+    animation: feria-in 520ms var(--ease-out) both;
+  }
+
+  .feria__sheet {
+    animation: feria-in 480ms var(--ease-out) calc(200ms + var(--i) * 110ms) both;
+  }
+
+  .feria__trail {
+    animation: feria-draw 1400ms var(--ease-out) 700ms both;
+  }
+
+  .feria__step {
+    animation: feria-step 360ms var(--ease-out) calc(900ms + var(--i) * 260ms) both;
+  }
+
+  .feria__flag {
+    animation: feria-in 480ms var(--ease-out) 2300ms both;
+  }
+
+  .feria--armed [data-reveal]:not(.is-visible) {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  .feria--armed [data-reveal] {
+    transition: opacity 480ms var(--ease-out) var(--d, 0ms), transform 480ms var(--ease-out) var(--d, 0ms);
+  }
+
+  .feria--armed .feria__glyph path {
+    stroke-dashoffset: 1;
+  }
+
+  .feria--armed .is-visible .feria__glyph path,
+  .feria--armed .is-visible.feria__glyph path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 900ms var(--ease-out) calc(var(--d, 0ms) + 200ms);
+  }
+
+  .feria--armed .feria__grid span {
+    opacity: 0;
+  }
+
+  .feria--armed .is-visible .feria__grid span {
+    opacity: 1;
+    transition: opacity 200ms ease-out calc(var(--i) * 9ms);
+  }
+
+  .feria--armed .is-visible .feria__grid .is-lit {
+    animation: feria-lit 300ms var(--ease-out) calc(var(--i) * 9ms) both;
+  }
+
+  .feria__tile {
+    transition: transform 200ms var(--ease-out);
+  }
+
+  .feria__row--goal:hover .feria__tile {
+    transform: scale(1.04);
+  }
+
+  .feria .btn-primary {
+    transition: background-color 150ms ease, color 150ms ease, transform 160ms var(--ease-out);
+  }
+
+  .feria .btn-primary:active {
+    transform: scale(0.97);
+  }
+}
+
+@keyframes feria-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes feria-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes feria-step {
+  from {
+    fill: var(--line);
+  }
+  to {
+    fill: var(--accent);
+  }
+}
+
+@keyframes feria-lit {
+  from {
+    background: var(--line);
+  }
+}
+
+@media (max-width: 719px) {
+  .feria {
+    padding-inline: var(--space-4);
+  }
+
+  .feria__hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: var(--space-8);
+  }
+
+  .feria__hero h1 {
+    max-width: 12ch;
+  }
+
+  .feria__dots-pair {
+    gap: var(--space-4);
+  }
+
+  .feria__block {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: var(--space-8);
+  }
+
+  .feria__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .feria__row--goal,
+  .feria__row--person {
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+}
+
+/* Mercado meta y modelo de negocio */
+.feria__body--wide {
+  max-width: none;
+}
+
+.feria__sector {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+}
+
+.feria__chip {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.feria__tabs,
+.feria__switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.feria__tab,
+.feria__switch button {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-muted);
+  font: inherit;
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.feria__tab:active,
+.feria__switch button:active {
+  transform: scale(0.97);
+}
+
+.feria__tab[aria-selected='true'],
+.feria__switch button[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--ink);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+@media (hover: hover) {
+  .feria__tab:hover,
+  .feria__switch button:hover {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+}
+
+.feria__tab:focus-visible,
+.feria__switch button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.feria__save {
+  display: block;
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.feria__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+}
+
+.feria__panel p {
+  margin: 0;
+}
+
+.feria__panel-title {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.feria__panel-note {
+  color: var(--ink-muted);
+}
+
+.feria__plans,
+.feria__plan-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feria__plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+
+.feria__plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  border: 1px solid var(--line);
+  transition: border-color 200ms ease, transform 200ms ease;
+}
+
+.feria__plan--featured {
+  border-color: var(--accent);
+}
+
+@media (hover: hover) {
+  .feria__plan:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+}
+
+.feria__plan p {
+  margin: 0;
+}
+
+.feria__plan-name {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.feria__plan .feria__plan-pitch,
+.feria__plan .feria__plan-alt {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.feria__plan .feria__price {
+  margin-top: var(--space-3);
+  font-size: clamp(24px, 2.6vw, 32px);
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.feria__plan .feria__price span {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.feria__plan-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.feria__plan-items li {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--line);
+  font-size: var(--text-sm);
+  line-height: 22px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .feria__panel {
+    animation: feria-in 320ms var(--ease-out, ease-out) both;
+  }
+}

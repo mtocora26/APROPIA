@@ -1,29 +1,239 @@
 .app-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.app-header--compact {
+  padding-block: var(--space-2);
+}
+
+.app-header--compact .logo__word {
+  font-size: var(--text-md);
+}
+
+.app-header--compact .logo svg {
+  width: 22px;
+  height: 22px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.logo__word {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .app-brand {
-  font-weight: 700;
-  font-size: 20px;
-  color: var(--text-h);
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--ink);
   text-decoration: none;
 }
 
-.app-main {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 24px 16px;
+.app-header__panel {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
 }
 
-.home__courses {
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.app-nav__link,
+.app-nav__cta,
+.app-nav__about,
+.app-header__toggle {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.app-nav__link {
+  border-bottom: 2px solid transparent;
+  color: var(--ink-muted);
+}
+
+.app-nav__link:hover {
+  color: var(--ink);
+}
+
+.app-nav__link--active {
+  border-bottom-color: var(--accent);
+  color: var(--ink);
+}
+
+/* The one action the fair demo starts from. */
+.app-nav__cta {
+  margin-right: var(--space-2);
+  padding-inline: var(--space-4);
+  background: var(--accent);
+  color: var(--on-accent);
+  clip-path: var(--cut-shape);
+}
+
+.app-nav__cta:hover,
+.app-nav__cta--active {
+  background: var(--ink);
+  color: var(--on-accent);
+}
+
+.app-nav__about {
+  padding-inline: var(--space-3);
+  color: var(--ink-muted);
+  font-family: var(--font-body);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.app-nav__about:hover {
+  color: var(--accent);
+}
+
+.app-header__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+}
+
+.app-header__toggle {
+  display: none;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.app-nav a:focus-visible,
+.app-header__toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .app-header__toggle {
+    display: inline-flex;
+  }
+
+  .app-header__panel {
+    display: none;
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    padding-top: var(--space-2);
+  }
+
+  .app-header--open .app-header__panel {
+    display: flex;
+  }
+
+  .app-nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .app-nav__cta {
+    justify-content: center;
+    margin: 0 0 var(--space-2);
+  }
+
+  .app-nav__link {
+    border-bottom: 1px solid var(--line);
+    border-left: 2px solid transparent;
+  }
+
+  .app-nav__link--active {
+    border-bottom-color: var(--line);
+    border-left-color: var(--accent);
+  }
+
+  .app-header__tools {
+    padding-top: var(--space-3);
+  }
+}
+
+.app-main {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5);
+}
+
+.app-back {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 44px;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink-muted);
+  font-size: var(--text-md);
+  text-decoration: none;
+}
+
+.app-back:hover {
+  color: var(--accent);
+}
+
+.app-back:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.home {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin: 24px 0;
+  gap: var(--space-5);
+}
+
+.home h1 {
+  margin: 0;
+}
+
+.home > p {
+  margin: 0;
+  max-width: 560px;
+  font-size: var(--text-lg);
+  line-height: 28px;
+  color: var(--ink-muted);
+}
+
+.home__courses,
+.flashcards__decks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -31,29 +241,78 @@
 .course-card {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-bottom-width: 4px;
-  border-radius: 14px;
-  color: var(--text);
+  gap: var(--space-1);
+  min-height: 44px;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink-muted);
   text-decoration: none;
 }
 
 .course-card:hover {
   border-color: var(--accent);
+  color: var(--ink-muted);
 }
 
 .course-card__title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-h);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--ink);
 }
 
 .course-card__meta {
-  font-size: 14px;
+  font-size: var(--text-md);
+  line-height: 22px;
+}
+
+.home__demo a,
+.tutoring__actions a:not(.tutoring__primary) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 .home__demo {
-  font-size: 14px;
+  font-size: var(--text-md);
+}
+
+/* Desktop: logo and student tools on top, the full navigation below. */
+@media (min-width: 768px) {
+  .app-header:not(.app-header--compact) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'brand tools'
+      'nav nav';
+    row-gap: var(--space-2);
+    padding-bottom: 0;
+  }
+
+  .app-header:not(.app-header--compact) .app-header__panel {
+    display: contents;
+  }
+
+  .app-header:not(.app-header--compact) .app-brand {
+    grid-area: brand;
+  }
+
+  .app-header:not(.app-header--compact) .app-header__tools {
+    grid-area: tools;
+    justify-self: end;
+  }
+
+  .app-header:not(.app-header--compact) .app-nav {
+    grid-area: nav;
+    gap: 0 var(--space-1);
+  }
+
+  .app-nav__cta {
+    margin-block: var(--space-1);
+  }
+
+  .app-nav__about {
+    margin-left: auto;
+  }
 }

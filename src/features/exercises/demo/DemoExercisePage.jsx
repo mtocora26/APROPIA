@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { progressRepository } from '../../../app/progressRepository.js'
+import { useProgressRepository } from '../../students/studentContext.js'
 import { useExercise } from '../../../hooks/useExercise.js'
 import {
   SAVE_STATUSES,
@@ -20,6 +20,7 @@ function DemoExercisePage() {
 }
 
 function DemoExercise({ onRestart }) {
+  const progressRepository = useProgressRepository()
   const exercise = useExercise({
     items: DEMO_ITEMS,
     validateAnswer: validateTextAnswer,

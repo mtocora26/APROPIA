@@ -1,4 +1,4 @@
-# Arquitectura de Tukola (English Practice Platform)
+# Arquitectura de APROPIA
 
 > ⚠️ **Pivote 2026-09-22**: se decidió migrar a React (ver [ADR-0002](./decisiones/ADR-0002-adopcion-react-vite.md)) y usar **Firebase (Firestore + Auth email/password, cuenta única) como backend**, más **Capacitor** para empaquetar app nativa (ver [ADR-0004](./decisiones/ADR-0004-firebase-y-capacitor.md), que supera a ADR-0003). El contenido viejo (verbos irregulares, ICFES, Context Hunt) se archiva en `/legacy` — ya no es el foco del producto. Las secciones 1-2 de abajo describen el estado *pre-pivote* como referencia histórica; la sección 4 describe el destino real actual.
 

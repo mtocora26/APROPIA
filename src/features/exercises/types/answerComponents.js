@@ -1,5 +1,9 @@
 import ChoiceAnswer from './ChoiceAnswer.jsx'
+import CodeAnswer from './CodeAnswer.jsx'
+import DialogueAnswer from './DialogueAnswer.jsx'
+import HuntAnswer from './HuntAnswer.jsx'
 import MatchAnswer from './MatchAnswer.jsx'
+import OpenAnswer from './OpenAnswer.jsx'
 import ReorderAnswer from './ReorderAnswer.jsx'
 import SpellingAnswer from './SpellingAnswer.jsx'
 import TypedAnswer from './TypedAnswer.jsx'
@@ -12,4 +16,8 @@ export const ANSWER_COMPONENTS = Object.freeze({
   reorder: ReorderAnswer,
   match: MatchAnswer,
   spelling: SpellingAnswer,
+  open: OpenAnswer,
+  dialogue: DialogueAnswer,
+  hunt: HuntAnswer,
+  code: CodeAnswer,
 })

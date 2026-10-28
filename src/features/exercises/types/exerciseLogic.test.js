@@ -7,6 +7,7 @@ import {
   prepareExercise,
   shuffle,
   speakableText,
+  visibleDialogueLines,
 } from './exerciseLogic.js'
 
 const context = { alphabet: ITALIAN_ALPHABET }
@@ -114,4 +115,61 @@ test('correctAnswerText describes the expected answer', () => {
 test('speakableText skips match exercises', () => {
   assert.equal(speakableText(reorder), 'Io sono Eva')
   assert.equal(speakableText(match), null)
+})
+
+const open = {
+  type: 'open',
+  prompt: 'Cuéntale a un compañero qué has hecho hoy.',
+  modelAnswer: 'I have had a busy day.',
+}
+const dialogue = {
+  type: 'dialogue',
+  lines: [
+    { who: 'Waiter', text: 'Ready to order?' },
+    { who: 'You', options: ['Yes, a coffee please.', 'Yesterday I coffee.'], answer: 'Yes, a coffee please.' },
+    { who: 'Waiter', text: 'Anything else?' },
+    { who: 'You', options: ['No, thanks.', 'No, thank.'], answer: 'No, thanks.' },
+    { who: 'Waiter', text: 'Enjoy!' },
+  ],
+}
+
+test('open: the result is whatever the student rated themselves', () => {
+  assert.equal(checkAnswer({ selfRating: 'ok', text: '' }, open), true)
+  assert.equal(checkAnswer({ selfRating: 'miss', text: 'x' }, open), false)
+  assert.equal(checkAnswer(undefined, open), false)
+  assert.equal(speakableText(open, context), 'I have had a busy day.')
+  assert.equal(correctAnswerText(open, context), null)
+})
+
+test('dialogue: every chosen line must be the right one, in order', () => {
+  assert.equal(checkAnswer({ choices: ['Yes, a coffee please.', 'No, thanks.'] }, dialogue), true)
+  assert.equal(checkAnswer({ choices: ['Yes, a coffee please.', 'No, thank.'] }, dialogue), false)
+  assert.equal(checkAnswer({ choices: ['Yes, a coffee please.'] }, dialogue), false)
+  assert.equal(checkAnswer({}, dialogue), false)
+})
+
+test('dialogue: shows the conversation up to the next line to answer', () => {
+  assert.equal(visibleDialogueLines(dialogue, 0).length, 2)
+  assert.equal(visibleDialogueLines(dialogue, 1).length, 4)
+  assert.equal(visibleDialogueLines(dialogue, 2).length, 5)
+})
+
+test('dialogue: shuffles options per line and writes the full correct text', () => {
+  const prepared = prepareExercise(dialogue, { random: seededRandom() })
+
+  assert.equal(prepared.view.options[0], null)
+  assert.deepEqual([...prepared.view.options[1]].sort(), [...dialogue.lines[1].options].sort())
+  assert.equal(
+    correctAnswerText(dialogue, context),
+    'Waiter: Ready to order? / You: Yes, a coffee please. / Waiter: Anything else? / You: No, thanks. / Waiter: Enjoy!',
+  )
+  assert.equal(speakableText(dialogue, context), null)
+})
+
+test('hunt: only the wrong word index is correct and the correction is shown', () => {
+  const hunt = { type: 'hunt', tokens: ['She', 'am', 'a', 'doctor.'], wrongIndex: 1, correction: 'She is a doctor.' }
+
+  assert.equal(checkAnswer(1, hunt), true)
+  assert.equal(checkAnswer(0, hunt), false)
+  assert.equal(correctAnswerText(hunt), 'She is a doctor.')
 })

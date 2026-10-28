@@ -16,8 +16,9 @@ const MAX_STARS_PER_LESSON = 3
  *
  * @param {object} course see domain/course.js
  * @param {{ exercises: Record<string, object> }} progress see core/storage
+ * @param {{ unlockAll?: boolean }} options tutor profile may visit any lesson
  */
-export function buildCourseMap(course, progress) {
+export function buildCourseMap(course, progress, { unlockAll = false } = {}) {
   let previousCompleted = true
   let currentLessonId = null
 
@@ -30,7 +31,7 @@ export function buildCourseMap(course, progress) {
 
       let status = LESSON_STATUS.LOCKED
       if (completed) status = LESSON_STATUS.COMPLETED
-      else if (previousCompleted) status = LESSON_STATUS.AVAILABLE
+      else if (previousCompleted || unlockAll) status = LESSON_STATUS.AVAILABLE
 
       if (status === LESSON_STATUS.AVAILABLE && currentLessonId === null) {
         currentLessonId = lesson.id
@@ -65,3 +66,17 @@ export function findMapNode(map, lessonId) {
   }
   return null
 }
+
+/** Learning state of a node: «Dominio» (3 stars), «Reforzar» (done, fewer stars), «En proceso» (open), «Pendiente» (locked). */
+export function nodeState({ status, stars }) {
+  if (status === LESSON_STATUS.COMPLETED) return stars >= MAX_STARS_PER_LESSON ? 'dominio' : 'refuerzo'
+  if (status === LESSON_STATUS.AVAILABLE) return 'proceso'
+  return 'pendiente'
+}
+
+export const STATE_LABELS = Object.freeze({
+  dominio: 'Dominio',
+  refuerzo: 'Reforzar',
+  proceso: 'En proceso',
+  pendiente: 'Bloqueada',
+})

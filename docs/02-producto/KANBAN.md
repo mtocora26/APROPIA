@@ -1,4 +1,4 @@
-# Kanban — Tukola
+# Kanban — APROPIA
 
 Tablero simple en markdown. Muévete de columna editando este archivo (o migra a GitHub Projects cuando quieras algo visual — ver nota al final).
 
@@ -8,10 +8,13 @@ Tablero simple en markdown. Muévete de columna editando este archivo (o migra a
 > Todo lo que vive en [BACKLOG.md](./BACKLOG.md) y no está priorizado para ahora.
 
 ## ✅ Ready (próximas 1-2 semanas)
-- [ ] EPIC-07-04 — Portar FSRS a módulo ES puro (#7)
 
 ## 🔨 In Progress
-_(vacío — arrastra aquí solo 1 tarjeta cuando empieces)_
+- [ ] EPIC-11-01 — Estudiantes locales (#22) — rama `feature/EPIC-11-01-estudiantes-locales`
+- [ ] EPIC-07-04 — FSRS como módulo ES puro (#7) — rama `feature/EPIC-07-04-fsrs`
+- [ ] EPIC-12-01 — Flashcards con FSRS por estudiante (#23) — rama `feature/EPIC-12-01-flashcards`
+- [ ] EPIC-12-02 — Recap de inicio de clase y sesiones de tutoría (#24) — rama `feature/EPIC-12-02-recap-sesiones`
+- [ ] EPIC-13-01 — Ejercicios creativos y modo clase (#25) — rama `feature/EPIC-13-01-ejercicios-creativos`
 
 ## 👀 Review (autorevisión antes de mergear)
 - [ ] EPIC-07-05 — `ExerciseContainer` genérico (#6) — rama `feature/EPIC-07-05-exercise-container`
