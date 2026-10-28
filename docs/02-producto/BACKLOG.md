@@ -37,6 +37,7 @@ _Objetivo: modelar el contenido para que agregar un curso sea "solo agregar dato
 | EPIC-08-03 | Crear `content/courses/italian-a1/` con tu material actual (2-3 lecciones piloto) | 🔴 | 3 |
 | EPIC-08-04 | Selector de curso en el dashboard (elegir idioma/curso activo) | 🟡 | 2 |
 | EPIC-08-05 | Definir proceso repetible: "cómo convierto una clase de mi curso en contenido de la app" (plantilla) | 🟡 | 1 |
+| ✅ EPIC-08-06 | Curso `english-tenses`: un módulo por tiempo verbal, contenido migrado de legacy (#20) + despliegue en Vercel | 🔴 | 2 |
 
 ## EPIC-09 — Firebase (Firestore + Auth email/password)
 _Objetivo: sincronizar progreso entre dispositivos, con el mismo contrato `ProgressRepository` ya en uso._
