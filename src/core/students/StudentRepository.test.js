@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { createMemoryStorage } from '../storage/memoryStorage.js'
 import { StudentRepository, StudentStorageError } from './StudentRepository.js'
-import { DEFAULT_STUDENT_ID } from './studentModel.js'
+import { ADMIN_STUDENT_ID, DEFAULT_STUDENT_ID } from './studentModel.js'
 
 const NOW = '2026-10-20T10:00:00.000Z'
 
@@ -21,7 +21,7 @@ test('starts with the default student, without writing anything', () => {
 
   assert.deepEqual(
     repository.list().map((student) => student.id),
-    [DEFAULT_STUDENT_ID],
+    [DEFAULT_STUDENT_ID, ADMIN_STUDENT_ID],
   )
   assert.equal(repository.getActive().id, DEFAULT_STUDENT_ID)
   assert.equal(storage.length, 0)
@@ -80,13 +80,39 @@ test('removing a student deletes their progress and moves the active one', () =>
   assert.equal(storage.getItem(`apropia.sessions.${id}`), null)
   assert.equal(storage.getItem('apropia.progress'), '{"keep":true}')
   assert.equal(repository.getActive().id, DEFAULT_STUDENT_ID)
-  assert.equal(repository.list().length, 1)
+  assert.equal(repository.list().length, 2)
 })
 
 test('the last student cannot be removed', () => {
   const { repository } = createRepository()
 
   assert.throws(() => repository.remove(DEFAULT_STUDENT_ID), /al menos un estudiante/)
+})
+
+test('tutor profile is selectable, reserved and independent of student progress', () => {
+  const { repository, storage } = createRepository()
+  repository.setActive(ADMIN_STUDENT_ID)
+
+  assert.equal(repository.getActive().name, 'Tutor (admin)')
+  assert.throws(() => repository.remove(ADMIN_STUDENT_ID), /no se puede eliminar/)
+  assert.throws(() => repository.rename(ADMIN_STUDENT_ID, 'Otro'), /no se puede renombrar/)
+  assert.throws(() => repository.remove(DEFAULT_STUDENT_ID), /al menos un estudiante/)
+  assert.equal(storage.getItem('apropia.progress'), null)
+})
+
+test('older student lists gain the tutor profile without replacing the selected student', () => {
+  const storage = createMemoryStorage()
+  storage.setItem('apropia.students', JSON.stringify({
+    version: 1,
+    students: [{ id: DEFAULT_STUDENT_ID, name: 'Yo', createdAt: NOW }],
+    activeId: DEFAULT_STUDENT_ID,
+  }))
+  const { repository } = createRepository(storage)
+
+  assert.deepEqual(repository.list().map(({ id }) => id), [DEFAULT_STUDENT_ID, ADMIN_STUDENT_ID])
+  assert.equal(repository.getActive().id, DEFAULT_STUDENT_ID)
+  repository.setActive(ADMIN_STUDENT_ID)
+  assert.equal(createRepository(storage).repository.getActive().id, ADMIN_STUDENT_ID)
 })
 
 test('reports corrupt stored data without overwriting it', () => {

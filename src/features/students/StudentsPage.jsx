@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { createBackup, restoreBackup } from '../../core/storage/backup.js'
+import { ADMIN_STUDENT_ID } from '../../core/students/studentModel.js'
 import { useStudents } from './studentContext.js'
 import './students.css'
 
@@ -9,6 +10,7 @@ function StudentsPage() {
   const [newName, setNewName] = useState('')
   const [editing, setEditing] = useState(null)
   const [message, setMessage] = useState(null)
+  const learners = students.filter((student) => student.id !== ADMIN_STUDENT_ID)
 
   // Runs `action`, showing its error (e.g. duplicated name) instead of crashing.
   function attempt(action, onSuccess) {
@@ -69,7 +71,7 @@ function StudentsPage() {
   return (
     <section className="students">
       <h1>Estudiantes</h1>
-      <p>Cada estudiante tiene su propio progreso. Elige con quién estás en la tutoría.</p>
+      <p>Cada estudiante tiene su propio progreso. El perfil Tutor (admin) del selector puede consultar todos los módulos sin desbloquearlos y no requiere contraseña.</p>
 
       {message && (
         <p role="alert" className={`students__message students__message--${message.kind}`}>
@@ -78,7 +80,7 @@ function StudentsPage() {
       )}
 
       <ul className="students__list">
-        {students.map((student) => (
+        {learners.map((student) => (
           <li key={student.id} className="students__item">
             {editing?.id === student.id ? (
               <form onSubmit={handleRename} className="students__row">
@@ -113,7 +115,7 @@ function StudentsPage() {
                 >
                   Renombrar
                 </button>
-                {students.length > 1 && (
+                {learners.length > 1 && (
                   <button type="button" onClick={() => handleRemove(student)}>
                     Eliminar
                   </button>

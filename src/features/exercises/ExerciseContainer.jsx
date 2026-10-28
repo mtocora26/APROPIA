@@ -1,5 +1,7 @@
 import { NEXT_STEPS } from '../../core/session/studySession.js'
 import { EXERCISE_STATES } from '../../hooks/useExercise.js'
+import Meter from '../../ui/Meter.jsx'
+import Panel from '../../ui/Panel.jsx'
 import './ExerciseContainer.css'
 
 /**
@@ -16,7 +18,8 @@ import './ExerciseContainer.css'
  * @param {(args: { item: unknown, answer: unknown, result: string }) => React.ReactNode} [props.renderFeedback]
  *   Extra, type-specific feedback (e.g. the expected answer).
  * @param {() => void} [props.onRestart]
- * @param {React.ReactNode} [props.children] Extra content for the summary screen.
+ * @param {React.ReactNode | ((args: { onRestart?: Function }) => React.ReactNode)} [props.children]
+ *   Extra content for the summary screen. A function takes over the actions (including restart).
  */
 function ExerciseContainer({
   title,
@@ -32,7 +35,7 @@ function ExerciseContainer({
   if (state.status === EXERCISE_STATES.IDLE) {
     return (
       <section className="exercise">
-        <h2>{title}</h2>
+        <h1 className="page-title">{title}</h1>
         <button type="button" onClick={start} autoFocus>
           Empezar
         </button>
@@ -43,7 +46,7 @@ function ExerciseContainer({
   if (state.status === EXERCISE_STATES.DONE) {
     return (
       <section className="exercise">
-        <h2>{title}</h2>
+        <h1 className="page-title">{title}</h1>
         <ExerciseSummary stats={stats} onRestart={onRestart}>
           {children}
         </ExerciseSummary>
@@ -57,7 +60,7 @@ function ExerciseContainer({
   return (
     <section className="exercise">
       <header className="exercise__header">
-        <h2>{title}</h2>
+        <h1 className="page-title">{title}</h1>
         {reviewing && (
           <p className="exercise__phase">Repaso: corrige tus errores</p>
         )}
@@ -68,7 +71,7 @@ function ExerciseContainer({
         />
       </header>
 
-      <div className="exercise__prompt">{renderPrompt(state.currentItem)}</div>
+      <Panel featured className="exercise__prompt">{renderPrompt(state.currentItem)}</Panel>
 
       {/* `key` resets the answer UI on every step, even if an item repeats. */}
       <div key={state.step} className="exercise__answer">
@@ -85,7 +88,7 @@ function ExerciseContainer({
           role="status"
         >
           <p className="exercise__feedback-title">
-            {state.result === 'correct' ? '¡Correcto!' : 'Incorrecto'}
+            {state.result === 'correct' ? 'Correcto' : 'Reforzar'}
           </p>
           {renderFeedback?.({
             item: state.currentItem,
@@ -115,10 +118,10 @@ function ExerciseProgress({ current, total, combo }) {
       <span>
         {current} / {total}
       </span>
-      <progress value={current - 1} max={total} aria-label="Progreso" />
+      <Meter value={current - 1} max={total} label={`Progreso: ${current - 1} de ${total}`} />
       {combo >= MIN_COMBO_SHOWN && (
         <span key={combo} className="exercise__combo" aria-label={`Combo de ${combo}`}>
-          🔥 {combo}
+          Combo {combo}
         </span>
       )}
     </div>
@@ -132,11 +135,17 @@ function ExerciseSummary({ stats, onRestart, children }) {
       <p>
         {stats.correct} correctas de {stats.answered}
       </p>
-      {children}
-      {onRestart && (
-        <button type="button" onClick={onRestart} autoFocus>
-          Repetir
-        </button>
+      {typeof children === 'function' ? (
+        children({ onRestart })
+      ) : (
+        <>
+          {children}
+          {onRestart && (
+            <button type="button" className="button--secondary" onClick={onRestart} autoFocus>
+              Repetir
+            </button>
+          )}
+        </>
       )}
     </div>
   )

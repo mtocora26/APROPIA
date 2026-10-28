@@ -1,18 +1,26 @@
 import { Link, useParams } from 'react-router-dom'
-import { useProgressRepository } from '../students/studentContext.js'
-import { getCourse } from '../../content/courses/index.js'
+import { ADMIN_STUDENT_ID } from '../../core/students/studentModel.js'
+import { useProgressRepository, useStudents } from '../students/studentContext.js'
+import { getCourse } from '../../app/courseCatalog.js'
 import { useCourseProgress } from '../../hooks/useCourseProgress.js'
+import { formatMinutes, moduleMinutes } from '../lessons/duration.js'
 import { lessonPath } from '../lessons/paths.js'
-import { buildCourseMap, LESSON_STATUS } from './courseMap.js'
+import Icon from '../../ui/Icon.jsx'
+import Meter from '../../ui/Meter.jsx'
+import MarkLast from '../../ui/MarkLast.jsx'
+import Panel from '../../ui/Panel.jsx'
+import { buildCourseMap, LESSON_STATUS, nodeState, STATE_LABELS } from './courseMap.js'
+import EnglishNav from '../english/EnglishNav.jsx'
+import { ENGLISH_COURSE_ID } from '../english/useStudiedEnglish.js'
 import './courseMap.css'
 
-// Horizontal offsets that draw the zigzag path.
-const PATH_OFFSETS = ['0px', '48px', '72px', '48px', '0px', '-48px', '-72px', '-48px']
 const MAX_STARS = 3
+const MAX_PROGRESS_SEGMENTS = 10
 
 function CoursePage() {
   const { courseId } = useParams()
   const progressRepository = useProgressRepository()
+  const { activeStudent } = useStudents()
   const course = getCourse(courseId)
   const { progress, error } = useCourseProgress({
     repository: progressRepository,
@@ -22,7 +30,7 @@ function CoursePage() {
   if (!course) {
     return (
       <p>
-        No encontramos este curso. <Link to="/">Volver al inicio</Link>
+        No encontramos este curso. <Link to="/inicio">Volver al inicio</Link>
       </p>
     )
   }
@@ -35,103 +43,118 @@ function CoursePage() {
     return <p>Cargando…</p>
   }
 
-  const map = buildCourseMap(course, progress)
+  const map = buildCourseMap(course, progress, { unlockAll: activeStudent.id === ADMIN_STUDENT_ID })
 
   return (
     <section className="course-map">
+      {course.id === ENGLISH_COURSE_ID && <EnglishNav />}
+      <Link to="/inicio" className="app-back">
+        <Icon name="back" size={16} /> Volver a rutas
+      </Link>
       <header className="course-map__header">
-        <h1>{course.title}</h1>
-        <p className="course-map__stats">
-          <span aria-label={`${map.stars} de ${map.maxStars} estrellas`}>
-            <span className="course-map__star" aria-hidden="true">★</span> {map.stars}/
-            {map.maxStars}
+        <h1>
+          <MarkLast text={course.title} />
+        </h1>
+        <div className="course-map__stats">
+          <span className="course-map__stars">
+            <span className="label">Estrellas</span> {map.stars}/{map.maxStars}
+            <span aria-hidden="true">
+              <Meter value={map.stars} max={map.maxStars} label={`${map.stars} de ${map.maxStars} estrellas`} />
+            </span>
           </span>
-          <span>⚡ {map.totalXp} XP</span>
-        </p>
+          <span>
+            <span className="label">XP</span> {map.totalXp}
+          </span>
+        </div>
       </header>
 
       {map.modules.map(({ module, lessons }, m) => (
-        <section key={module.id} className="course-map__module">
-          <h2 className="course-map__banner">
-            <span>Módulo {m + 1}</span>
-            {module.title}
-          </h2>
-          <ol className="course-map__path">
-            {lessons.map((node, i) => (
-              <li
-                key={node.lesson.id}
-                className="course-map__step"
-                style={{ '--offset': PATH_OFFSETS[i % PATH_OFFSETS.length] }}
-              >
-                <MapNode
-                  node={node}
-                  number={i + 1}
-                  current={node.lesson.id === map.currentLessonId}
-                  to={lessonPath(course.id, node.lesson.id)}
-                />
-              </li>
-            ))}
-          </ol>
-        </section>
+        <ModulePanel
+          key={module.id}
+          module={module}
+          lessons={lessons}
+          index={m}
+          currentLessonId={map.currentLessonId}
+          courseId={course.id}
+        />
       ))}
     </section>
   )
 }
 
-function MapNode({ node, number, current, to }) {
-  const { lesson, status, stars } = node
-  const icon = nodeIcon(node, number)
-  const classes = [
-    'map-node',
-    `map-node--${status}`,
-    current && 'map-node--current',
-    lesson.review && 'map-node--review',
-  ]
-    .filter(Boolean)
-    .join(' ')
-
-  if (status === LESSON_STATUS.LOCKED) {
-    return (
-      <div className={classes} aria-label={`${lesson.title}, bloqueada`}>
-        <span className="map-node__circle" aria-hidden="true">
-          🔒
-        </span>
-        <span className="map-node__title">{lesson.title}</span>
-      </div>
-    )
-  }
+function ModulePanel({ module, lessons, index, currentLessonId, courseId }) {
+  const completed = lessons.filter((node) => node.status === LESSON_STATUS.COMPLETED).length
 
   return (
-    <Link
-      to={to}
-      className={classes}
-      aria-current={current ? 'step' : undefined}
+    <Panel
+      as="section"
+      featured={lessons.some((node) => node.lesson.id === currentLessonId)}
+      className="course-map__module"
+      style={{ '--i': index }}
     >
-      {current && <span className="map-node__bubble">Empezar</span>}
-      <span className="map-node__circle" aria-hidden="true">
-        {icon}
-      </span>
-      <span className="map-node__title">{lesson.title}</span>
-      {status === LESSON_STATUS.COMPLETED && (
-        <span
-          className="map-node__stars"
-          aria-label={`${stars} de ${MAX_STARS} estrellas`}
-        >
-          {Array.from({ length: MAX_STARS }, (_, i) => (
-            <span key={i} className={i < stars ? 'map-node__star--on' : undefined}>
-              ★
-            </span>
-          ))}
-        </span>
-      )}
-    </Link>
+      <header className="course-map__banner">
+        <div>
+          <h2>{module.title}</h2>
+          <p className="course-map__duration">
+            Módulo {index + 1} · {formatMinutes(moduleMinutes(module))} solo ·{' '}
+            {formatMinutes(moduleMinutes(module, 'class'))} en clase
+          </p>
+        </div>
+        <p className="course-map__progress">
+          {completed} de {lessons.length} {lessons.length === 1 ? 'lección' : 'lecciones'}
+          <Meter
+            value={completed}
+            max={lessons.length}
+            segments={Math.min(lessons.length, MAX_PROGRESS_SEGMENTS)}
+            label={`${completed} de ${lessons.length} lecciones completadas`}
+          />
+        </p>
+      </header>
+      <ol className="course-map__path">
+        {lessons.map((node) => (
+          <li key={node.lesson.id} className="course-map__step">
+            <MapNode
+              node={node}
+              current={node.lesson.id === currentLessonId}
+              to={lessonPath(courseId, node.lesson.id)}
+            />
+          </li>
+        ))}
+      </ol>
+    </Panel>
   )
 }
 
-function nodeIcon(node, number) {
-  if (node.lesson.review) return '🏆'
-  if (node.status === LESSON_STATUS.COMPLETED) return '✓'
-  return number
+function MapNode({ node, current, to }) {
+  const { lesson, status, stars } = node
+  const state = nodeState(node)
+  const classes = ['map-node', `map-node--${state}`, current && 'map-node--current']
+    .filter(Boolean)
+    .join(' ')
+  const body = (
+    <>
+      <span className="map-node__title">
+        {lesson.review && <Icon name="trophy" size={18} />}
+        {lesson.title}
+      </span>
+      {status === LESSON_STATUS.COMPLETED && (
+        <Meter value={stars} max={MAX_STARS} segments={MAX_STARS} label={`${stars} de ${MAX_STARS} estrellas`} />
+      )}
+      <span className={`state state--${state}`}>
+        {STATE_LABELS[state]}
+      </span>
+    </>
+  )
+
+  if (status === LESSON_STATUS.LOCKED) {
+    return <div className={classes}>{body}</div>
+  }
+
+  return (
+    <Link to={to} className={classes} aria-current={current ? 'step' : undefined}>
+      {body}
+    </Link>
+  )
 }
 
 export default CoursePage

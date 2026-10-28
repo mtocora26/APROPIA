@@ -5,6 +5,46 @@ export const PAST_SIMPLE = {
   title: 'Past Simple',
   lessons: [
     {
+      id: 'ps-l0-was-were',
+      title: 'To be en pasado: was / were',
+      theory: [
+        { type: 'text', text: 'To be es el único verbo que NO usa did en pasado simple. Cambia por sí mismo: am/is → was, are → were. Igual que en presente no usamos do con to be (Are you tired?), en pasado tampoco usamos did (Were you tired?).' },
+        { type: 'timeline', title: 'Antes y ahora', now: 75, events: [
+          { emoji: '😴', label: 'I was tired (yesterday)', from: 45 },
+          { emoji: '😊', label: 'I am happy (now)', from: 75 },
+          { emoji: '🏖️', label: 'We were in Cartagena (in 2023)', from: 15 },
+        ] },
+        { type: 'table', columns: ['Sujeto', 'Presente', 'Pasado', 'Ejemplo'], rows: [
+          ['I / he / she / it', 'am / is', 'was', 'She was at home.'],
+          ['you / we / they', 'are', 'were', 'They were late.'],
+          ['Negativa', 'isn\'t / aren\'t', 'wasn\'t / weren\'t', 'I wasn\'t ready.'],
+          ['Pregunta', 'Is / Are ...?', 'Was / Were ...?', 'Were you at the party?'],
+        ] },
+        { type: 'scene', title: 'Ayer vs hoy', items: [
+          { emoji: '🌧️', text: 'It was rainy yesterday.', translation: 'Ayer estuvo lluvioso.' },
+          { emoji: '🎂', text: 'I was 19 last year.', translation: 'El año pasado tenía 19.' },
+          { emoji: '🧑‍🤝‍🧑', text: 'We were classmates.', translation: 'Éramos compañeros.' },
+        ] },
+        { type: 'tip', text: 'Con to be NUNCA uses did: «Did you were tired?» y «I didn\'t was there» son errores. Correcto: Were you tired? / I wasn\'t there. En el resto de los verbos sí: Did you go? / I didn\'t go.' },
+      ],
+      exercises: [
+        { id: 'ps-l0-e1', type: 'choice', prompt: 'Elige was o were.', sentence: 'My grandmother ___ a teacher.', options: ['was', 'were'], answer: 'was' },
+        { id: 'ps-l0-e2', type: 'choice', prompt: 'Elige was o were.', sentence: 'We ___ very tired last night.', options: ['was', 'were'], answer: 'were' },
+        { id: 'ps-l0-e3', type: 'typed', prompt: 'Forma negativa. Yo no estaba en casa.', sentence: 'I ___ at home.', answer: "wasn't", alternatives: ['was not'] },
+        { id: 'ps-l0-e4', type: 'reorder', prompt: 'Ordena la pregunta: ¿Estabas en la fiesta?', tokens: ['Were', 'you', 'at', 'the', 'party?'], answer: ['Were', 'you', 'at', 'the', 'party?'] },
+        { id: 'ps-l0-e5', type: 'hunt', prompt: 'Detective: toca la palabra incorrecta.', tokens: ['Did', 'you', 'were', 'at', 'school?'], wrongIndex: 0, correction: 'Were you at school?' },
+        { id: 'ps-l0-e6', type: 'hunt', prompt: 'Detective: toca la palabra incorrecta.', tokens: ["They", "didn't", 'was', 'happy.'], wrongIndex: 1, correction: "They weren't happy." },
+        { id: 'ps-l0-e7', type: 'choice', picture: '🌧️☂️', prompt: '¿Cuál frase describe bien el pasado?', options: ['Yesterday it was rainy.', 'Yesterday it is rainy.', 'Yesterday it did was rainy.'], answer: 'Yesterday it was rainy.' },
+        { id: 'ps-l0-e8', type: 'dialogue', prompt: 'Tu amigo te llama después de un viaje.', lines: [
+          { who: 'Leo', text: 'Hi! I was in Medellín last week.' },
+          { who: 'Tú', options: ['Really? How was the trip?', 'Really? How did the trip was?', 'Really? How is the trip yesterday?'], answer: 'Really? How was the trip?' },
+          { who: 'Leo', text: 'It was amazing! The people were so kind.' },
+          { who: 'Tú', options: ['Were you alone?', 'Did you were alone?', 'Was you alone?'], answer: 'Were you alone?' },
+        ] },
+        { id: 'ps-l0-e9', type: 'open', picture: '🕰️', prompt: 'Compara tu infancia con hoy: cómo eras y dónde estabas a los 10 años (3 frases con was/were).', hints: ['When I was ten, I was ...', 'My friends were ...', 'We were at ...'], modelAnswer: 'When I was ten, I was very shy. My friends were funny. We were always at the park.' },
+      ],
+    },
+    {
       id: 'ps-l1-verbos-1',
       title: 'Verbos en pasado (1/3)',
       theory: [
@@ -366,6 +406,16 @@ export const PAST_SIMPLE = {
         {
           type: 'text',
           text: 'Afirmativa: Sujeto + verbo en pasado. La forma es la misma para todas las personas.',
+        },
+        {
+          type: 'timeline',
+          title: 'El pasado simple: acción terminada',
+          now: 85,
+          events: [
+            { emoji: '🛒', label: 'I bought a bike (last week)', from: 40 },
+            { emoji: '🏖️', label: 'We visited Cartagena (in 2023)', from: 15 },
+            { emoji: '🎬', label: 'She watched a film (yesterday)', from: 70 },
+          ],
         },
         {
           type: 'example',
@@ -794,5 +844,64 @@ export const PAST_SIMPLE = {
         },
       ],
     },
+    {
+      id: 'ps-l-reto-creativo',
+      title: 'Reto creativo',
+      theory: [
+        { type: 'text', text: 'Practica el pasado simple contando historias: encuentra errores, completa una escena y escribe tu propia aventura.' },
+        { type: 'tip', text: 'Con did/didn\'t el verbo vuelve a su forma base: I didn\'t go (no «I didn\'t went»).' },
+      ],
+      exercises: [
+        { id: 'ps-lr-e1', type: 'hunt', prompt: 'Detective: toca la palabra incorrecta.', tokens: ['Yesterday', 'I', 'goed', 'to', 'school.'], wrongIndex: 2, correction: 'Yesterday I went to school.' },
+        { id: 'ps-lr-e2', type: 'hunt', prompt: 'Detective: toca la palabra incorrecta.', tokens: ['She', "didn't", 'went', 'to', 'the', 'party.'], wrongIndex: 2, correction: "She didn't go to the party." },
+        { id: 'ps-lr-e3', type: 'hunt', prompt: 'Detective: toca la palabra incorrecta.', tokens: ['Did', 'you', 'saw', 'the', 'movie?'], wrongIndex: 2, correction: 'Did you see the movie?' },
+        { id: 'ps-lr-e4', type: 'dialogue', prompt: 'Tu amigo vuelve de vacaciones. Responde a su historia.', lines: [
+          { who: 'Leo', text: 'Hey! I just got back from Cartagena!' },
+          { who: 'Tú', options: ['Cool! What did you do there?', 'Cool! What you did there?', 'Cool! What do you did there?'], answer: 'Cool! What did you do there?' },
+          { who: 'Leo', text: 'I visited the old city and I ate a lot of seafood.' },
+          { who: 'Tú', options: ['Did you swim in the sea?', 'Did you swam in the sea?', 'You swam in the sea?'], answer: 'Did you swim in the sea?' },
+        ] },
+        { id: 'ps-lr-e5', type: 'open', prompt: 'Cuenta el mejor día de tu último fin de semana en 3 frases.', hints: ['Last Saturday I ...', 'Then I ...', 'It was ...'], modelAnswer: 'Last Saturday I visited my grandmother. We cooked soup and we watched a movie. It was a great day.' },
+        { id: 'ps-lr-e6', type: 'open', prompt: 'Eres un viajero en el tiempo: cuenta a dónde fuiste y qué viste (3 frases).', hints: ['I travelled to ...', 'I saw ...', 'I met ...'], modelAnswer: 'I travelled to ancient Egypt. I saw the pyramids. I met a very friendly cat.' },
+      ],
+    },
+  ],
+  reviewSize: 8,
+  // Repaso del módulo: ejercicios distintos a los de las lecciones, en otros contextos.
+  reviewExercises: [
+    { id: 'ps-r19', from: 'ps-l0-was-were', type: 'dialogue', picture: '🎬🍿', prompt: 'Hablan de una película que vieron ayer.', lines: [
+      { who: 'Ana', text: 'Where were you last night?' },
+      { who: 'Tú', options: ['I was at the cinema.', 'I did was at the cinema.', 'I were at the cinema.'], answer: 'I was at the cinema.' },
+      { who: 'Ana', text: 'How was the movie?' },
+      { who: 'Tú', options: ['It was a bit long, but the actors were great.', 'It were a bit long, but the actors was great.', 'It did be long.'], answer: 'It was a bit long, but the actors were great.' },
+    ] },
+    { id: 'ps-r20', from: 'ps-l0-was-were', type: 'typed', prompt: 'Completa con la forma negativa. Mis zapatos no eran nuevos.', sentence: 'My shoes ___ new.', answer: "weren't", alternatives: ['were not'] },
+    { id: 'ps-r1', from: 'ps-l1-verbos-1', type: 'dialogue', prompt: 'Tu compañero de piso llega a casa. Completa la charla.', lines: [
+      { who: 'Mateo', text: 'Where did you go this morning?' },
+      { who: 'Tú', options: ['I went to the market and I bought fruit.', 'I goed to the market and I buyed fruit.', 'I go to the market and I bought fruit.'], answer: 'I went to the market and I bought fruit.' },
+      { who: 'Mateo', text: 'Did you make lunch?' },
+      { who: 'Tú', options: ['Yes, I made pasta.', 'Yes, I maked pasta.', 'Yes, I did made pasta.'], answer: 'Yes, I made pasta.' },
+    ] },
+    { id: 'ps-r2', from: 'ps-l1-verbos-1', type: 'typed', picture: '🚕✈️', prompt: 'Pasado de take. Ayer tomé un taxi al aeropuerto.', sentence: 'Yesterday I ___ a taxi to the airport.', answer: 'took' },
+    { id: 'ps-r3', from: 'ps-l2-verbos-2', type: 'hunt', prompt: 'Detective: toca la palabra incorrecta.', tokens: ['Last', 'night', 'we', 'seed', 'a', 'shooting', 'star.'], wrongIndex: 3, correction: 'Last night we saw a shooting star.' },
+    { id: 'ps-r4', from: 'ps-l2-verbos-2', type: 'open', prompt: 'Cuenta cómo te sentiste y qué escuchaste en tu último concierto, fiesta o evento (2 frases).', hints: ['I felt ...', 'I heard ...'], modelAnswer: 'I felt very excited. I heard my favourite song.' },
+    { id: 'ps-r5', from: 'ps-l3-verbos-3', type: 'choice', prompt: 'Un amigo cuenta su fin de semana. ¿Cuál frase es correcta?', options: ['He rode his bike and broke the lamp.', 'He ridden his bike and breaked the lamp.', 'He rided his bike and broke the lamp.'], answer: 'He rode his bike and broke the lamp.' },
+    { id: 'ps-r6', from: 'ps-l3-verbos-3', type: 'reorder', prompt: 'Ordena: Mi abuelo construyó esta casa.', tokens: ['My', 'grandfather', 'built', 'this', 'house.'], answer: ['My', 'grandfather', 'built', 'this', 'house.'] },
+    { id: 'ps-r7', from: 'ps-l4-afirmativas', type: 'open', prompt: 'Escribe una mini noticia de ayer en tu ciudad (2 frases en pasado).', hints: ['Yesterday a ... ', 'The police / people ...'], modelAnswer: 'Yesterday a big storm hit the city. Many people stayed at home.' },
+    { id: 'ps-r8', from: 'ps-l4-afirmativas', type: 'typed', prompt: 'Completa con el pasado de study. Anoche estudié hasta tarde.', sentence: 'Last night I ___ until late.', answer: 'studied' },
+    { id: 'ps-r9', from: 'ps-l5-negativas', type: 'hunt', prompt: 'Detective: toca la palabra incorrecta.', tokens: ['He', "didn't", 'bought', 'any', 'souvenirs.'], wrongIndex: 2, correction: "He didn't buy any souvenirs." },
+    { id: 'ps-r10', from: 'ps-l5-negativas', type: 'typed', prompt: 'Excusa del examen. No estudié anoche.', sentence: 'I ___ study last night.', answer: "didn't", alternatives: ['did not'] },
+    { id: 'ps-r11', from: 'ps-l6-preguntas', type: 'dialogue', prompt: 'Entrevista a un famoso. Haz las preguntas en pasado.', lines: [
+      { who: 'Tú', options: ['When did you start singing?', 'When you started singing?', 'When did you started singing?'], answer: 'When did you start singing?' },
+      { who: 'Singer', text: 'When I was ten years old.' },
+      { who: 'Tú', options: ['Did you win any prizes?', 'Do you won any prizes?', 'Did you won any prizes?'], answer: 'Did you win any prizes?' },
+    ] },
+    { id: 'ps-r12', from: 'ps-l6-preguntas', type: 'reorder', prompt: 'Ordena: ¿Dónde compraste esos zapatos?', tokens: ['Where', 'did', 'you', 'buy', 'those', 'shoes?'], answer: ['Where', 'did', 'you', 'buy', 'those', 'shoes?'] },
+    { id: 'ps-r13', from: 'ps-l7-lectura-1', type: 'open', prompt: 'Cuenta un viaje o paseo que hiciste, en 3 frases: adónde fuiste, qué viste y cómo te sentiste.', hints: ['I went to ...', 'I saw ...', 'It was ...'], modelAnswer: 'I went to the beach with my cousins. We saw dolphins. It was amazing.' },
+    { id: 'ps-r14', from: 'ps-l7-lectura-1', type: 'choice', prompt: '«Nosotros caminamos por el sendero y descansamos». ¿Cuál es correcta?', options: ['We walked along the trail and rested.', 'We walk along the trail and rested.', 'We walked along the trail and rest.'], answer: 'We walked along the trail and rested.' },
+    { id: 'ps-r15', from: 'ps-l8-lectura-2', type: 'open', prompt: 'Misterio: perdiste algo importante. Di qué perdiste, dónde lo buscaste y quién lo encontró (3 frases).', hints: ['I lost my ...', 'I looked for it ...', 'Someone found it ...'], modelAnswer: 'I lost my phone. I looked for it in the kitchen. My sister found it in the garden.' },
+    { id: 'ps-r16', from: 'ps-l8-lectura-2', type: 'hunt', prompt: 'Detective: toca la palabra incorrecta.', tokens: ['Did', 'you', 'found', 'the', 'wallet?'], wrongIndex: 2, correction: 'Did you find the wallet?' },
+    { id: 'ps-r17', from: 'ps-l-reto-creativo', type: 'open', picture: '🚀🌙👽', prompt: 'Inventa tu propia aventura de ayer: algo imposible que hiciste (3 frases).', hints: ['Yesterday I flew to ...', 'I met ...', 'We ...'], modelAnswer: 'Yesterday I flew to the moon. I met a friendly alien. We ate pizza together.' },
+    { id: 'ps-r18', from: 'ps-l-reto-creativo', type: 'hunt', prompt: 'Detective: toca la palabra incorrecta.', tokens: ['They', 'meeted', 'at', 'the', 'station.'], wrongIndex: 1, correction: 'They met at the station.' },
   ],
 }

@@ -1,0 +1,456 @@
+{
+  "title": "Ruta de Estudio: Ciclos en PSeInt",
+  "summary": "Domina las estructuras repetitivas Mientras, Repetir y Para, además de contadores y acumuladores.",
+  "modules": [
+    {
+      "title": "Módulo 1: Fundamentos y Estructura Mientras",
+      "lessons": [
+        {
+          "title": "Lección 1: ¿Qué es un ciclo?",
+          "theory": [
+            {
+              "kind": "text",
+              "text": "Un ciclo repite un bloque de instrucciones. Cada repetición se llama iteración."
+            },
+            {
+              "kind": "tip",
+              "text": "Si nada dentro del cuerpo del ciclo cambia para acercarlo a terminar, provocas un ciclo infinito."
+            }
+          ],
+          "exercises": [
+            {
+              "type": "choice",
+              "prompt": "¿Cómo se le llama a cada repetición de un ciclo?",
+              "sentence": "",
+              "options": [
+                "Una iteración",
+                "Un contador",
+                "Un acumulador",
+                "Una condición"
+              ],
+              "answer": "Una iteración",
+              "alternatives": [],
+              "pairs": [],
+              "modelAnswer": "",
+              "hints": [],
+              "explanation": "Cada repetición individual dentro de un ciclo se denomina iteración."
+            },
+            {
+              "type": "typed",
+              "prompt": "Completa la frase con el término correcto según los apuntes.",
+              "sentence": "Todo ciclo necesita un cuerpo, una condición y algo que cambie para evitar un ciclo ___.",
+              "options": [],
+              "answer": "infinito",
+              "alternatives": [
+                "infinito."
+              ],
+              "pairs": [],
+              "modelAnswer": "",
+              "hints": [
+                "Ocurre cuando la condición nunca cambia."
+              ],
+              "explanation": "Si no hay cambios que acerquen el ciclo a su fin, este se vuelve infinito."
+            },
+            {
+              "type": "match",
+              "prompt": "Relaciona cada concepto con su definición básica.",
+              "sentence": "",
+              "options": [],
+              "answer": "",
+              "alternatives": [],
+              "pairs": [
+                {
+                  "left": "Iteración",
+                  "right": "Cada repetición del ciclo"
+                },
+                {
+                  "left": "Cuerpo",
+                  "right": "Instrucciones que se repiten"
+                },
+                {
+                  "left": "Ciclo infinito",
+                  "right": "Ocurre cuando nada cambia para terminar"
+                }
+              ],
+              "modelAnswer": "",
+              "hints": [],
+              "explanation": "Estos son los componentes y definiciones fundamentales de las estructuras repetitivas."
+            },
+            {
+              "type": "open",
+              "prompt": "Explica con tus propias palabras para qué sirve un ciclo en programación.",
+              "sentence": "",
+              "options": [],
+              "answer": "",
+              "alternatives": [],
+              "pairs": [],
+              "modelAnswer": "Sirve para repetir un bloque de instrucciones sin tener que escribir lo mismo muchas veces, o cuando no se sabe de antemano cuántas veces se repetirá.",
+              "hints": [
+                "Piensa en ahorrar código y en tareas que no sabes cuántas veces ocurrirán."
+              ],
+              "explanation": "Los ciclos evitan la repetición manual de código y manejan entradas dinámicas."
+            }
+          ]
+        },
+        {
+          "title": "Lección 2: Estructura Mientras",
+          "theory": [
+            {
+              "kind": "text",
+              "text": "La condición se evalúa ANTES de cada iteración. Si es falsa desde el principio, el cuerpo no se ejecuta ni una vez."
+            },
+            {
+              "kind": "tip",
+              "text": "Se usa principalmente cuando no sabemos cuántas veces se va a repetir el proceso."
+            }
+          ],
+          "exercises": [
+            {
+              "type": "choice",
+              "prompt": "¿Cuándo se evalúa la condición en el ciclo Mientras?",
+              "sentence": "",
+              "options": [
+                "Antes de cada iteración",
+                "Después de cada iteración",
+                "Solo al finalizar el programa",
+                "Al azar"
+              ],
+              "answer": "Antes de cada iteración",
+              "alternatives": [],
+              "pairs": [],
+              "modelAnswer": "",
+              "hints": [],
+              "explanation": "En el Mientras, la condición se revisa antes de entrar al cuerpo del ciclo."
+            },
+            {
+              "type": "typed",
+              "prompt": "Completa la sintaxis básica en PSeInt.",
+              "sentence": "Mientras condicion Hacer instrucciones Fin___",
+              "options": [],
+              "answer": "Mientras",
+              "alternatives": [
+                "FinMientras"
+              ],
+              "pairs": [],
+              "modelAnswer": "",
+              "hints": [
+                "Termina con la palabra clave que cierra esta estructura."
+              ],
+              "explanation": "La estructura Mientras se cierra con FinMientras."
+            },
+            {
+              "type": "match",
+              "prompt": "Relaciona las características del ciclo Mientras.",
+              "sentence": "",
+              "options": [],
+              "answer": "",
+              "alternatives": [],
+              "pairs": [
+                {
+                  "left": "Evaluación",
+                  "right": "Antes de cada iteración"
+                },
+                {
+                  "left": "Uso principal",
+                  "right": "Cuando no se sabe cuántas veces repetir"
+                },
+                {
+                  "left": "Ejecución mínima",
+                  "right": "Puede ser cero veces si inicia falso"
+                }
+              ],
+              "modelAnswer": "",
+              "hints": [],
+              "explanation": "El ciclo Mientras destaca por validar antes de ejecutar."
+            },
+            {
+              "type": "open",
+              "prompt": "Explica por qué el cuerpo de un ciclo Mientras puede no ejecutarse ni una sola vez.",
+              "sentence": "",
+              "options": [],
+              "answer": "",
+              "alternatives": [],
+              "pairs": [],
+              "modelAnswer": "Porque la condición se evalúa antes de entrar al ciclo, y si ya es falsa desde el inicio, nunca se ejecuta el bloque interno.",
+              "hints": [
+                "Piensa en el momento exacto en el que se revisa la condición."
+              ],
+              "explanation": "Al evaluarse antes, una condición falsa inicial impide la ejecución."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Módulo 2: Estructuras Repetir y Para",
+      "lessons": [
+        {
+          "title": "Lección 1: Estructura Repetir ... Hasta Que",
+          "theory": [
+            {
+              "kind": "text",
+              "text": "La condición se evalúa DESPUÉS de cada iteración, por lo que el cuerpo se ejecuta al menos una vez."
+            },
+            {
+              "kind": "tip",
+              "text": "Termina cuando la condición se vuelve VERDADERA, lo cual es al revés que el ciclo Mientras."
+            }
+          ],
+          "exercises": [
+            {
+              "type": "choice",
+              "prompt": "¿Cuándo termina el ciclo Repetir ... Hasta Que?",
+              "sentence": "",
+              "options": [
+                "Cuando la condición se vuelve verdadera",
+                "Cuando la condición se vuelve falsa",
+                "Cuando el contador llega a cero",
+                "Nunca termina"
+              ],
+              "answer": "Cuando la condición se vuelve verdadera",
+              "alternatives": [],
+              "pairs": [],
+              "modelAnswer": "",
+              "hints": [],
+              "explanation": "A diferencia del Mientras, este ciclo busca que la condición sea verdadera para detenerse."
+            },
+            {
+              "type": "typed",
+              "prompt": "Completa el comando de cierre en PSeInt.",
+              "sentence": "Repetir instrucciones Hasta Que ___",
+              "options": [],
+              "answer": "condicion",
+              "alternatives": [
+                "condición"
+              ],
+              "pairs": [],
+              "modelAnswer": "",
+              "hints": [
+                "Es el elemento evaluado para saber si se detiene."
+              ],
+              "explanation": "El bloque exige la palabra Hasta Que seguida de la condición."
+            },
+            {
+              "type": "match",
+              "prompt": "Relaciona las características del ciclo Repetir.",
+              "sentence": "",
+              "options": [],
+              "answer": "",
+              "alternatives": [],
+              "pairs": [
+                {
+                  "left": "Evaluación",
+                  "right": "Después de cada iteración"
+                },
+                {
+                  "left": "Ejecución mínima",
+                  "right": "Al menos una vez"
+                },
+                {
+                  "left": "Condición de salida",
+                  "right": "Termina cuando es verdadera"
+                }
+              ],
+              "modelAnswer": "",
+              "hints": [],
+              "explanation": "El ciclo Repetir garantiza una ejecución inicial."
+            },
+            {
+              "type": "open",
+              "prompt": "¿Para qué tipo de tareas es muy útil el ciclo Repetir ... Hasta Que según los apuntes?",
+              "sentence": "",
+              "options": [],
+              "answer": "",
+              "alternatives": [],
+              "pairs": [],
+              "modelAnswer": "Es muy útil para validar datos, como pedir una nota hasta que esté en un rango válido.",
+              "hints": [
+                "Piensa en asegurar que un usuario ingrese información correcta."
+              ],
+              "explanation": "Garantiza pedir el dato al menos una vez antes de verificar si es correcto."
+            }
+          ]
+        },
+        {
+          "title": "Lección 2: Estructura Para",
+          "theory": [
+            {
+              "kind": "text",
+              "text": "Se usa cuando sabemos exactamente cuántas veces se va a repetir. La variable de control cambia sola en cada iteración según el paso."
+            },
+            {
+              "kind": "tip",
+              "text": "Puedes usar Con Paso -1 para contar hacia atrás."
+            }
+          ],
+          "exercises": [
+            {
+              "type": "choice",
+              "prompt": "¿En qué situación debes usar principalmente el ciclo Para?",
+              "sentence": "",
+              "options": [
+                "Cuando sabemos cuántas veces se repite",
+                "Cuando no sabemos cuántas veces se repite",
+                "Cuando la condición es verdadera desde el inicio",
+                "Cuando queremos un ciclo infinito"
+              ],
+              "answer": "Cuando sabemos cuántas veces se repite",
+              "alternatives": [],
+              "pairs": [],
+              "modelAnswer": "",
+              "hints": [],
+              "explanation": "El ciclo Para está diseñado para iteraciones con un límite conocido."
+            },
+            {
+              "type": "typed",
+              "prompt": "Completa la estructura del ciclo Para para contar hacia atrás.",
+              "sentence": "Para i <- 10 Hasta 1 Con Paso ___ Hacer",
+              "options": [],
+              "answer": "-1",
+              "alternatives": [
+                "- 1"
+              ],
+              "pairs": [],
+              "modelAnswer": "",
+              "hints": [
+                "Es un número negativo que indica el decremento."
+              ],
+              "explanation": "Se usa Con Paso -1 para realizar conteos descendentes."
+            },
+            {
+              "type": "match",
+              "prompt": "Relaciona los elementos del ciclo Para.",
+              "sentence": "",
+              "options": [],
+              "answer": "",
+              "alternatives": [],
+              "pairs": [
+                {
+                  "left": "Variable de control",
+                  "right": "Cambia sola en cada iteración"
+                },
+                {
+                  "left": "Con Paso -1",
+                  "right": "Cuenta hacia atrás"
+                },
+                {
+                  "left": "FinPara",
+                  "right": "Cierra la estructura"
+                }
+              ],
+              "modelAnswer": "",
+              "hints": [],
+              "explanation": "El ciclo Para automatiza el cambio de la variable de control."
+            },
+            {
+              "type": "open",
+              "prompt": "Explica cuál es la principal diferencia entre el ciclo Para y el ciclo Mientras respecto al conocimiento previo.",
+              "sentence": "",
+              "options": [],
+              "answer": "",
+              "alternatives": [],
+              "pairs": [],
+              "modelAnswer": "El ciclo Para se usa cuando se sabe cuántas repeticiones habrá, mientras que el Mientras se usa cuando no se sabe.",
+              "hints": [
+                "Piensa en cuándo conoces el número de iteraciones."
+              ],
+              "explanation": "El conocimiento previo del número de repeticiones define cuál estructura elegir."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Módulo 3: Contadores, Acumuladores y Errores Frecuentes",
+      "lessons": [
+        {
+          "title": "Lección 1: Contadores y Acumuladores",
+          "theory": [
+            {
+              "kind": "text",
+              "text": "Un contador aumenta de a uno (cont <- cont + 1) para contar sucesos. Un acumulador suma valores (suma <- suma + n) para guardar un total."
+            },
+            {
+              "kind": "tip",
+              "text": "Ambos se inicializan ANTES del ciclo, casi siempre en 0. Cuidado al calcular el promedio: ¡no dividas si el contador es 0!"
+            }
+          ],
+          "exercises": [
+            {
+              "type": "choice",
+              "prompt": "¿Dónde se deben inicializar los contadores y acumuladores?",
+              "sentence": "",
+              "options": [
+                "Antes del ciclo",
+                "Dentro del cuerpo del ciclo",
+                "Después de terminar el ciclo",
+                "No necesitan inicializarse"
+              ],
+              "answer": "Antes del ciclo",
+              "alternatives": [],
+              "pairs": [],
+              "modelAnswer": "",
+              "hints": [],
+              "explanation": "Si se inicializan dentro, se reiniciarán en cada vuelta."
+            },
+            {
+              "type": "typed",
+              "prompt": "Completa la operación típica de un acumulador.",
+              "sentence": "suma <- suma + ___",
+              "options": [],
+              "answer": "n",
+              "alternatives": [
+                "valor"
+              ],
+              "pairs": [],
+              "modelAnswer": "",
+              "hints": [
+                "Es la variable que contiene el nuevo número a sumar."
+              ],
+              "explanation": "El acumulador suma el nuevo valor ingresado en cada iteración."
+            },
+            {
+              "type": "match",
+              "prompt": "Relaciona cada concepto con su asignación.",
+              "sentence": "",
+              "options": [],
+              "answer": "",
+              "alternatives": [],
+              "pairs": [
+                {
+                  "left": "Contador",
+                  "right": "cont <- cont + 1"
+                },
+                {
+                  "left": "Acumulador",
+                  "right": "suma <- suma + n"
+                },
+                {
+                  "left": "Promedio",
+                  "right": "acumulador / contador"
+                }
+              ],
+              "modelAnswer": "",
+              "hints": [],
+              "explanation": "Las operaciones básicas para contar, acumular y promediar."
+            },
+            {
+              "type": "open",
+              "prompt": "Explica qué sucede si inicializas un acumulador DENTRO del ciclo en lugar de antes.",
+              "sentence": "",
+              "options": [],
+              "answer": "",
+              "alternatives": [],
+              "pairs": [],
+              "modelAnswer": "El acumulador se reiniciará a cero en cada vuelta, perdiendo el total acumulado de las iteraciones anteriores.",
+              "hints": [
+                "Piensa en qué le pasa a su valor al entrar de nuevo al bloque."
+              ],
+              "explanation": "Reiniciar dentro del ciclo borra el progreso anterior en cada iteración."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

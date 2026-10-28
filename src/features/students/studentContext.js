@@ -23,6 +23,11 @@ export function useSessionRepository() {
   return useStudentContext().sessionRepository
 }
 
+/** The active student's `StudiedRepository` (lessons marked as studied). */
+export function useStudiedRepository() {
+  return useStudentContext().studiedRepository
+}
+
 /** `{ students, activeStudent, switchStudent, addStudent, renameStudent, removeStudent }` */
 export function useStudents() {
   return useStudentContext()

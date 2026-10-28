@@ -3,8 +3,10 @@ import test from 'node:test'
 import { Rating, createEmptyCard, reviewCard } from '../fsrs/fsrs.js'
 import {
   answerSession,
+  buildMixedQueue,
   buildReviewQueue,
   formatInterval,
+  parseCardKey,
   isSessionDone,
   startSession,
 } from './flashcardSession.js'
@@ -50,4 +52,12 @@ test('formats intervals for the rating buttons', () => {
   assert.equal(formatInterval(3), '3 d')
   assert.equal(formatInterval(65), '2 meses')
   assert.equal(formatInterval(540), '1.5 años')
+})
+
+test('mixed queue takes turns between decks and respects the limit', () => {
+  const deck = (id) => ({ id, cards: ['a', 'b', 'c'].map((card) => ({ id: card })) })
+  const queue = buildMixedQueue([deck('d1'), deck('d2')], {}, new Date(), 4)
+
+  assert.equal(queue.length, 4)
+  assert.deepEqual(queue.map((key) => parseCardKey(key).deckId), ['d1', 'd2', 'd1', 'd2'])
 })

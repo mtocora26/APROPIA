@@ -40,6 +40,13 @@ function RecapPage() {
     <section className="tutoring">
       <h1>Recap de {activeStudent.name}</h1>
 
+      <p className="tutoring__actions">
+        <Link to="/practica" className="tutoring__primary">
+          Práctica de inglés: repasa lo estudiado
+        </Link>{' '}
+        <Link to="/ingles/estudiado">Marcar lo estudiado</Link>
+      </p>
+
       <h2>Última tutoría</h2>
       {recap.lastSession ? (
         <>
@@ -92,6 +99,12 @@ function RecapPage() {
                 <Link to={`/flashcards/${deck.id}`}>Repasar</Link>
               </li>
             ))}
+            {recap.decks.some(({ deck }) => deck.id.startsWith('verbs-')) && (
+              <li className="tutoring__item">
+                <span>Verbos: práctica mixta (12 tarjetas, todos los modos)</span>
+                <Link to="/flashcards/verbos-mixto">Repasar mezclado</Link>
+              </li>
+            )}
           </ul>
         </>
       )}

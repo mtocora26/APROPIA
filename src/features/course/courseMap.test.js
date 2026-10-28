@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { createEmptyProgress } from '../../core/storage/progressModel.js'
-import { buildCourseMap, findMapNode, LESSON_STATUS } from './courseMap.js'
+import { buildCourseMap, findMapNode, LESSON_STATUS, nodeState } from './courseMap.js'
 
 const exercise = (id) => ({ id, type: 'choice', prompt: '?', options: ['a', 'b'], answer: 'a' })
 const lesson = (id) => ({ id, title: id, theory: [], exercises: [exercise(`${id}-e1`)] })
@@ -50,6 +50,15 @@ test('without progress only the first lesson is available', () => {
   assert.equal(map.maxStars, 12)
 })
 
+test('tutor sees every lesson without changing the student unlock sequence', () => {
+  const progress = createEmptyProgress('c')
+  const tutor = buildCourseMap(course, progress, { unlockAll: true })
+
+  assert.ok(statuses(tutor).every(([, status]) => status === LESSON_STATUS.AVAILABLE))
+  assert.equal(tutor.currentLessonId, 'l1')
+  assert.equal(findMapNode(buildCourseMap(course, progress), 'l3').status, LESSON_STATUS.LOCKED)
+})
+
 test('completing a lesson unlocks the next one, across modules', () => {
   const map = buildCourseMap(
     course,
@@ -90,4 +99,11 @@ test('when everything is completed there is no current lesson', () => {
 
   assert.equal(map.currentLessonId, null)
   assert.equal(map.stars, map.maxStars)
+})
+
+test('nodeState names the learning state of each node', () => {
+  assert.equal(nodeState({ status: LESSON_STATUS.COMPLETED, stars: 3 }), 'dominio')
+  assert.equal(nodeState({ status: LESSON_STATUS.COMPLETED, stars: 2 }), 'refuerzo')
+  assert.equal(nodeState({ status: LESSON_STATUS.AVAILABLE, stars: 0 }), 'proceso')
+  assert.equal(nodeState({ status: LESSON_STATUS.LOCKED, stars: 0 }), 'pendiente')
 })

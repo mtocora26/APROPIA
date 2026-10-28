@@ -1,11 +1,13 @@
 import {
   STUDENTS_STORAGE_KEY,
   STUDENTS_VERSION,
+  ADMIN_STUDENT_ID,
   createDefaultStudentsData,
   createStudent,
   normalizeStudentName,
   studentStorageKeys,
   validateStudentsData,
+  withAdminStudent,
 } from './studentModel.js'
 
 export class StudentStorageError extends Error {
@@ -70,6 +72,7 @@ export class StudentRepository {
 
   rename(id, name) {
     const data = this.#read()
+    if (id === ADMIN_STUDENT_ID) throw new TypeError('El perfil de tutor no se puede renombrar')
     if (!data.students.some((student) => student.id === id)) {
       throw new TypeError('El estudiante no existe')
     }
@@ -86,10 +89,11 @@ export class StudentRepository {
   /** Removes a student and all their stored data. The last one cannot be removed. */
   remove(id) {
     const data = this.#read()
+    if (id === ADMIN_STUDENT_ID) throw new TypeError('El perfil de tutor no se puede eliminar')
     if (!data.students.some((student) => student.id === id)) {
       throw new TypeError('El estudiante no existe')
     }
-    if (data.students.length === 1) {
+    if (data.students.filter((student) => student.id !== ADMIN_STUDENT_ID).length === 1) {
       throw new TypeError('Debe quedar al menos un estudiante')
     }
 
@@ -135,7 +139,7 @@ export class StudentRepository {
     if (serialized === null) return createDefaultStudentsData(this.now())
 
     try {
-      return validateStudentsData(JSON.parse(serialized))
+      return withAdminStudent(validateStudentsData(JSON.parse(serialized)), this.now())
     } catch (error) {
       throw new StudentStorageError('La lista de estudiantes guardada no es válida', {
         cause: error,

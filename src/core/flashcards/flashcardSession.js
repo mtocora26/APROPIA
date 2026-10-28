@@ -19,6 +19,42 @@ export function buildReviewQueue(deck, cards, now, limit = DEFAULT_SESSION_SIZE)
     .map((item) => item.id)
 }
 
+export const MIXED_SESSION_SIZE = 12
+
+/** Identifies a card across decks in a mixed session. */
+export function cardKey(deckId, cardId) {
+  return `${deckId}/${cardId}`
+}
+
+export function parseCardKey(key) {
+  const split = key.indexOf('/')
+  return { deckId: key.slice(0, split), cardId: key.slice(split + 1) }
+}
+
+/**
+ * One session mixing several decks (e.g. the verb modes): takes turns between
+ * decks so the same verb is practised in different ways, never more than
+ * `limit` cards.
+ *
+ * @param {object[]} decks
+ * @param {Record<string, Record<string, object>>} cardsByDeck FSRS cards by deck id, then card id
+ * @returns {string[]} card keys (see `cardKey`)
+ */
+export function buildMixedQueue(decks, cardsByDeck, now, limit = MIXED_SESSION_SIZE) {
+  const queues = decks.map((deck) =>
+    buildReviewQueue(deck, cardsByDeck[deck.id] ?? {}, now, limit).map((id) => cardKey(deck.id, id)),
+  )
+  const mixed = []
+
+  while (mixed.length < limit && queues.some((queue) => queue.length > 0)) {
+    for (const queue of queues) {
+      if (mixed.length < limit && queue.length > 0) mixed.push(queue.shift())
+    }
+  }
+
+  return mixed
+}
+
 export function startSession(queue) {
   return { queue, reviewed: 0, forgotten: 0 }
 }

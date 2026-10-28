@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Apropia Explicativo</title>
+<style>
+@font-face{font-family:"Chakra Petch";font-weight:500;src:url(node_modules/@fontsource/chakra-petch/files/chakra-petch-latin-500-normal.woff2)}
+@font-face{font-family:"Chakra Petch";font-weight:600;src:url(node_modules/@fontsource/chakra-petch/files/chakra-petch-latin-600-normal.woff2)}
+@font-face{font-family:"Chakra Petch";font-weight:700;src:url(node_modules/@fontsource/chakra-petch/files/chakra-petch-latin-700-normal.woff2)}
+@font-face{font-family:"Barlow";font-weight:400;src:url(node_modules/@fontsource/barlow/files/barlow-latin-400-normal.woff2)}
+@font-face{font-family:"Barlow";font-weight:500;src:url(node_modules/@fontsource/barlow/files/barlow-latin-500-normal.woff2)}
+@font-face{font-family:"Barlow";font-weight:600;src:url(node_modules/@fontsource/barlow/files/barlow-latin-600-normal.woff2)}
+:root{
+  --bg:#0d0f12; --surface:#12161a; --line:#262c33; --line-strong:#5a6570;
+  --ink:#eceff1; --ink-muted:#8c97a0; --accent:#c9f31d; --on-accent:#0d0f12;
+  --dominio:#6cc4ff; --refuerzo:#ff8a4c;
+  --display:"Chakra Petch",system-ui,sans-serif; --body:"Barlow",system-ui,sans-serif;
+  --cut:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;background:var(--bg);overflow:hidden;font-family:var(--body)}
+.scene{position:absolute;inset:0;opacity:0;padding:150px 140px 110px;display:flex;flex-direction:column;justify-content:center}
+.center{align-items:center;text-align:center}
+.label{font-family:var(--display);font-weight:500;font-size:22px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-muted)}
+.big{font-family:var(--display);font-weight:700;font-size:96px;line-height:1.04;letter-spacing:-.01em;text-wrap:balance}
+.mid{font-family:var(--display);font-weight:600;font-size:64px;line-height:1.1;text-wrap:balance}
+.lead{font-weight:500;font-size:46px;line-height:1.25;max-width:1400px;text-wrap:balance}
+.muted{color:var(--ink-muted)}
+.src{font-size:24px;color:var(--ink-muted)}
+.hl{position:relative;display:inline-block;white-space:nowrap}
+.hl>.b,.hl>.t{padding:0 .12em;margin:0 -.12em}
+.hl>.t{position:absolute;inset:0;background:var(--accent);color:var(--on-accent);clip-path:inset(0 100% 0 0)}
+.meter{display:flex;gap:8px}
+.meter i{display:block;width:34px;height:34px;background:var(--line)}
+.meter i.on{background:var(--accent)}
+.meter.sm{gap:5px}.meter.sm i{width:24px;height:18px}
+.meter.blue i.on{background:var(--dominio)}
+.meter.orange i.on{background:var(--refuerzo)}
+
+/* Barra de capítulos */
+#chrome{position:absolute;left:140px;right:140px;top:56px;display:flex;justify-content:space-between;align-items:center;z-index:10;opacity:0}
+#chrome .chs{display:flex;gap:10px;align-items:center}
+#chrome .chs i{display:block;width:70px;height:8px;background:var(--line)}
+#chrome .chs i.on{background:var(--accent)}
+#chrome .chs i.done{background:var(--line-strong)}
+#chrome .mini{display:flex;align-items:center;gap:18px}
+#chrome .mini svg{width:40px;height:35px}
+
+/* Logo */
+.logo{display:flex;align-items:center;gap:56px}
+.logo svg{width:189px;height:165px;overflow:visible}
+.logo .wm{height:118px;width:auto}
+.slogan{font-family:var(--display);font-weight:600;font-size:76px;margin-top:56px}
+
+/* Capítulo */
+.chap{display:flex;align-items:flex-end;gap:60px}
+.chap .n{font-family:var(--display);font-weight:700;font-size:260px;line-height:.8;color:var(--accent)}
+.chap .t{font-family:var(--display);font-weight:700;font-size:130px;line-height:.95}
+
+/* Datos */
+.stat{display:grid;grid-template-columns:440px 1fr;gap:20px 60px;align-items:center}
+.stat .num{font-family:var(--display);font-weight:700;font-size:200px;line-height:.9;white-space:nowrap;font-variant-numeric:tabular-nums}
+.stat .txt{display:flex;flex-direction:column;gap:22px}
+
+/* Paneles */
+.panel{background:var(--surface);border:1px solid var(--line);padding:40px 48px;position:relative;
+  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)))}
+.panel.feat{border-left:6px solid var(--accent)}
+.split{display:grid;grid-template-columns:680px 1fr;gap:90px;align-items:center}
+.cap{display:flex;flex-direction:column;gap:24px}
+.cap .big{font-size:92px}
+.cap .sub{font-size:40px;color:var(--ink-muted);line-height:1.22;text-wrap:balance}
+.tag{display:inline-flex;align-self:flex-start;font-family:var(--display);font-size:22px;letter-spacing:.16em;text-transform:uppercase;border:2px dashed var(--line-strong);color:var(--ink-muted);padding:8px 16px}
+
+.state{display:inline-flex;align-items:center;gap:10px;font-family:var(--display);font-size:20px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.state::before{content:"";width:16px;height:16px;display:inline-block}
+.state.proceso{color:var(--accent)} .state.proceso::before{background:var(--accent)}
+.state.dominio{color:var(--dominio)} .state.dominio::before{background:var(--dominio)}
+.state.refuerzo{color:var(--refuerzo)} .state.refuerzo::before{background:var(--refuerzo);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.state.pend{color:var(--ink-muted)} .state.pend::before{border:2px solid var(--line-strong)}
+
+/* Flujo */
+.flow{position:relative;height:430px;margin-top:40px}
+.file{position:absolute;left:0;display:flex;align-items:center;gap:16px;font-family:var(--display);font-weight:600;font-size:28px;background:var(--surface);border:1px solid var(--line);padding:18px 24px;width:400px}
+.file .ico{width:34px;height:42px;border:3px solid var(--ink);flex:none;clip-path:polygon(0 0,70% 0,100% 25%,100% 100%,0 100%)}
+.file small{font-family:var(--body);font-weight:400;font-size:22px;color:var(--ink-muted);margin-left:auto}
+.wire{position:absolute;height:3px;background:var(--line-strong);transform-origin:left center}
+.hub{position:absolute;left:560px;top:135px;width:180px;height:160px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line)}
+.hub svg{width:110px;height:96px}
+.node{position:absolute;top:185px;width:24px;height:24px;background:var(--bg);border:3px solid var(--ink-muted)}
+.node.today{border-color:var(--accent);background:var(--accent)}
+.node.exam{border-color:var(--accent)}
+.nlabel{position:absolute;top:230px;font-family:var(--display);font-size:22px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);transform:translateX(-50%);white-space:nowrap}
+.nlabel.on{color:var(--accent)}
+.qcard{position:absolute;left:900px;top:300px;width:760px;padding:24px 30px;font-size:28px}
+.qcard .lock{margin-top:12px;font-size:22px;color:var(--ink-muted);font-family:var(--display);letter-spacing:.14em;text-transform:uppercase}
+.swap{position:relative;height:120px}
+.swap>*{position:absolute;left:0;top:0}
+
+/* Listas */
+.rows{display:flex;flex-direction:column;gap:22px;margin-top:40px}
+.rowi{display:flex;align-items:center;gap:30px;font-size:40px;font-weight:500}
+.days{display:flex;flex-direction:column;gap:16px}
+.day{background:var(--surface);border:1px solid var(--line);padding:22px 30px}
+.day.today{border-left:6px solid var(--accent)}
+.day .d{display:flex;gap:18px;align-items:baseline;font-family:var(--display);font-weight:600;font-size:30px}
+.day .d .label{font-size:18px}
+.day.today .d .label{color:var(--accent)}
+.lesson{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:27px}
+.lesson .m{font-size:22px;color:var(--ink-muted);display:flex;align-items:center;gap:12px}
+.q{font-family:var(--display);font-weight:600;font-size:40px;line-height:1.15;margin:20px 0 26px;text-wrap:balance}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.opt{border:2px solid var(--line-strong);padding:20px 22px;font-size:26px;font-weight:500;background:var(--bg)}
+.opt.ok{border-color:var(--dominio)}
+.boxes{display:flex;gap:14px;margin-top:30px;align-items:center}
+.boxes span{font-family:var(--display);font-weight:600;font-size:28px;border:2px solid var(--line-strong);padding:10px 20px}
+.boxes span.on{border-color:var(--accent);color:var(--on-accent);background:var(--accent)}
+.boxes em{font-style:normal;font-size:24px;color:var(--ink-muted);margin-right:8px}
+.topic{display:grid;grid-template-columns:1fr auto;gap:12px 24px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line);font-size:30px;font-weight:500}
+.topic:last-child{border-bottom:0}
+.topic .meter{grid-column:1/2}
+.grid12{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.cell{border:2px dashed var(--line-strong);padding:16px;display:flex;flex-direction:column;gap:12px}
+.cell .meter i{width:14px;height:14px}
+.cell .meter{gap:4px}
+.cell b{font-family:var(--display);font-weight:600;font-size:24px;color:var(--ink-muted)}
+
+/* ODS */
+.ods{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-top:20px}
+.odc{border-top:6px solid var(--line);padding-top:28px;display:flex;flex-direction:column;gap:16px}
+.odc .no{display:flex;align-items:center;gap:18px}
+.odc .no b{font-family:var(--display);font-weight:700;font-size:150px;line-height:.85}
+.odc .sw{width:26px;height:26px}
+.odc .nm{font-family:var(--display);font-weight:600;font-size:38px;line-height:1.1;min-height:84px}
+.odc p{font-size:31px;line-height:1.35;color:var(--ink-muted)}
+.odc.on{border-top-color:var(--accent)}
+
+/* Equipo */
+.person{font-family:var(--display);font-weight:700;font-size:92px;line-height:1}
+.quote{margin-top:56px;max-width:1300px}
+.quote p{font-family:var(--display);font-weight:600;font-size:46px;line-height:1.2;margin-top:14px;text-wrap:balance}
+.partners{display:flex;align-items:center;gap:56px}
+.partners::after{content:none}
+.partners img+img{border-left:2px solid var(--line-strong);padding-left:56px}
+.partners img{height:96px;width:auto;display:block}
+.partners.sm img{height:76px}
+.partners.sm{gap:44px}
+.partners.sm img+img{padding-left:44px}
+.cta2{margin-top:50px;font-family:var(--display);font-weight:600;font-size:46px}
+.cta2 small{display:block;font-family:var(--body);font-weight:500;font-size:30px;color:var(--ink-muted);margin-top:10px}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<div id="chrome">
+  <div class="mini"><svg viewBox="209 209 782 684"><rect x="209" y="642" width="782" height="167" fill="#c9f31d"/><path d="M349 893 L349 530 A251 251 0 0 1 851 530 L851 893" fill="none" stroke="#eceff1" stroke-width="140"/></svg><span class="label" id="chname"></span></div>
+  <div class="chs"><i></i><i></i><i></i><i></i><span class="label" id="chnum" style="margin-left:14px"></span></div>
+</div>
+
+<!-- Intro -->
+<section class="scene center" id="intro" data-d="6">
+  <div class="logo">
+    <svg viewBox="209 209 782 684"><rect class="bar" x="209" y="642" width="782" height="167" fill="#c9f31d"/><path class="arch" d="M349 893 L349 530 A251 251 0 0 1 851 530 L851 893" fill="none" stroke="#eceff1" stroke-width="140"/></svg>
+    <img class="wm" src="wordmark.png" alt="APROPIA">
+  </div>
+  <p class="slogan" data-at="2.0">Haz tuyo lo que <span class="hl" data-hl="2.6"><span class="b">aprendes</span><span class="t">aprendes</span></span></p>
+  <div class="partners" data-at="3.2" style="margin-top:70px"><img src="upc_t.png" alt="Universidad Popular del Cesar"><img src="feria_t.png" alt="XV Feria de Emprendimiento"></div>
+  <p class="label" data-at="3.5" style="margin-top:22px">Seccional Aguachica</p>
+</section>
+
+<!-- 01 La idea -->
+<section class="scene" id="c1" data-d="2.8" data-chap="1">
+  <div class="chap"><span class="n" data-at="0.1">01</span><span class="t" data-at="0.25"><span class="hl" data-hl="0.8"><span class="b">La idea</span><span class="t">La idea</span></span></span></div>
+</section>
+
+<section class="scene" id="i1" data-d="8" data-chap="1">
+  <p class="label" data-at="0.1">Estudiantes universitarios en Colombia</p>
+  <div class="stat" style="margin-top:40px">
+    <span class="num" data-at="0.2"><span data-count="91" data-at="0.3">0</span> %</span>
+    <div class="txt" data-at="0.6"><div class="meter" data-fill="18" data-n="20" data-at="0.6"></div><p class="lead">usa inteligencia artificial para estudiar.</p></div>
+    <span class="num" data-at="2.6"><span data-count="61" data-at="2.7">0</span> %</span>
+    <div class="txt" data-at="3.0"><div class="meter" data-fill="12" data-n="20" data-at="3.0"></div><p class="lead">dice que <span class="hl" data-hl="3.9"><span class="b">nadie le enseñó</span><span class="t">nadie le enseñó</span></span> a hacerlo bien.</p></div>
+  </div>
+  <p class="src" data-at="1.2" style="margin-top:44px">Fuente: GAD3 y Planeta Formación (2024)</p>
+</section>
+
+<section class="scene" id="i2" data-d="8" data-chap="1">
+  <p class="label" data-at="0.1">Un experimento con universitarios · Fan et al. (2025)</p>
+  <p class="big" data-at="0.3" style="margin-top:30px">Con ChatGPT mejoraron sus ensayos.</p>
+  <p class="big muted" data-at="1.8" style="margin-top:12px">Pero no aprendieron más.</p>
+  <div class="panel feat" data-at="3.6" style="margin-top:56px;max-width:1300px">
+    <p class="label">Lo llaman</p>
+    <p class="mid" style="margin-top:10px"><span class="hl" data-hl="4.2"><span class="b">pereza metacognitiva</span><span class="t">pereza metacognitiva</span></span></p>
+    <p class="lead muted" style="margin-top:14px;font-size:38px">El estudiante deja que la herramienta piense por él.</p>
+  </div>
+</section>
+
+<section class="scene" id="i3" data-d="11" data-chap="1" style="justify-content:flex-start;padding-top:190px">
+  <div class="swap">
+    <p class="mid" data-at="0.2" data-out="3.0">Apropia parte de <span class="hl" data-hl="0.8"><span class="b">tu propio material</span><span class="t">tu propio material</span></span>.</p>
+    <p class="mid" data-at="3.3" data-out="6.6">Arma tu ruta <span class="hl" data-hl="3.9"><span class="b">con fecha</span><span class="t">con fecha</span></span> hasta el parcial.</p>
+    <p class="mid" data-at="6.9">Y te hace <span class="hl" data-hl="7.5"><span class="b">practicar primero</span><span class="t">practicar primero</span></span>.</p>
+  </div>
+  <div class="flow" id="flow">
+    <div class="file" style="top:40px" data-at="0.6"><span class="ico"></span>guia-ciclos.pdf<small>Guía</small></div>
+    <div class="file" style="top:180px" data-at="0.9"><span class="ico"></span>clase-04.pdf<small>Diapositivas</small></div>
+    <div class="file" style="top:320px" data-at="1.2"><span class="ico"></span>apuntes.txt<small>Notas</small></div>
+    <div class="wire" id="w1" style="left:400px;top:216px;width:160px"></div>
+    <div class="hub" data-at="2.0" data-anim="fade"><svg viewBox="209 209 782 684"><rect x="209" y="642" width="782" height="167" fill="#c9f31d"/><path d="M349 893 L349 530 A251 251 0 0 1 851 530 L851 893" fill="none" stroke="#eceff1" stroke-width="140"/></svg></div>
+    <div class="wire" id="w2" style="left:740px;top:196px;width:900px"></div>
+  </div>
+</section>
+
+<section class="scene" id="i4" data-d="6" data-chap="1">
+  <p class="label" data-at="0.1">Dónde estamos hoy</p>
+  <div class="rows">
+    <div class="rowi" data-at="0.4"><span class="state dominio">Lista</span>Demostración funcional</div>
+    <div class="rowi" data-at="1.1"><span class="state proceso">En marcha</span>Piloto con un estudiante de inglés</div>
+    <div class="rowi" data-at="1.8"><span class="state pend">Siguiente</span>Validarlo con el programa de mentoría</div>
+  </div>
+</section>
+
+<!-- 02 Factor diferencial -->
+<section class="scene" id="c2" data-d="2.8" data-chap="2">
+  <div class="chap"><span class="n" data-at="0.1">02</span><span class="t" data-at="0.25">El factor <span class="hl" data-hl="0.8"><span class="b">diferencial</span><span class="t">diferencial</span></span></span></div>
+</section>
+
+<section class="scene" id="d0" data-d="7" data-chap="2">
+  <p class="big muted" data-at="0.2">Generar preguntas y tarjetas ya no distingue a nadie.</p>
+  <p class="lead" data-at="1.8" style="margin-top:26px">Herramientas gratuitas como NotebookLM ya lo hacen.</p>
+  <p class="big" data-at="3.4" style="margin-top:60px">Apropia compite en todo lo que <span class="hl" data-hl="4.2"><span class="b">rodea al material.</span><span class="t">rodea al material.</span></span></p>
+</section>
+
+<section class="scene" id="d1" data-d="6" data-chap="2">
+  <div class="split">
+    <div class="cap"><span class="label" data-at="0.1">1 de 4</span><p class="big" data-at="0.2">Un plan con meta.</p><p class="sub" data-at="0.5">No es un chat. Es una ruta con fecha hasta el examen: qué estudiar hoy y en qué orden.</p></div>
+    <div class="days">
+      <div class="day today" data-at="0.8"><div class="d"><span class="label">Hoy</span>martes 28 de octubre</div>
+        <div class="lesson"><span>¿Qué es un ciclo?</span><span class="m">8 min <span class="state proceso">En proceso</span></span></div>
+        <div class="lesson"><span>Estructura Mientras</span><span class="m">10 min</span></div></div>
+      <div class="day" data-at="1.2"><div class="d"><span class="label">Día</span>jueves 30 de octubre</div>
+        <div class="lesson"><span>Repetir … Hasta Que · Estructura Para</span><span class="m">18 min</span></div></div>
+      <div class="day" data-at="1.6"><div class="d"><span class="label">Día</span>sábado 1 de noviembre</div>
+        <div class="lesson"><span>Contadores y acumuladores</span><span class="m">10 min</span></div></div>
+      <div class="day" data-at="2.0"><div class="d"><span class="label">Antes del parcial</span>lunes 3 de noviembre</div>
+        <div class="lesson"><span class="muted">Repaso general</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="scene" id="d2" data-d="6.5" data-chap="2">
+  <div class="split">
+    <div class="cap"><span class="label" data-at="0.1">2 de 4</span><p class="big" data-at="0.2">Práctica primero.</p><p class="sub" data-at="0.5">Respondes antes de ver la solución. La repetición espaciada te devuelve lo que se te olvida.</p></div>
+    <div class="panel" data-at="0.8">
+      <p class="label">Estructura Mientras</p>
+      <p class="q">¿Cuándo se evalúa la condición en el ciclo Mientras?</p>
+      <div class="opts"><div class="opt" id="d2ok">Antes de cada iteración</div><div class="opt">Después de cada iteración</div><div class="opt">Solo al finalizar</div><div class="opt">Al azar</div></div>
+      <div class="boxes" id="d2boxes"><em>Vuelve en</em><span>1</span><span>2</span><span>4</span><span>7</span><span>14</span><em style="margin-left:4px">días</em></div>
+    </div>
+  </div>
+</section>
+
+<section class="scene" id="d3" data-d="6.5" data-chap="2">
+  <div class="split">
+    <div class="cap"><span class="label" data-at="0.1">3 de 4</span><p class="big" data-at="0.2">Dominio medido.</p><p class="sub" data-at="0.5">Sabe qué tema ya manejas y cuál necesita otra vuelta.</p></div>
+    <div class="panel" data-at="0.8">
+      <p class="label">Ciclos en PSeInt · tu dominio</p>
+      <div class="topic"><span>¿Qué es un ciclo?</span><span class="state dominio" data-at="2.4" data-anim="fade">Dominio</span><div class="meter sm blue" data-n="20" data-fill="20" data-at="1.0"></div></div>
+      <div class="topic"><span>Estructura Mientras</span><span class="state dominio" data-at="2.6" data-anim="fade">Dominio</span><div class="meter sm blue" data-n="20" data-fill="17" data-at="1.2"></div></div>
+      <div class="topic"><span>Repetir … Hasta Que</span><span class="state proceso" data-at="2.8" data-anim="fade">En proceso</span><div class="meter sm" data-n="20" data-fill="10" data-at="1.4"></div></div>
+      <div class="topic"><span>Contadores y acumuladores</span><span class="state refuerzo" data-at="3.0" data-anim="fade">Reforzar</span><div class="meter sm orange" data-n="20" data-fill="5" data-at="1.6"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="scene" id="d4" data-d="6" data-chap="2">
+  <div class="split">
+    <div class="cap"><span class="label" data-at="0.1">4 de 4</span><p class="big" data-at="0.2">Capa de mentor.</p><p class="sub" data-at="0.5">El mentor ve cómo avanza su grupo. Ninguna herramienta gratuita de IA lo ofrece.</p><span class="tag" data-at="1.0">En desarrollo</span></div>
+    <div class="grid12" id="d4grid"></div>
+  </div>
+</section>
+
+<!-- 03 ODS -->
+<section class="scene" id="c3" data-d="2.8" data-chap="3">
+  <div class="chap"><span class="n" data-at="0.1">03</span><span class="t" data-at="0.25">Los <span class="hl" data-hl="0.8"><span class="b">ODS</span><span class="t">ODS</span></span> que impacta</span></div>
+</section>
+
+<section class="scene" id="o1" data-d="16" data-chap="3">
+  <div class="ods">
+    <div class="odc" id="od1" data-at="0.3"><div class="no"><span class="label">ODS</span><b>4</b><span class="sw" style="background:#c5192d"></span></div><p class="nm">Educación de calidad</p><p>Aprendizaje personalizado, y una IA que sirve para aprender mejor y no solo para copiar respuestas.</p></div>
+    <div class="odc" id="od2" data-at="4.6"><div class="no"><span class="label">ODS</span><b>10</b><span class="sw" style="background:#dd1367"></span></div><p class="nm">Reducción de las desigualdades</p><p>Un estudiante de una seccional, sin tutor disponible, accede a un acompañamiento que hoy tienen pocos.</p></div>
+    <div class="odc" id="od3" data-at="8.9"><div class="no"><span class="label">ODS</span><b>9</b><span class="sw" style="background:#fd6925"></span></div><p class="nm">Industria, innovación e infraestructura</p><p>Tecnología hecha desde una región intermedia, con costos bajos de operación.</p></div>
+  </div>
+  <p class="src" data-at="12.8" style="margin-top:60px;font-size:28px">Soluciones basadas en la naturaleza: vínculo indirecto. Menos fotocopias y contenido reutilizado en lugar de pedirle lo mismo a la IA una y otra vez.</p>
+</section>
+
+<!-- 04 Equipo -->
+<section class="scene" id="c4" data-d="2.8" data-chap="4">
+  <div class="chap"><span class="n" data-at="0.1">04</span><span class="t" data-at="0.25"><span class="hl" data-hl="0.8"><span class="b">Equipo</span><span class="t">Equipo</span></span></span></div>
+</section>
+
+<section class="scene" id="e1" data-d="10" data-chap="4">
+  <p class="label" data-at="0.1">Fundador y desarrollador</p>
+  <p class="person" data-at="0.3" style="margin-top:20px">Manuel David Castro Tocora</p>
+  <p class="lead muted" data-at="1.0" style="margin-top:26px">Estudiante de Ingeniería de Sistemas y mentor en el programa de mentoría de la universidad.</p>
+  <div class="panel feat quote" data-at="3.6">
+    <p class="label">La ventaja</p>
+    <p>Trabajo cerca de quien la usa: veo cómo estudia y ajusto el producto <span class="hl" data-hl="5.0"><span class="b">en días.</span><span class="t">en días.</span></span></p>
+  </div>
+</section>
+
+<!-- Cierre -->
+<section class="scene center" id="outro" data-d="9">
+  <div class="logo">
+    <svg viewBox="209 209 782 684"><rect class="bar" x="209" y="642" width="782" height="167" fill="#c9f31d"/><path class="arch" d="M349 893 L349 530 A251 251 0 0 1 851 530 L851 893" fill="none" stroke="#eceff1" stroke-width="140"/></svg>
+    <img class="wm" src="wordmark.png" alt="APROPIA">
+  </div>
+  <p class="slogan" data-at="0.6">Haz tuyo lo que <span class="hl" data-hl="1.0"><span class="b">aprendes</span><span class="t">aprendes</span></span></p>
+  <p class="cta2" data-at="1.8">Pruébala tú.<small>Sube tus apuntes y arma tu primera ruta.</small></p>
+  <div class="partners sm" data-at="2.4" style="margin-top:64px"><img src="upc_t.png" alt="Universidad Popular del Cesar"><img src="feria_t.png" alt="XV Feria de Emprendimiento"></div>
+  <p class="src" data-at="2.8" style="margin-top:28px;font-size:22px">Fuentes: GAD3 y Planeta Formación (2024); Fan et al. (2025).</p>
+</section>
+
+</div>
+<script>
+const P = new URLSearchParams(location.search);
+const CH = ['La idea','El factor diferencial','Los ODS que impacta','Equipo'];
+const SCENES=[...document.querySelectorAll('.scene')].map(el=>({id:el.id,el,d:+el.dataset.d,chap:+(el.dataset.chap||0)}));
+window.DURATION=SCENES.reduce((a,s)=>a+s.d,0);
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const eo=x=>1-Math.pow(1-clamp(x),3);
+const eio=x=>{x=clamp(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const lerp=(a,b,x)=>a+(b-a)*x;
+document.querySelectorAll('.meter').forEach(m=>{m.innerHTML='<i></i>'.repeat(+m.dataset.n||20)});
+function setMeter(m,on){[...m.children].forEach((b,i)=>b.classList.toggle('on',i<on))}
+
+// Capa de mentor: tablero en desarrollo (líneas punteadas, sin datos reales)
+const g=document.getElementById('d4grid');
+'ABCDEFGHIJKL'.split('').forEach(()=>{g.insertAdjacentHTML('beforeend','<div class="cell"><b>Estudiante</b><div class="meter sm" data-n="8"></div></div>')});
+g.querySelectorAll('.meter').forEach(m=>{m.innerHTML='<i></i>'.repeat(8)});
+
+// Flujo: nodos de la ruta
+const flow=document.getElementById('flow');
+const NODES=[['Hoy',820,'today'],['Jue',1000,''],['Sáb',1180,''],['Lun',1360,''],['Parcial',1600,'exam']];
+NODES.forEach(([t,x,c],i)=>{flow.insertAdjacentHTML('beforeend',`<div class="node ${c}" data-i="${i}" style="left:${x-12}px"></div><div class="nlabel ${c?'on':''}" data-i="${i}" style="left:${x}px">${t}</div>`)});
+flow.insertAdjacentHTML('beforeend','<div class="panel qcard" id="qcard"><p>¿Cuándo se evalúa la condición en el ciclo Mientras?</p><p class="lock">Respuesta: después de intentarlo</p></div>');
+
+function reveal(el,local){
+  const at=+el.dataset.at, p=eo((local-at)/0.5), anim=el.dataset.anim||'up';
+  let o=p; if(el.dataset.out){o*=clamp((+el.dataset.out-local)/0.35)}
+  el.style.opacity=o;
+  if(anim==='up') el.style.transform=`translateY(${(1-p)*28}px)`;
+}
+function logo(el,t,quick){
+  const s=quick?0.45:1,o=quick?0.05:0;
+  const bar=el.querySelector('.bar'),arch=el.querySelector('.arch'),wm=el.querySelector('.wm');
+  bar.setAttribute('width',782*eo((t-o-0.05)/(0.55*s)));
+  const L=arch.getTotalLength();arch.style.strokeDasharray=L;arch.style.strokeDashoffset=L*(1-eio((t-o-0.4*s)/(0.9*s)));
+  const pw=eo((t-o-1.1*s)/(0.7*s));wm.style.clipPath=`inset(0 ${100-pw*100}% 0 0)`;wm.style.transform=`translateX(${(1-pw)*-20}px)`;
+}
+const CUSTOM={
+  intro(t,el){logo(el,t,0)},
+  outro(t,el){logo(el,t,1)},
+  i3(t,el){
+    el.querySelector('#w1').style.transform=`scaleX(${eo((t-1.5)/0.5)})`;
+    el.querySelector('#w2').style.transform=`scaleX(${eio((t-3.4)/1.6)})`;
+    el.querySelectorAll('.node,.nlabel').forEach(n=>{const i=+n.dataset.i,p=eo((t-3.6-i*0.3)/0.4);n.style.opacity=p});
+    const q=el.querySelector('#qcard'),pq=eo((t-7.2)/0.5);q.style.opacity=pq;q.style.transform=`translateY(${(1-pq)*24}px)`;
+  },
+  d2(t,el){
+    el.querySelector('#d2ok').classList.toggle('ok',t>2.0);
+    const spans=el.querySelectorAll('#d2boxes span'), k=Math.floor(clamp((t-2.8)/0.55,0,4.99));
+    spans.forEach((s,i)=>s.classList.toggle('on',t>2.8&&i===k));
+  },
+  d4(t,el){
+    el.querySelectorAll('.cell').forEach((c,i)=>{const p=eo((t-0.6-i*0.07)/0.4);c.style.opacity=p*0.9;c.style.transform=`translateY(${(1-p)*16}px)`});
+  },
+  o1(t,el){
+    const act=t<4.6?1:t<8.9?2:3;
+    ['od1','od2','od3'].forEach((id,i)=>{const c=el.querySelector('#'+id);c.classList.toggle('on',i+1===act&&t<12.6)});
+  },
+};
+
+const chrome=document.getElementById('chrome');
+window.renderAt=function(t){
+  let acc=0, chap=0, chromeOp=0;
+  for(const s of SCENES){
+    const local=t-acc,on=local>=0&&local<s.d;
+    if(on){
+      const fin=clamp(local/0.35), fout=s.id==='outro'?clamp((s.d-local)/1.0):clamp((s.d-local)/0.35);
+      s.el.style.opacity=Math.min(fin,fout);
+      chap=s.chap; chromeOp=s.chap?1:0;
+      if(s.chap && s.el.id.startsWith('c')) chromeOp=clamp((local-0.8)/0.4);
+      s.el.querySelectorAll('[data-at]').forEach(e=>{if(!e.hasAttribute('data-count')&&!e.classList.contains('meter'))reveal(e,local)});
+      s.el.querySelectorAll('.hl').forEach(h=>{const p=eio((local-(+h.dataset.hl))/0.45);h.querySelector('.t').style.clipPath=`inset(0 ${100-p*100}% 0 0)`});
+      s.el.querySelectorAll('[data-count]').forEach(c=>{const p=eo((local-(+c.dataset.at))/1.1);c.textContent=Math.round(+c.dataset.count*p)});
+      s.el.querySelectorAll('.meter[data-fill]').forEach(m=>{const p=eo((local-(+m.dataset.at))/1.1);setMeter(m,Math.round(+m.dataset.fill*p));m.style.opacity=clamp((local-(+m.dataset.at))/0.3)});
+      if(CUSTOM[s.id])CUSTOM[s.id](local,s.el);
+    } else s.el.style.opacity=0;
+    acc+=s.d;
+  }
+  chrome.style.opacity=chromeOp;
+  if(chap){
+    document.getElementById('chname').textContent=CH[chap-1];
+    document.getElementById('chnum').textContent=`0${chap} / 04`;
+    [...chrome.querySelectorAll('.chs i')].forEach((b,i)=>{b.className=i+1===chap?'on':i+1<chap?'done':''});
+  }
+};
+document.fonts.ready.then(()=>{window.READY=true;renderAt(+(P.get('t')||0))});
+</script>
+</body>
+</html>

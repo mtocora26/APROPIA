@@ -3,6 +3,7 @@ import {
   createFlashcardRepository,
   createProgressRepository,
   createSessionRepository,
+  createStudiedRepository,
 } from '../../app/progressRepository.js'
 import { StudentContext } from './studentContext.js'
 
@@ -35,6 +36,7 @@ function StudentProvider({ studentRepository, children }) {
       progressRepository: activeId === null ? null : createProgressRepository(activeId),
       flashcardRepository: activeId === null ? null : createFlashcardRepository(activeId),
       sessionRepository: activeId === null ? null : createSessionRepository(activeId),
+      studiedRepository: activeId === null ? null : createStudiedRepository(activeId),
       switchStudent: (id) => apply(() => studentRepository.setActive(id)),
       addStudent: (name) => apply(() => studentRepository.add(name)),
       renameStudent: (id, name) => apply(() => studentRepository.rename(id, name)),

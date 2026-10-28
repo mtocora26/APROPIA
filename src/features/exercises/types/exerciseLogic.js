@@ -57,7 +57,7 @@ export function prepareExercise(exercise, { alphabet = [], random = Math.random 
 
 /**
  * `validateAnswer` for `useExercise`. The shape of `value` depends on the type:
- * choice/typed → string, reorder/spelling → string[], match → { attempts },
+ * choice/typed → string, hunt → index of the tapped word, reorder/spelling → string[], match → { attempts },
  * open → { selfRating: 'ok' | 'miss', text }, dialogue → { choices: string[] }
  * (one choice per line with options, in order).
  */
@@ -70,6 +70,9 @@ export function checkAnswer(value, exercise, { alphabet = [] } = {}) {
       return validateTextAnswer(value, {
         answers: [exercise.answer, ...(exercise.alternatives ?? [])],
       })
+
+    case 'hunt':
+      return value === exercise.wrongIndex
 
     case 'reorder':
       return Array.isArray(value) && isAcceptedOrder(value, exercise)
@@ -85,6 +88,9 @@ export function checkAnswer(value, exercise, { alphabet = [] } = {}) {
 
     case 'open':
       return value?.selfRating === 'ok'
+
+    case 'code':
+      return value?.passed === true
 
     case 'dialogue': {
       const answers = dialogueBlanks(exercise).map((line) => line.answer)
@@ -106,6 +112,10 @@ export function correctAnswerText(exercise, { alphabet = [] } = {}) {
     case 'choice':
     case 'typed':
       return exercise.answer
+    case 'code':
+      return exercise.modelAnswer
+    case 'hunt':
+      return exercise.correction
     case 'reorder':
       return exercise.answer.join(' ')
     case 'spelling':
@@ -126,8 +136,8 @@ export function correctAnswerText(exercise, { alphabet = [] } = {}) {
  * Match exercises mix both languages, so they are not read.
  */
 export function speakableText(exercise, context) {
-  if (exercise.type === 'open') return exercise.modelAnswer
-  if (exercise.type === 'match' || exercise.type === 'dialogue') return null
+  if (exercise.type === 'open') return exercise.code ? null : exercise.modelAnswer
+  if (['match', 'dialogue', 'code'].includes(exercise.type)) return null
   return correctAnswerText(exercise, context)
 }
 

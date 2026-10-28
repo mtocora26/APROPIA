@@ -1,6 +1,7 @@
 export const STUDENTS_STORAGE_KEY = 'apropia.students'
 export const STUDENTS_VERSION = 1
 export const DEFAULT_STUDENT_ID = 'yo'
+export const ADMIN_STUDENT_ID = 'admin'
 export const MAX_NAME_LENGTH = 40
 
 export const STUDENT_CARDS_VERSION = 1
@@ -9,6 +10,7 @@ export const STUDENT_SESSIONS_VERSION = 1
 const PROGRESS_KEY_PREFIX = 'apropia.progress'
 const CARDS_KEY_PREFIX = 'apropia.cards'
 const SESSIONS_KEY_PREFIX = 'apropia.sessions'
+const STUDIED_KEY_PREFIX = 'apropia.studied'
 
 /**
  * Storage key of a student's course progress. The default student keeps the
@@ -34,12 +36,20 @@ export function sessionsStorageKey(studentId) {
     : `${SESSIONS_KEY_PREFIX}.${studentId}`
 }
 
+/** Storage key of the lessons marked as studied (same rule as progress). */
+export function studiedStorageKey(studentId) {
+  return studentId === DEFAULT_STUDENT_ID
+    ? STUDIED_KEY_PREFIX
+    : `${STUDIED_KEY_PREFIX}.${studentId}`
+}
+
 /** Every storage key that holds data belonging to one student. */
 export function studentStorageKeys(studentId) {
   return [
     progressStorageKey(studentId),
     cardsStorageKey(studentId),
     sessionsStorageKey(studentId),
+    studiedStorageKey(studentId),
   ]
 }
 
@@ -61,8 +71,20 @@ export function createStudent({ id, name, createdAt }) {
 export function createDefaultStudentsData(now) {
   return {
     version: STUDENTS_VERSION,
-    students: [createStudent({ id: DEFAULT_STUDENT_ID, name: 'Yo', createdAt: now })],
+    students: [
+      createStudent({ id: DEFAULT_STUDENT_ID, name: 'Yo', createdAt: now }),
+      createStudent({ id: ADMIN_STUDENT_ID, name: 'Tutor (admin)', createdAt: now }),
+    ],
     activeId: DEFAULT_STUDENT_ID,
+  }
+}
+
+/** Existing local student lists gain the tutor profile without changing their active student. */
+export function withAdminStudent(data, now) {
+  if (data.students.some((student) => student.id === ADMIN_STUDENT_ID)) return data
+  return {
+    ...data,
+    students: [...data.students, createStudent({ id: ADMIN_STUDENT_ID, name: 'Tutor (admin)', createdAt: now })],
   }
 }
 

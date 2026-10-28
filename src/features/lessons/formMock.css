@@ -1,0 +1,73 @@
+/* Ventana de ejemplo: imita una aplicación de Windows, por eso usa colores claros propios. */
+.form-mock { margin: 0; container-type: inline-size; }
+
+.form-mock__window {
+  /* El ancho y el texto crecen juntos (--form-scale lo agranda en modo clase). */
+  --win-w: min(100cqw, calc(var(--form-w) * var(--form-scale, 1)));
+  width: var(--win-w);
+  border: 1px solid #6b7480;
+  background: #f0f0f0;
+  color: #1b1f24;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: max(11px, calc(var(--win-w) * var(--font-ratio)));
+}
+
+.form-mock__titlebar {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: #fff;
+  border-bottom: 1px solid #c8cdd3;
+  font-size: 0.93em;
+}
+
+.form-mock__chrome { letter-spacing: 0.1em; color: #555; }
+
+.form-mock__canvas { position: relative; width: 100%; }
+
+.form-mock__slot { position: absolute; }
+
+.form-mock__slot > :first-child { display: flex; align-items: center; width: 100%; height: 100%; box-sizing: border-box; }
+
+.form-mock__label { white-space: nowrap; }
+
+.form-mock__box {
+  padding: 0 6px;
+  border: 1px solid #7a8089;
+  background: #fff;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.form-mock__slot > .form-mock__combo { justify-content: space-between; }
+.form-mock__combo i { font-style: normal; }
+
+.form-mock__slot > .form-mock__list { flex-direction: column; align-items: flex-start; justify-content: flex-start; padding-top: 2px; }
+.form-mock__list em { font-style: normal; line-height: 1.5; }
+
+.form-mock__button {
+  justify-content: center;
+  border: 1px solid #7a8089;
+  background: linear-gradient(#f7f7f7, #dcdcdc);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.form-mock__check { gap: 6px; }
+.form-mock__tick { width: 13px; height: 13px; border: 1px solid #7a8089; background: #fff; display: inline-block; }
+.form-mock__tick--on { background: #2b6cb0; box-shadow: inset 0 0 0 2px #fff; }
+
+.form-mock__name {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.78em;
+  color: #5b6470;
+  white-space: nowrap;
+}
+
+.form-mock__caption { margin-top: var(--space-2); font-size: var(--text-sm); color: var(--ink-muted); }

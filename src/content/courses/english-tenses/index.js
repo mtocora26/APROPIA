@@ -1,3 +1,4 @@
+import { TO_BE } from './toBe.js'
 import { PAST_SIMPLE } from './pastSimple.js'
 import { PRESENT_PERFECT } from './presentPerfect.js'
 import { PAST_PERFECT } from './pastPerfect.js'
@@ -12,6 +13,7 @@ export const ENGLISH_TENSES = {
   language: 'en',
   level: 'B1',
   modules: [
+    TO_BE,
     PAST_SIMPLE,
     PRESENT_PERFECT,
     PAST_PERFECT,

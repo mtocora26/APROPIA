@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   DEFAULT_STUDENT_ID,
+  ADMIN_STUDENT_ID,
   createDefaultStudentsData,
   normalizeStudentName,
   cardsStorageKey,
@@ -12,6 +13,7 @@ import {
 
 test('the default student keeps the historical progress key', () => {
   assert.equal(progressStorageKey(DEFAULT_STUDENT_ID), 'apropia.progress')
+  assert.equal(progressStorageKey(ADMIN_STUDENT_ID), 'apropia.progress.admin')
 })
 
 test('other students get their own progress key', () => {
@@ -46,5 +48,6 @@ test('cards follow the same key rule as progress', () => {
     'apropia.progress.ab12',
     'apropia.cards.ab12',
     'apropia.sessions.ab12',
+    'apropia.studied.ab12',
   ])
 })

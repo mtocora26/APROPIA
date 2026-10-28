@@ -18,6 +18,8 @@ export const EXERCISE_TYPES = Object.freeze([
   'spelling',
   'open',
   'dialogue',
+  'hunt',
+  'code',
 ])
 
 export const THEORY_BLOCK_TYPES = Object.freeze([
@@ -25,7 +27,15 @@ export const THEORY_BLOCK_TYPES = Object.freeze([
   'tip',
   'example',
   'table',
+  'code',
+  'form',
+  'try',
+  'syntax',
+  'timeline',
+  'scene',
 ])
+
+export const FORM_CONTROL_KINDS = Object.freeze(['label', 'textbox', 'button', 'checkbox', 'listbox', 'combobox'])
 
 /**
  * @param {object} course
@@ -70,10 +80,45 @@ export function validateCourse(course) {
         assertUniqueId(exercise.id, ids, `${exercisePath}.id`)
         validateExercise(exercise, exercisePath, course.alphabet)
       })
+
+      if (lesson.tutorNotes !== undefined) {
+        assertStringArray(lesson.tutorNotes, `${lessonPath}.tutorNotes`)
+      }
+
+      if (lesson.classExercises !== undefined) {
+        assertNonEmptyArray(lesson.classExercises, `${lessonPath}.classExercises`)
+        lesson.classExercises.forEach((exercise, e) => {
+          const exercisePath = `${lessonPath}.classExercises[${e}]`
+          assertRecord(exercise, exercisePath)
+          assertUniqueId(exercise.id, ids, `${exercisePath}.id`)
+          validateExercise(exercise, exercisePath, course.alphabet)
+        })
+      }
     })
   })
 
   course.modules.forEach((module, m) => {
+    if (module.reviewSize !== undefined && !(Number.isInteger(module.reviewSize) && module.reviewSize > 0)) {
+      fail(`course.modules[${m}].reviewSize`, 'must be a positive integer')
+    }
+
+    if (module.reviewExercises !== undefined) {
+      const lessonIds = new Set(module.lessons.map((lesson) => lesson.id))
+      assertNonEmptyArray(module.reviewExercises, `course.modules[${m}].reviewExercises`)
+      module.reviewExercises.forEach((exercise, e) => {
+        const exercisePath = `course.modules[${m}].reviewExercises[${e}]`
+        assertRecord(exercise, exercisePath)
+        assertUniqueId(exercise.id, ids, `${exercisePath}.id`)
+        if (!lessonIds.has(exercise.from)) fail(`${exercisePath}.from`, 'must be the id of a lesson of the module')
+        validateExercise(exercise, exercisePath, course.alphabet)
+      })
+      for (const lessonId of lessonIds) {
+        if (!module.reviewExercises.some((exercise) => exercise.from === lessonId)) {
+          fail(`course.modules[${m}].reviewExercises`, `needs at least one exercise from "${lessonId}"`)
+        }
+      }
+    }
+
     if (ids.has(reviewLessonId(module))) {
       fail(`course.modules[${m}]`, `"${reviewLessonId(module)}" is reserved for the module review`)
     }
@@ -82,14 +127,22 @@ export function validateCourse(course) {
   return course
 }
 
-export const MODULE_REVIEW_SAMPLE_SIZE = 10
+export const MODULE_REVIEW_SAMPLE_SIZE = 6
 
 /**
  * Lessons of a module in order. Modules with 2+ lessons end with a generated
- * "review" lesson that mixes a random sample of all their exercises.
+ * "review" lesson: a short, balanced sample (see `sampleReview`) with the same
+ * number of exercises from every lesson. If the module defines
+ * `reviewExercises` (each tagged with `from: <lessonId>`), the review draws only
+ * from those, so the student practises the topic in new contexts instead of
+ * repeating the exercises already done.
  */
 export function moduleLessons(module) {
   if (module.lessons.length < 2) return module.lessons
+
+  const groups = module.reviewExercises
+    ? module.lessons.map((lesson) => module.reviewExercises.filter((exercise) => exercise.from === lesson.id))
+    : module.lessons.map((lesson) => lesson.exercises)
 
   return [
     ...module.lessons,
@@ -97,16 +150,47 @@ export function moduleLessons(module) {
       id: reviewLessonId(module),
       title: 'Repaso del módulo',
       review: true,
-      sampleSize: MODULE_REVIEW_SAMPLE_SIZE,
+      sampleSize: module.reviewSize ?? MODULE_REVIEW_SAMPLE_SIZE,
       theory: [
         {
           type: 'text',
-          text: 'Una mezcla de ejercicios de todas las lecciones del módulo, para fijar lo aprendido.',
+          text: 'Un repaso corto con ejercicios de cada lección del módulo, en situaciones distintas a las que ya practicaste.',
         },
       ],
-      exercises: module.lessons.flatMap((lesson) => lesson.exercises),
+      exercises: groups.flat(),
+      exerciseGroups: groups,
     },
   ]
+}
+
+/**
+ * Picks up to `size` exercises taking turns between the groups (one per
+ * lesson), so every lesson is represented before any is repeated.
+ *
+ * @param {object[][]} groups
+ * @param {number} size
+ * @param {() => number} random
+ */
+export function sampleReview(groups, size, random = Math.random) {
+  const queues = shuffled(groups.filter((group) => group.length > 0), random).map((group) => shuffled(group, random))
+  const picked = []
+
+  while (picked.length < size && queues.some((queue) => queue.length > 0)) {
+    for (const queue of queues) {
+      if (picked.length < size && queue.length > 0) picked.push(queue.shift())
+    }
+  }
+
+  return picked
+}
+
+function shuffled(list, random) {
+  const result = [...list]
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1))
+    ;[result[i], result[j]] = [result[j], result[i]]
+  }
+  return result
 }
 
 /** @returns {{ module: object, lesson: object } | null} */
@@ -159,9 +243,85 @@ function validateTheoryBlock(block, path) {
     assertString(block.text, `${path}.text`)
   }
 
+  if (block.type === 'code') {
+    assertString(block.text, `${path}.text`)
+  }
+
+  if (block.type === 'syntax') {
+    assertString(block.title, `${path}.title`)
+    assertString(block.template, `${path}.template`)
+    if (block.parts !== undefined) {
+      assertNonEmptyArray(block.parts, `${path}.parts`)
+      block.parts.forEach((part, p) => {
+        assertRecord(part, `${path}.parts[${p}]`)
+        assertString(part.name, `${path}.parts[${p}].name`)
+        assertString(part.desc, `${path}.parts[${p}].desc`)
+      })
+    }
+  }
+
+  if (block.type === 'try') {
+    assertString(block.code, `${path}.code`)
+    assertString(block.ask, `${path}.ask`)
+    if (block.datos !== undefined) assertStringArray(block.datos, `${path}.datos`)
+  }
+
+  if (block.type === 'form') {
+    assertString(block.title, `${path}.title`)
+    assertPositive(block.width, `${path}.width`)
+    assertPositive(block.height, `${path}.height`)
+    assertNonEmptyArray(block.controls, `${path}.controls`)
+    const names = new Set()
+    block.controls.forEach((control, c) => {
+      const controlPath = `${path}.controls[${c}]`
+      assertRecord(control, controlPath)
+      assertOneOf(control.kind, FORM_CONTROL_KINDS, `${controlPath}.kind`)
+      assertUniqueId(control.name, names, `${controlPath}.name`)
+      for (const key of ['x', 'y']) assertPositive(control[key], `${controlPath}.${key}`, { allowZero: true })
+      for (const key of ['w', 'h']) assertPositive(control[key], `${controlPath}.${key}`)
+      if (control.x + control.w > block.width || control.y + control.h > block.height) {
+        fail(controlPath, 'must fit inside the form')
+      }
+      if (control.text !== undefined && typeof control.text !== 'string') fail(`${controlPath}.text`, 'must be a string')
+      if (control.items !== undefined) assertStringArray(control.items, `${controlPath}.items`, { allowEmpty: true })
+    })
+  }
+
   if (block.type === 'example') {
     assertString(block.text, `${path}.text`)
     assertString(block.translation, `${path}.translation`)
+  }
+
+  if (block.type === 'scene') {
+    assertOptionalString(block.title, `${path}.title`)
+    assertNonEmptyArray(block.items, `${path}.items`)
+    block.items.forEach((item, i) => {
+      assertRecord(item, `${path}.items[${i}]`)
+      assertString(item.emoji, `${path}.items[${i}].emoji`)
+      assertString(item.text, `${path}.items[${i}].text`)
+      assertOptionalString(item.translation, `${path}.items[${i}].translation`)
+    })
+  }
+
+  if (block.type === 'timeline') {
+    assertOptionalString(block.title, `${path}.title`)
+    assertNonEmptyArray(block.events, `${path}.events`)
+    if (!Number.isFinite(block.now) || block.now < 0 || block.now > 100) {
+      fail(`${path}.now`, 'must be a number between 0 and 100')
+    }
+    block.events.forEach((event, i) => {
+      const eventPath = `${path}.events[${i}]`
+      assertRecord(event, eventPath)
+      assertString(event.emoji, `${eventPath}.emoji`)
+      assertString(event.label, `${eventPath}.label`)
+      for (const key of ['from', 'to']) {
+        if (event[key] !== undefined && !(Number.isFinite(event[key]) && event[key] >= 0 && event[key] <= 100)) {
+          fail(`${eventPath}.${key}`, 'must be a number between 0 and 100')
+        }
+      }
+      if (event.from === undefined) fail(`${eventPath}.from`, 'is required')
+      if (event.to !== undefined && event.to < event.from) fail(`${eventPath}.to`, 'must be >= from')
+    })
   }
 
   if (block.type === 'table') {
@@ -179,7 +339,14 @@ function validateTheoryBlock(block, path) {
 function validateExercise(exercise, path, alphabet) {
   assertOneOf(exercise.type, EXERCISE_TYPES, `${path}.type`)
   assertString(exercise.prompt, `${path}.prompt`)
+  assertOptionalString(exercise.snippet, `${path}.snippet`)
+  assertOptionalString(exercise.picture, `${path}.picture`)
+  if (exercise.snippetLang !== undefined) {
+    if (!exercise.snippet) fail(`${path}.snippetLang`, 'requires snippet')
+    assertString(exercise.snippetLang, `${path}.snippetLang`)
+  }
   assertOptionalString(exercise.explanation, `${path}.explanation`)
+  assertOptionalString(exercise.classInstruction, `${path}.classInstruction`)
 
   switch (exercise.type) {
     case 'choice':
@@ -233,10 +400,50 @@ function validateExercise(exercise, path, alphabet) {
     case 'open':
       assertOptionalString(exercise.sentence, `${path}.sentence`)
       assertString(exercise.modelAnswer, `${path}.modelAnswer`)
+      assertOptionalString(exercise.codeLanguage, `${path}.codeLanguage`)
+      if (exercise.codeLanguage !== undefined && !exercise.code) {
+        fail(`${path}.codeLanguage`, 'requires code: true')
+      }
+      if (exercise.code !== undefined && typeof exercise.code !== 'boolean') {
+        fail(`${path}.code`, 'must be a boolean')
+      }
+      if (exercise.practiceMinutes !== undefined &&
+          (!exercise.code || !Number.isFinite(exercise.practiceMinutes) || exercise.practiceMinutes <= 0)) {
+        fail(`${path}.practiceMinutes`, 'requires code and a positive number')
+      }
       if (exercise.hints !== undefined) {
         assertStringArray(exercise.hints, `${path}.hints`)
       }
       break
+
+    case 'code': {
+      assertString(exercise.modelAnswer, `${path}.modelAnswer`)
+      assertOptionalString(exercise.starter, `${path}.starter`)
+      assertNonEmptyArray(exercise.tests, `${path}.tests`)
+      exercise.tests.forEach((item, t) => {
+        const testPath = `${path}.tests[${t}]`
+        assertRecord(item, testPath)
+        if (item.inputs !== undefined) assertStringArray(item.inputs, `${testPath}.inputs`, { allowEmpty: true })
+        for (const key of ['contains', 'notContains', 'lines']) {
+          if (item[key] !== undefined) assertStringArray(item[key], `${testPath}.${key}`, { allowEmpty: true })
+        }
+        if (!item.contains && !item.notContains && !item.lines && !item.usesAllInputs) {
+          fail(testPath, 'needs contains, notContains, lines or usesAllInputs')
+        }
+      })
+      if (exercise.hints !== undefined) assertStringArray(exercise.hints, `${path}.hints`)
+      if (exercise.theory !== undefined) {
+        assertArray(exercise.theory, `${path}.theory`)
+        if (!exercise.theory.every((index) => Number.isInteger(index) && index >= 0)) {
+          fail(`${path}.theory`, 'must be indexes of the lesson theory blocks')
+        }
+      }
+      if (exercise.practiceMinutes !== undefined &&
+          (!Number.isFinite(exercise.practiceMinutes) || exercise.practiceMinutes <= 0)) {
+        fail(`${path}.practiceMinutes`, 'must be a positive number')
+      }
+      break
+    }
 
     case 'dialogue': {
       assertNonEmptyArray(exercise.lines, `${path}.lines`)
@@ -259,6 +466,14 @@ function validateExercise(exercise, path, alphabet) {
       if (yourLines === 0) fail(`${path}.lines`, 'needs at least one line with options')
       break
     }
+
+    case 'hunt':
+      assertStringArray(exercise.tokens, `${path}.tokens`)
+      assertString(exercise.correction, `${path}.correction`)
+      if (!Number.isInteger(exercise.wrongIndex) || exercise.wrongIndex < 0 || exercise.wrongIndex >= exercise.tokens.length) {
+        fail(`${path}.wrongIndex`, 'must be an index of tokens')
+      }
+      break
 
     case 'spelling':
       assertString(exercise.word, `${path}.word`)
@@ -303,6 +518,12 @@ function assertOneOf(value, allowed, path) {
 function assertString(value, path) {
   if (typeof value !== 'string' || value.trim() === '') {
     fail(path, 'must be a non-empty string')
+  }
+}
+
+function assertPositive(value, path, { allowZero = false } = {}) {
+  if (!Number.isFinite(value) || (allowZero ? value < 0 : value <= 0)) {
+    fail(path, allowZero ? 'must be a number >= 0' : 'must be a positive number')
   }
 }
 

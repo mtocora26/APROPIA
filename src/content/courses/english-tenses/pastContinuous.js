@@ -13,6 +13,24 @@ export const PAST_CONTINUOUS = {
           text: 'Past Continuous: Sujeto + was/were + verbo-ing. WAS con I, he, she, it; WERE con you, we, they.',
         },
         {
+          type: 'timeline',
+          title: 'Una acción en progreso en el pasado, interrumpida por otra',
+          now: 90,
+          events: [
+            { emoji: '🍳', label: 'I was cooking (en progreso)', from: 20, to: 60 },
+            { emoji: '📞', label: 'The phone rang (interrupción)', from: 45 },
+          ],
+        },
+        {
+          type: 'scene',
+          title: 'Imagina la escena a las 8 p. m.',
+          items: [
+            { emoji: '📚', text: 'I was studying.', translation: 'Yo estaba estudiando.' },
+            { emoji: '🍝', text: 'My mom was cooking.', translation: 'Mi mamá estaba cocinando.' },
+            { emoji: '⚽', text: 'The kids were playing.', translation: 'Los niños estaban jugando.' },
+          ],
+        },
+        {
           type: 'example',
           text: 'I was sleeping when the phone rang.',
           translation: 'Yo estaba durmiendo cuando sonó el teléfono.',
@@ -405,5 +423,24 @@ export const PAST_CONTINUOUS = {
         },
       ],
     },
+  ],
+  // Repaso del módulo: ejercicios distintos a los de las lecciones, en otros contextos.
+  reviewExercises: [
+    { id: 'pc-r1', from: 'pc-l1-afirmativas', type: 'open', picture: '🕗📞', prompt: 'Te llaman a las 8 p. m. de ayer. Di qué estabas haciendo tú y qué estaba haciendo tu familia (2 frases).', hints: ['At 8 p.m. I was ...', 'My mom/dad was ...'], modelAnswer: 'At 8 p.m. I was doing my homework. My mom was cooking dinner.' },
+    { id: 'pc-r2', from: 'pc-l1-afirmativas', type: 'reorder', prompt: 'Ordena: Los niños estaban jugando en el parque.', tokens: ['The', 'kids', 'were', 'playing', 'in', 'the', 'park.'], answer: ['The', 'kids', 'were', 'playing', 'in', 'the', 'park.'] },
+    { id: 'pc-r3', from: 'pc-l2-negativas', type: 'hunt', prompt: 'Detective: toca la palabra incorrecta.', tokens: ['They', "wasn't", 'listening', 'to', 'the', 'teacher.'], wrongIndex: 1, correction: "They weren't listening to the teacher." },
+    { id: 'pc-r4', from: 'pc-l2-negativas', type: 'typed', prompt: 'Coartada: «No estaba en el banco, estaba durmiendo». Completa la negativa.', sentence: 'I ___ at the bank. I was sleeping.', answer: "wasn't", alternatives: ['was not'] },
+    { id: 'pc-r5', from: 'pc-l3-preguntas', type: 'dialogue', prompt: 'Eres detective e interrogas a un testigo.', lines: [
+      { who: 'Tú', options: ['What were you doing at midnight?', 'What you were doing at midnight?', 'What was you doing at midnight?'], answer: 'What were you doing at midnight?' },
+      { who: 'Witness', text: 'I was walking my dog.' },
+      { who: 'Tú', options: ['Was anyone walking with you?', 'Did anyone was walking with you?', 'Were anyone walking with you?'], answer: 'Was anyone walking with you?' },
+    ] },
+    { id: 'pc-r6', from: 'pc-l3-preguntas', type: 'reorder', prompt: 'Ordena la pregunta: ¿Qué estaba mirando ella?', tokens: ['What', 'was', 'she', 'watching?'], answer: ['What', 'was', 'she', 'watching?'] },
+    { id: 'pc-r7', from: 'pc-l4-was-were', type: 'choice', picture: '🕺💃🎶', prompt: 'En la fiesta de anoche. Elige was o were.', sentence: 'My cousins ___ dancing all night.', options: ['was', 'were'], answer: 'were' },
+    { id: 'pc-r8', from: 'pc-l4-was-were', type: 'hunt', prompt: 'Detective: toca la palabra incorrecta.', tokens: ['You', 'was', 'singing', 'in', 'the', 'shower.'], wrongIndex: 1, correction: 'You were singing in the shower.' },
+    { id: 'pc-r9', from: 'pc-l5-lectura-1', type: 'open', prompt: 'Describe una tarde lluviosa que recuerdes: qué hacías tú y qué hacían los demás (3 frases).', hints: ['It was raining while ...', 'I was ... and my friend was ...'], modelAnswer: 'It was raining all afternoon. I was reading a book and my brother was playing video games. The dog was sleeping.' },
+    { id: 'pc-r10', from: 'pc-l5-lectura-1', type: 'choice', prompt: '«Mientras llovía, ella leía». ¿Cuál es correcta?', options: ['While it was raining, she was reading.', 'While it rained, she reading.', 'While it was rain, she was read.'], answer: 'While it was raining, she was reading.' },
+    { id: 'pc-r11', from: 'pc-l6-lectura-2', type: 'open', prompt: 'Imagina una sorpresa para un amigo. Cuenta qué estaban haciendo todos justo antes de que llegara (3 frases).', hints: ['Everyone was ...', 'Meanwhile, ... was ...'], modelAnswer: 'Everyone was hiding behind the sofa. Laura was holding the cake. Meanwhile, Tom was turning off the lights.' },
+    { id: 'pc-r12', from: 'pc-l6-lectura-2', type: 'typed', picture: '🎈🍰🤫', prompt: 'Completa. Mientras ellos decoraban, yo estaba cocinando.', sentence: 'While they were decorating, I ___ cooking.', answer: 'was' },
   ],
 }

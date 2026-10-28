@@ -9,7 +9,7 @@ function PlayerBadge({ stats }) {
         aria-label={`Racha de ${stats.streak} días${stats.studiedToday ? '' : ', todavía no estudias hoy'}`}
         title={stats.studiedToday ? 'Racha asegurada hoy' : 'Estudia hoy para mantener la racha'}
       >
-        🔥 {stats.streak}
+        <span className="label">Racha</span> {stats.streak}
       </span>
       <span className="player-badge__level" aria-label={`Nivel ${stats.level}`}>
         Nv {stats.level}

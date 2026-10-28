@@ -165,3 +165,11 @@ test('dialogue: shuffles options per line and writes the full correct text', () 
   )
   assert.equal(speakableText(dialogue, context), null)
 })
+
+test('hunt: only the wrong word index is correct and the correction is shown', () => {
+  const hunt = { type: 'hunt', tokens: ['She', 'am', 'a', 'doctor.'], wrongIndex: 1, correction: 'She is a doctor.' }
+
+  assert.equal(checkAnswer(1, hunt), true)
+  assert.equal(checkAnswer(0, hunt), false)
+  assert.equal(correctAnswerText(hunt), 'She is a doctor.')
+})

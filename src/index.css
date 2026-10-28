@@ -1,56 +1,127 @@
+@import '../tokens.css';
+
 :root {
-  --text: #4b4654;
-  --text-h: #08060d;
-  --bg: #fff;
-  --surface: #f7f6f9;
-  --border: #e5e4e7;
-  --accent: #7a2fd1;
-  --accent-bg: rgba(122, 47, 209, 0.08);
-  --on-accent: #fff;
-  --success: #1f7a3f;
-  --success-bg: rgba(31, 122, 63, 0.1);
-  --error: #b42318;
-  --error-bg: rgba(180, 35, 24, 0.08);
-  --on-success: #fff;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-
-  font: 17px/1.5 var(--sans);
-  color-scheme: light dark;
-  color: var(--text);
+  color-scheme: dark;
+  font: 18px/26px var(--font-body);
+  color: var(--ink);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
-}
+  scrollbar-color: var(--line-strong) var(--bg);
+  scrollbar-width: thin;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #b4b8c2;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --surface: #1f2028;
-    --border: #2e303a;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.12);
-    --on-accent: #16171d;
-    --success: #4ade80;
-    --success-bg: rgba(74, 222, 128, 0.1);
-    --error: #f87171;
-    --error-bg: rgba(248, 113, 113, 0.1);
-    --on-success: #16171d;
-  }
+  /* Estados de respuesta: siempre con palabra y forma además del color */
+  --success: var(--state-dominio);
+  --error: var(--state-refuerzo);
 }
 
 body {
   margin: 0;
   background: var(--bg);
+  color: var(--ink);
+  font-size: inherit;
+  line-height: inherit;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 h1,
+h2,
+h3 {
+  margin-block: 0 var(--space-4);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(32px, 6vw, 56px);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
 h2 {
-  color: var(--text-h);
-  line-height: 1.2;
+  font-size: clamp(22px, 3.4vw, 28px);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+/* Skip link: visible only on keyboard focus */
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 10;
+  padding: var(--space-3) var(--space-4);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+main:focus {
+  outline: none;
+}
+
+/* Page title for working screens (lessons, exercises, reviews): headline size, not display. */
+.page-title {
+  margin: 0;
+  font-size: clamp(22px, 3.4vw, var(--text-2xl));
+  font-weight: 600;
+  line-height: 1.15;
+  text-transform: none;
+}
+
+strong {
+  font-weight: 600;
 }
 
 a {
+  color: var(--ink);
+  text-decoration-color: var(--line-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+a:hover {
   color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+input,
+select,
+textarea {
+  border-radius: 0;
+}
+
+::placeholder {
+  color: var(--ink-muted);
+}
+
+progress,
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
